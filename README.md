@@ -1,12 +1,10 @@
 # 项目
 
-----------
-
 演示地址：[http://xjpz.me](http://xjpz.me "首页")
 
 `mosquito-blog`是一个用`Scala`+`Play`搭建的`webservice`博客系统。
 
-前端是由`play`模板渲染(`html`模板也是借用Play!的，像Play!致敬！)。
+前端是由`play`模板渲染(`html`模板也是借用play的，向play!致敬！)。
 
 后端是用`play`写的一套完整的`RESTful APIs`。在设计数据结构与实现后端`APIs`时充分考虑了程序的可移植性、可扩展性，因此后端`APIs`可完全独立与其他前端技术（如`PHP`、`Ajax`、`jQuery`）搭配实现更友好的用户体验。
 
