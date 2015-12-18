@@ -1,7 +1,5 @@
 # 项目
 
-----------
-
 演示地址：[http://xjpz.me](http://xjpz.me "首页")
 
 `mosquito-blog`是一个用`Scala`+`Play`搭建的`webservice`博客系统。
