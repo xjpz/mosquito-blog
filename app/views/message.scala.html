@@ -1,0 +1,354 @@
+@(uid: Long)
+@import play.api.Play
+@import java.text.SimpleDateFormat
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>留言板 - 心尖偏左</title>
+        <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
+        <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+
+            <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+        <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
+
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/message.css")" >
+        <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
+            <!-- 新 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
+
+            <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+
+    <body>
+            <!-- ntopbar -->
+        <div class="topbar">
+            <div class="ntopbar_main">
+                <div class="ntopbar_floatL">
+                    <div><script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=17542041042688205263' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
+                    </div>
+                </div>
+
+                <div class="ntopbar_menu">
+                    <div class="dropdown">
+
+                        @if(uid == 0){
+                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                <a href="/">注册/登录</a>|
+                            </span>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a href="javascript:" onclick="toLogin()">注册</a></li>
+                                <li><a href="javascript:" onclick="toLogin()">登录</a></li>
+                                <li><a href="/blog/to/reset/password">修改密码</a></li>
+                            </ul>
+                        }else{
+                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
+                            </span>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
+                                <li><a href="/blog/to/reset/password">修改密码</a></li>
+                                <li><a href="@routes.Application.logOut()">退出</a></li>
+                            </ul>
+                        }
+                        @*<span class="link" ><a href="@routes.Application.user()">个人中心</a>|</span>*@
+                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
+                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+            <!-- blog -->
+        <div class="bloga" id="bloga">
+            <div class="bloghead" id="bloghead">
+                <br>
+                <div class="blog_name" id="blog_name">
+                    <a href="/">@Play.current.configuration.getString("site_name").getOrElse("")</a>
+                    <span>@Service.findNews2MoodHead.getOrElse("Scala满足了我对编程语言的所有幻想")</span>
+                </div>
+            </div>
+            <div class="blogb" id="blogb">
+                    <!-- 留言-->
+                <div class="blogbody" id="blogbody">
+
+                    <h1>留言板(@Service.queryMessageReply(0).length)<sup>V2015.beta</sup></h1>
+
+                    <div id="article_comment" class="article_comment">
+                    @defining(controllers.Service.queryMessageReply(0)) { queryMessageReplyList =>
+
+                        @for(i <- 0 until queryMessageReplyList.length) {
+                            <div id="comment_body" class="comment_body">
+                                <div> @(i + 1)#&nbsp;&nbsp;<a href="#">@queryMessageReplyList(i).name</a> &nbsp;：</div>
+                                    &nbsp;&nbsp;&nbsp;&nbsp; @queryMessageReplyList(i).content
+                                <br>
+                                <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryMessageReplyList(i).inittime.get * 1000L)) &nbsp;&nbsp;
+                                    <a href="#comment" onclick="ClieckReply(@queryMessageReplyList(i).rid.getOrElse(0));">回复</a> &nbsp;|&nbsp;
+                                    <a  href="javascript:" onclick="reply_smile_numfun(@queryMessageReplyList(i).rid.getOrElse(0),'reply_smile_num@queryMessageReplyList(i).rid.getOrElse(0)')">赞(<span id="reply_smile_num@queryMessageReplyList(i).rid.getOrElse(0)">@queryMessageReplyList(i).smile.getOrElse(0)</span>)</a>
+                                <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
+                                </div>
+
+                                @defining(controllers.Service.queryMessageReplyChild(queryMessageReplyList(i).rid.getOrElse(0))) { queryMessageReplyChildList =>
+                                    @for(j <- 0 until queryMessageReplyChildList.length) {
+
+                                        <div id="comment_footer" class="comment_footer">
+
+                                            <div>
+                                                <a href="#">@queryMessageReplyChildList(j).name</a> &nbsp;回复&nbsp;
+                                                <a href="#">@controllers.Service.findReply2MessageUName(queryMessageReplyChildList(j).quote.get)</a>：
+                                            </div>
+                                                &nbsp;&nbsp;&nbsp;&nbsp; @queryMessageReplyChildList(j).content
+                                            <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryMessageReplyChildList(j).inittime.get * 1000L)) &nbsp;&nbsp;
+                                                <a href="#comment" onclick="ClieckReplyChild(@queryMessageReplyChildList(j).rid.getOrElse(0),'@queryMessageReplyChildList(j).name')">回复</a> &nbsp;|&nbsp;
+                                                <a href="javascript:" onclick="reply_smile_numfun(@queryMessageReplyChildList(j).rid.getOrElse(0),'reply_smile_num_child@queryMessageReplyChildList(j).rid.getOrElse(0)')">赞(<span id="reply_smile_num_child@queryMessageReplyChildList(j).rid.getOrElse(0)">@queryMessageReplyChildList(j).smile.getOrElse(0)</span>)</a>
+                                            </div>
+                                            <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        }
+                    }
+                    </div>
+
+                        <!-- 发表评论 -->
+                    <br/>
+                    <div id="commentform">
+                        @*<h3 id="respond">Add your comment now</h3>*@
+
+                    <div class='login_info' @if(uid == 0) {
+                        style="display:none;"} ><b>发表评论</b></div>
+
+                    <div class='login_info' @if(uid != 0) {
+                        style="display:none;"} > 还没有登陆？可以登录后再评论哦。
+                        <b><a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
+                            <a href="javascript:" onclick="toLogin()">&raquo;去注册</a></b>
+                    </div>
+
+                    <form action="@routes.Application.addMessageReplyForm()" method="post" id="commentform">
+
+                        <p><label for="author">用户:</label>
+                            <input type="text" name="name" id="author" @if(uid != 0) {
+                                value="@(controllers.Service.getUname(uid))" readonly="readonly"
+                            } else {
+                                value=""
+                            } size="25" tabindex="1" class="comment_input" required/></p>
+
+                        <div @if(uid != 0) {
+                            style="display: none;" }>
+                            <p><label for="email">邮箱:</label>
+                                <input @if(uid != 0) {
+                                    type="hidden"
+                                } else {
+                                    type="email"
+                                } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/></p>
+
+                            <p><label for="url">网址:</label>
+                                <input @if(uid != 0) {
+                                    type="hidden"
+                                } else {
+                                    type="text"
+                                } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" /></p>
+
+                        </div>
+                        <p><textarea name="content" id="comment" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea></p>
+
+                        <p>&nbsp;<input name="submit" type="submit" id="submit" tabindex="5" value="发表评论" class="button" /></p>
+                        <input type="hidden" name="comment_post_ID" value="542" />
+
+                        <p style="display : none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
+                        <p><input type="hidden" id="ak_js" name="aid" value="0" /></p>
+                        <p><input type="hidden" id="ak_js" name="quote" value="0" /></p>
+                        <p><input type="hidden" id="ak_js" name="uid" value="@uid" /></p>
+
+                    </form>
+                    </div>
+
+                </div>
+
+                <div class="blogright" id="blogright">
+
+                    <div class="catListTag">
+                        <h3 class="catListTitle">活跃用户</h3>
+                        <div class="module-list scroll-list">
+                            <ul>
+                            @if(controllers.Service.queryActiveUser().isDefined && controllers.Service.queryActiveUser().get.users.isDefined){
+                                @for(userIter <- controllers.Service.queryActiveUser().get.users.get){
+                                    <li ><a id="CatList_LinkList_0_Link_0" href="@routes.Application.queryWithUid(userIter.uid.get,Option(1))">@userIter.name</a><small>@(new SimpleDateFormat("YYYY-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
+                                }
+                            }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cloud">
+                        <h3>标签云</h3>
+                        <ul>
+                        @if(controllers.Service.queryCatalog.isDefined && controllers.Service.queryCatalog.get.catalogs.isDefined) {
+                            @for(catalogIter <- controllers.Service.queryCatalog.get.catalogs.get) {
+                                <li><a href="@(routes.Application.toCatalogArticle(catalogIter))">@catalogIter</a></li>
+                            }
+                        }
+
+                        </ul>
+                    </div>
+
+                    <div class="links">
+                        <h3>友情链接</h3>
+                        <ul>
+
+                        @if(controllers.Service.queryLink.isDefined && controllers.Service.queryLink().get.links.isDefined){
+                            @for(linkIter <- controllers.Service.queryLink.get.links.get){
+                                <li><a id="CatList_LinkList_0_Link_0" target="_blank" href="@linkIter.content">@linkIter.name</a> </li>
+                            }
+                        }
+
+                        </ul>
+                    </div>
+
+                    <div class="rank">
+                        <h3>推荐排行</h3>
+                        @if(Service.queryArticleAction("smile",Option(0),Option(5)).articles.isDefined) {
+                            @defining(Service.queryArticleAction("smile",Option(0),Option(5)).articles.get){ articleList=>
+                                <ul>
+                                    @for(i <- 0 until articleList.length) {
+                                        <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).smile.getOrElse(0)) </a></li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+
+                    <div class="rank">
+                        <h3>阅读排行</h3>
+                        @if(Service.queryArticleAction("read",Option(0),Option(5)).articles.isDefined) {
+                            @defining(Service.queryArticleAction("read",Option(0),Option(5)).articles.get){ articleList=>
+                                <ul>
+                                    @for(i <- 0 until articleList.length) {
+                                        <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).read.getOrElse(0)) </a></li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+
+                    <div class="rank">
+                        <h3>评论排行</h3>
+                        @if(Service.queryArticleAction("reply",Option(0),Option(5)).articles.isDefined) {
+                            @defining(Service.queryArticleAction("reply",Option(0),Option(5)).articles.get){ articleList=>
+                                <ul>
+                                    @for(i <- 0 until articleList.length) {
+                                        <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).reply.getOrElse(0)) </a></li>
+                                    }
+                                </ul>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <footer>
+            <div id="musicPlayer"></div>
+
+            <script>
+				$(function () {
+					$("#musicPlayer").simplemusic({
+						autoplay: false,
+						urls: ["http://blog.xjpz9999.com/music/gz.mp3","http://blog.xjpz9999.com/music/sxcs.mp3" ]
+					});
+				});
+			</script>
+            <div class="ft-copyright">
+                <p class="copyright">Copyright &copy;2015 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
+                    鄂ICP备15016359号-1</a><br>
+                </span>
+                    <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
+                </p>
+
+                    <!-- top -->
+                <div id="link_top" class="link_top" style="display : none ;">Top</div>
+
+                <script type="text/javascript">
+                    $(function(){
+                        showScroll();
+                        function showScroll(){
+                            $(window).scroll( function() {
+                                var scrollValue=$(window).scrollTop();
+                                scrollValue > 100 ? $('div[class=link_top]').fadeIn():$('div[class=link_top]').fadeOut();
+                            } );
+                            $('#link_top').click(function(){
+                                $("html,body").animate({scrollTop:0},200);
+                            });
+                        }
+                    })
+                </script>
+            </div>
+
+        </footer>
+    </body>
+
+</html>
+
+
+<script type="text/javascript">
+
+        function toLogin(){
+            window.location.href="/blog/to/login?url="+window.location.href
+        }
+
+    //异步刷新评论以及子评论点赞数
+    function reply_smile_numfun(rid,idName){
+        var num = document.getElementById(idName).innerText;
+		document.getElementById(idName).innerHTML = parseInt(num)+1;
+		$.ajax({
+            type: "GET",
+            url: "/blog/reply/message/smile/"+rid,
+            data: {},
+            success: function(data){
+
+            }
+         });
+
+	}
+
+    function ClieckReply(quote){
+//        textareaContent = top.document.getElementsByName("content");
+//        textareaContent[0].value = "";
+        input=top.document.getElementsByName("quote");
+        input[0].value=quote;
+    }
+    function ClieckReplyChild(quote,name){
+//        textareaContent = top.document.getElementsByName("content");
+//        textareaContent[0].value = "回复 "+name +" :"
+
+        input=top.document.getElementsByName("quote");
+        input[0].value=quote;
+
+    }
+
+    /*活跃用户滚动*/
+$(function () {
+    var settime;
+    $(".scroll-list").hover(function () {
+        clearInterval(settime);
+    }, function () {
+        settime = setInterval(function () {
+            var $first = $(".scroll-list ul:first");     //选取div下的第一个ul 而不是li；
+            var height = $first.find("li:first").height();      //获取第一个li的高度，为ul向上移动做准备；
+            $first.animate({ "marginTop": -height + "px" }, 2000, function () {
+                $first.css({ marginTop: 0 }).find("li:first").appendTo($first); //设置上边距为零，为了下一次移动做准备
+            });
+        }, 2000);
+    }).trigger("mouseleave");       //trigger()方法的作用是触发被选元素的制定事件类型
+});
+</script>
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+

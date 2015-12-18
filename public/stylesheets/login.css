@@ -1,0 +1,572 @@
+/*模板部分*/
+
+body{
+	margin:0px;
+	background-color:#FFFFFF;
+}
+
+a {
+	color: #258fb8;
+}
+a:link,a:visited{
+	text-decoration:none;  /*超链接无下划线*/
+}
+
+.topbar {
+	min-width: 950px;
+	height: 30px;
+	/*overflow: hidden;*/
+	font-size: 12px;
+	font-family: "宋体";
+	background-image: url(../images/topbar.png);
+
+}
+.ntopbar_main{
+	height: 30px;
+	margin: 0 auto;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	border-top: 5px solid #92d13d;
+	border-top-width: 5px;
+	border-top-style: solid;
+	border-top-color: rgb(146, 209, 61);
+}
+
+.ntopbar_floatL {
+	float: left;
+	position: relative;
+	line-height: 25px;
+	padding-left:25.5%;
+}
+
+
+
+.ntopbar_menu {
+	float: right;
+	margin-left: 10px;
+	position: relative;
+	padding-right:25.5%;
+}
+
+.link a:hover {
+	background:rgba(235,235,235,0.3);
+	color:#FFFFFF;
+	-webkit-box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;
+	box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;
+	-webkit-transition:all 150ms ease-in-out;
+	-moz-transition:all 150ms ease-in-out;
+	-o-transition:all 150ms ease-in-out;
+	-ms-transition:all 150ms ease-in-out;
+	transition:all 150ms ease-in-out
+}
+
+.ntopbar_menu span.link {
+	padding-right: 2px;
+	height: 25px;
+	line-height: 25px;
+	cursor: pointer;
+}
+
+
+.ntopbar_menu span {
+	float: left;
+}
+
+.ntopbar_menu span.link a, .ntopbar_menu span.link a:link {
+	float: left;
+	text-decoration: none;
+	padding: 0 16px 0 12px;
+	padding-top: 0px;
+	padding-right: 16px;
+	padding-bottom: 0px;
+	padding-left: 12px;
+}
+
+.nsinatopbar a, .nsinatopbar a:link, .nsinatopbar a:visited {
+	color: #2e3092;
+	text-decoration: none;
+}
+
+.bloga{
+	clear: both;
+	height:100%;
+	position:relative;
+}
+
+.blogb{
+	clear: both;
+	width: 49%;
+	z-index: 10;
+	position:relative;
+	background-color:#FFFFFF;
+	float:left;
+	margin-left:25.5%;
+	margin-top:-60px;
+
+	font-family: "Helvetica Neue","Helvetica",sans-serif;
+	font-weight: normal;
+	font-size: 15px;
+	-webkit-font-smoothing: antialiased;
+}
+
+.blogb:before {
+	content:" ";
+	background:url("../images/content-shadow@2x.png") 0 -542px no-repeat,url("../images/content-shadow@2x.png") right 0 no-repeat;
+	position:absolute;
+	top:0;
+	left:-23px;
+	right:-23px;
+	display:block;
+	height:540px;
+	z-index:-1
+}
+
+.bloghead {
+	clear: both;
+	width: auto;
+	height: 150px;
+	margin: 0 auto;
+	z-index: 10;
+	background-color:#92D13D;
+
+}
+.bloghead a{
+	font-size:48px;
+	color:#FFFFFF;
+}
+
+.blog_name{
+	margin-left:25.5%;
+	text-shadow: 0px 5px 5px #555;
+	font-size: 20px;
+}
+
+
+.blogbody {
+	float:left;
+	width: 100%;
+
+
+
+}
+.blogright {
+	float:left;
+	width: 28%;
+	text-align:center;
+	margin-left:0.7em;
+	background-color:#F9F9F9;
+
+}
+
+.weiboIframe{
+	clear:both;
+	margin:0px;
+}
+
+.blogbody_author{
+	float:left;
+}
+
+.blogbody_read {
+	float:right;
+}
+
+.blogs{
+	clear:both;
+	padding:20px;
+
+}
+
+.blogs h4 {
+	color:#258FB8;
+}
+
+/*//注册部分*/
+
+  html {
+
+  }
+body {
+	margin:0;
+//background: #fff url(../images/1.jpg) 50% 0 no-repeat;
+}
+ul {
+	padding:0;
+	margin:0;
+}
+ul li {
+	list-style-type:none;
+}
+a {
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:none;color:black;
+}
+.cl{ clear: both;}
+input[type="text"]:focus, input[type="password"]:focus {
+	outline:none;
+}
+input::-ms-clear {
+	display:none;
+}
+.login {
+	margin:0 auto;
+	width:370px;
+	border:2px solid #eee;
+	border-bottom:none;
+	position:relative;
+}
+.header {
+	height:50px;
+	border-bottom:1px solid #e2e2e2;
+	position:relative;
+	font-family:"Microsoft Yahei";
+}
+.header .switch {
+	height:45px;
+	position:absolute;
+	left:60px;
+	bottom:0;
+	font-size:16px;
+}
+.header .switch #switch_qlogin {
+	margin-right:85px;
+}
+.header .switch .switch_btn {
+	color:#999;
+	display:inline-block;
+	height:45px;
+	line-height:45px;
+	outline:none;
+	*hide-focus:expression(this.hideFocus=true);
+}
+.header .switch .switch_btn_focus {
+	color:#333;
+	display:inline-block;
+	height:45px;
+	line-height:45px;
+	outline:none;
+	*hide-focus:expression(this.hideFocus=true);
+}
+.header .switch .switch_btn:hover {
+	color:#333;
+	text-decoration:none;
+}
+.header .switch .switch_btn_focus:hover {
+	text-decoration:none;
+}
+#switch_bottom {
+	position:absolute;
+	bottom:-1px;_bottom:-2px;
+	border-bottom:2px solid #848484;
+}
+
+.web_login {
+	width:370px;
+	position:relative;
+}
+#web_login{_left:60px;*left:0;}
+.web_login .login_form {
+	width:272px;
+	margin:0 auto;
+}
+.web_login .reg_form {
+	width:300px;
+	margin:0 auto;
+}
+.web_login .input-tips {
+	float:left;
+	margin-top:10px;
+	width:50px;
+	height:42px;
+	font-size:16px;
+	line-height:42px;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.web_login .input-tips2 {
+	float:left;
+	text-align:right;
+	padding-right:10px;
+	width:75px;
+	height:30px;
+	font-size:16px;
+	margin-top:10px;
+	clear:both;
+	line-height:30px;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.web_login .inputOuter {
+	width:200px;
+	height:42px;
+	margin-top:10px;
+	float:left;
+
+}
+.web_login .inputOuter2 {
+	width:200px;
+	margin-top:6px;margin-top:5px\9;
+	float:left;
+
+}
+.web_login .inputstyle {
+	width:200px;
+	height:38px;
+	padding-left:5px;
+	line-height:30px;line-height:38px;
+	border:1px solid #D7D7D7;
+	background:#fff;
+	color:#333;border-radius:2px;
+	font-family:Verdana, Tahoma, Arial;
+	font-size:16px;
+	ime-mode:disabled;
+}
+.web_login input.inputstyle2:focus,.web_login input.inputstyle:focus{border:1px solid #198BD4;box-shadow:0 0 2px #198BD4;}
+.web_login .inputstyle2 {
+	height:34px;
+	padding-left:5px;
+	line-height:34px;
+	border:1px solid #D7D7D7;
+	background:#fff;
+	color:#333;border-radius:2px;
+	font-family:Verdana, Tahoma, Arial;
+	font-size:16px;
+	ime-mode:disabled;
+}
+.web_login .uinArea {
+	height:55px;
+	position:relative;
+	z-index:10;
+}
+.web_login .pwdArea {
+	height:55px;
+	margin-bottom:10px;
+	position:relative;
+	z-index:3;
+}
+.web_qr_login {
+	position:relative;
+
+	overflow:hidden;
+}
+
+.cue {
+	height:40px;
+	line-height:40px;
+	font-size:14px;
+	border:1px #CCCCCC solid;
+	margin-top:10px;margin-bottom:5px;
+	text-align:center;
+	font-family:"Hiragino Sans GB", "Microsoft Yahei";
+}
+.login {
+	background-color:#ffffff;
+}
+
+h1{margin:80px auto 50px auto;text-align:center;color:#fff;margin-left:-25px;font-size:35px;font-weight: bold;text-shadow: 0px 1px 1px #555;}
+h1 sup{
+	font-size: 18px;
+	font-style: normal;
+	position: absolute;
+	margin-left: 10px;}
+.login {border:0;padding:5px 0;
+	background: #fff;
+	margin: 0 auto;
+	-webkit-box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, .3);
+	box-shadow: 1px 1px 2px 0 rgba(0, 0, 0, .3);}
+
+.web_login{padding-bottom:20px;}
+
+.jianyi{color:#fff;text-align:center;margin-top:25px;color:#B3B8C4;}
+.reg_form li {
+	height: 55px;
+}
+.cue {
+	margin-top: 15px;
+	margin-bottom: 10px;border:1px solid #eee;border-radius:3px;
+}
+.web_login input.inputstyle2:focus, .web_login input.inputstyle:focus {
+	border: 1px solid #5796f0;
+	box-shadow: 0 0 0;
+}
+.web_login .reg_form {
+	width: 300px;
+	margin: 0 auto;
+}
+.web_login .inputstyle2 {border-radius:2px;width:210px;}
+
+.web_login #captcha{
+	width:103px;
+	float: left;
+}
+
+.web_login .captchaImage{
+	float: left;
+	margin-left: 0.5em;
+
+}
+
+.web_login .input-tips2 {
+	padding-right: 5px;
+	width: 80px;_width: 75px;_font-size:12px;}
+
+
+
+.button_blue
+{
+	display:inline-block;
+	float:left;
+	height:41px;border-radius:4px;
+	background:#2795dc;border:none;cursor:pointer;
+	border-bottom:3px solid #0078b3;*border-bottom:none;
+	color:#fff;
+	font-size:16px;padding:0 10px;*width:140px;
+	text-align:center;outline:none;font-family: "Microsoft Yahei",Arial, Helvetica, sans-serif;
+}
+input.button_blue:hover
+{
+	background:#0081c1;
+	border-bottom:3px solid #006698;*border-bottom:none;
+	color:#fff;
+	text-decoration:none;
+}
+a.zcxy {text-decoration: underline;line-height:58px;margin-left:15px;color: #959ca8;}
+.web_login .login_form {margin-top:30px;}
+.web_login .uinArea {
+	height: 60px;}
+.header .switch{left:70px;}
+
+
+.other_login{
+	font-size: 14px;
+	line-height: 42px;
+	font-family: "Hiragino Sans GB", "Microsoft Yahei";
+	color: black;
+}
+.other_login a{
+	color: black;
+}
+
+/*页脚*/
+.ft-copyright {
+	clear : both ;
+	width : auto ;
+	font-family : 'Courgette', cursive ;
+	text-align : center ;
+	font-size : 13px ;
+/ / top : 70px ;
+	top : 300px ;
+	position : relative ;
+
+}
+.ft-copyright a{
+	color: black;
+}
+
+/*站内搜索*/
+.bdcs-container .bdcs-main, .bdcs-container .bdcs-main * {
+	box-sizing:content-box;
+	margin:0;
+	padding:0;
+	float:none;
+	clear:none;
+	overflow:hidden;
+	white-space:nowrap;
+	word-wrap:normal;
+	border:0;
+	background:none;
+	width:auto;
+	height:auto;
+	max-width:none;
+	min-width:none;
+	max-height:none;
+	min-height:none;
+	border-radius:0;
+	box-shadow:none;
+	transition:none;
+	text-align:left;
+}
+
+.bdcs-container .bdcs-clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+	height: 0;
+}
+.bdcs-container .bdcs-clearfix {
+	zoom: 1;
+}
+
+.bdcs-container .bdcs-main {
+	overflow: visible;
+}
+.bdcs-container .bdcs-search {
+	display: block;
+	overflow: visible;
+	position: relative;
+	border-style: solid;
+}
+
+.bdcs-container .bdcs-search-form-input-wrap {
+	display: inline-block;
+}
+
+/*输入框自定义样式*/
+.bdcs-container .bdcs-search-form-input {
+	border-width: 1px;
+	border-style: solid;
+	display: inline-block;
+	vertical-align: top;
+	text-indent: 5px;
+	float: left;
+
+	border-color:#a6a6a6;
+	margin-right:5px;
+	margin-top:1px;
+	width:200px;
+	height:20px;
+	line-height:20px;
+	font-family:Arial,SimSun,sans-serif;
+	color:#000000;
+	font-size:12px;
+	border-radius:0px;
+	background-color:#FFFFFF;
+}
+.bdcs-container .bdcs-search-form-input:focus {
+	border-width: 1px;
+	border-style: solid;
+	outline: none;
+}
+.bdcs-container .bdcs-search-form-submit-wrap {
+	display: inline-block;
+}
+
+/*按钮样式自定义*/
+.bdcs-container .bdcs-search-form-submit {
+	display: inline-block;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+	vertical-align: top;
+	text-align: center;
+	width: 40px;
+	/*IE67 submit width fix*/
+	/*width: 1;
+    *overflow: visible;
+    /*fix IE6 submit height but width still bug*/
+//_overflow: hidden;
+
+	border-color:#e6e6e6;
+	height:20px;
+	background-color:#f5f5f5;
+	color:#000000;
+	font-family:Arial,SimSun,sans-serif;
+	font-size:12px;
+	border-radius:0;
+	*height:28px;
+	*margin-top:1px;
+	line-height:20px;
+	margin-top: 1px;
+}

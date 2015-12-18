@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+      <title>Simditor</title>
+      <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("simditor/styles/simditor.css")" />
+
+      <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/jquery.min.js")"></script>
+      <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/module.js")"></script>
+      <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/hotkeys.js")"></script>
+      <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/uploader.js")"></script>
+      <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/simditor.js")"></script>
+
+  </head>
+  <body>
+  @helper.form(action = routes.SimditorCtrl.text2Html, 'enctype -> "application/x-www-form-urlencoded") {
+
+      @*<textarea type="text" name="textStr" required></textarea>*@
+      <textarea id="editor" name="textStr" placeholder="请输入：" autofocus required></textarea>
+
+      <script type="text/javascript">
+          $(function(){
+               toolbar = [ 'title', 'bold', 'italic', 'underline', 'strikethrough',
+                        'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|',
+                        'link', 'image', 'hr', '|', 'indent', 'outdent' ];
+                var editor = new Simditor( {
+                    textarea : $('#editor'),
+                    placeholder : '这里输入内容...',
+                    toolbar : toolbar,  //工具栏
+                    defaultImage : '@routes.Assets.versioned("simditor/images/image.png")', //编辑器插入图片时使用的默认图片
+                    upload : {
+                        url : '@UploadCtrl.upload', //文件上传的接口地址
+                        params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
+                        fileKey: 'fileDataFileName', //服务器端获取文件数据的参数名
+                        connectionCount: 3,
+                        leaveConfirm: '正在上传文件'
+                    }
+                });
+           })
+        </script>
+
+      <p>
+          <input type="submit">
+      </p>
+
+  }
+  </body>
+</html>
