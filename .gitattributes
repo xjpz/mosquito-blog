@@ -1,2 +1,2 @@
-special-vendored-path/* linguist-vendored
-*.js linguist-vendored=false
+*.js linguist-language=Java
+*.css linguist-language=Java
