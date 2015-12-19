@@ -236,29 +236,22 @@
 
 <script type="text/javascript" language="javascript">
 
-        	function disp_alert(){
-		        alert("协议还没有起草。但，最终解释权归本站所有。")
-	        }
-
-	        function nopwd_alert(){
-		        alert("我也不知道你的密码。")
-	        }
+        function disp_alert(){
+		alert("协议还没有起草。但，最终解释权归本站所有。")
+	}
 
 	        <!-- 验证码-->
-	        function refresh(obj){
+	function refresh(obj){
                 obj.src="@routes.Captcha.getCaptcha?id="+Math.random();
-            }
+        }
 
             $(document).keyup(function(event){
                 if(event.keyCode ==13){
                     if($('#web_qr_login').css("display")=="block"){
-//                        alert("登录");
                         $("#butt_login").trigger("click");
                     }else {
-//                        alert("注册");
                         $("#reg").trigger("click");
                     }
-//
                 }
             });
 
