@@ -8,7 +8,7 @@ import models.other.{Mail, MailJsonTrait, Mails}
 import models.{Reply, ReplyWrapper, ReplysActor, _}
 import play.api.Play
 import play.api.libs.json.Json
-import utils.{MD5, HexStringUtil}
+import utils.MD5
 //play.Cache
 import play.api.Play.current
 import play.api.cache.Cache
@@ -164,7 +164,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
             .asInstanceOf[Option[ArticleWrapper]]
 
         articleOpt match {
-            case x if x.isDefined =>{
+            case x if x.isDefined =>
                 val article = articleOpt.get
 
                 val userFuture = uActor ? UsersActor.Find(Global.db, article.uid.get)
@@ -172,7 +172,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                     .asInstanceOf[Option[UserWrapper]]
 
                 Ok(views.html.article.render(userOpt.get, article, uid))
-            }
+
             case _ => NotFound(views.html.error40x(404))
         }
 
@@ -206,13 +206,13 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
             val passwordBase64ForSHA = Option(Base64.encodeBase64String(Global.shaEncoder.digest(passwdINForm.getBytes)))
 
             val userOpt = emailPattern.findFirstIn(loginAction) match {
-                case Some(action) => {
+                case Some(action) =>
                     //Email
                     val future = uActor ? UsersActor.FindByEmail(Global.db, loginAction)
                     Await.result(future, timeout.duration)
                         .asInstanceOf[Option[UserWrapper]]
-                }
-                case _ => {
+
+                case _ =>
                     //phone or uname
                     if (loginAction.length == 11 && loginAction.startsWith("1")) {
                         val future = uActor ? UsersActor.FindByPhone(Global.db, loginAction)
@@ -223,7 +223,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                         Await.result(future, timeout.duration)
                             .asInstanceOf[Option[UserWrapper]]
                     }
-                }
+
             }
 
             if (userOpt.isDefined) {
@@ -281,22 +281,9 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                         case x if models.Users.userIsExists(username) => flag = 2
                         case x if models.Users.userIsExists(phone) => flag = 3
                         case x if models.Users.userIsExists(email) => flag = 4
-                        case _ => {
-                            val user = User(
-                                Option(username),
-                                Option(passwd),
-                                Option(email),
-                                Option(phone),
-                                None,
-                                Option(1),
-                                Option(0),
-                                None,
-                                None,
-                                None,
-                                None,
-                                updtime,
-                                updtime
-                            )
+                        case _ =>
+                            val user = User(Option(username), Option(passwd), Option(email),
+                                Option(phone), None, Option(1), Option(0), None, None, None, None, updtime, updtime)
                             //*************
                             //邮件通知   *
                             //*************
@@ -309,26 +296,19 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                     请您妥善保管!
 
 祝您使用愉快！"""
-                            val mail = Mail(
-                                adminEmailOpt,
-                                Option(email),
-                                Option("欢迎注册【心尖偏左Blog】"),
-                                Option(mailcontent),
-                                adminEmailOpt,
-                                adminEmailPwdOpt
-                            )
+                            val mail = Mail(adminEmailOpt, Option(email),
+                                Option("欢迎注册【心尖偏左Blog】"), Option(mailcontent), adminEmailOpt, adminEmailPwdOpt)
 
                             Mails.send(mail)
 
                             val future = uActor ? UsersActor.Init(Global.db, user)
-                            val userOpt = Await.result(future, timeout.duration)
-                                .asInstanceOf[Option[UserWrapper]]
+                            val userOpt = Await.result(future, timeout.duration).asInstanceOf[Option[UserWrapper]]
 
                             if (userOpt.isDefined) {
                                 uid = userOpt.get.uid.get
                                 ret = true
                             }
-                        }
+
                     }
                 }
             }
@@ -585,7 +565,6 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                                 如非本人操作，请立即更改密码，并联系管理员。
 
 祝你使用愉快!"""
-
                             val mail = Mail(
                                 adminEmailOpt,
                                 Option(email),
@@ -694,14 +673,14 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val code = codeListBuff.head
 
         passwdListBuff match {
-            case x if uname=="admin" && codeListBuff.nonEmpty && code == new SimpleDateFormat("MMddHH").format(new Date()) => {
+            case x if uname=="admin" && codeListBuff.nonEmpty && code == new SimpleDateFormat("MMddHH").format(new Date()) =>
                 val future = uActor ? UsersActor.FindByName(Global.db, uname)
                 val userOpt = Await.result(future, timeout.duration).asInstanceOf[Option[UserWrapper]]
                 userOpt match {
                     case x: Option[UserWrapper] if x.isDefined && passwd == userOpt.get.password.get => Ok(views.html.admin.render())
                     case _ => Redirect("/blog/to/admin")
                 }
-            }
+
             case _ => Redirect("/blog/to/admin")
         }
     }
@@ -754,7 +733,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
             updtime
         )
             Option(otype) match{
-                case Some("1") => {
+                case Some("1") =>
                     //初始化user的qq openid
                     user.qopenid = Option(openid)
                     user.qtoken = Option(token)
@@ -762,18 +741,17 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                     val future = uActor ? UsersActor.AddQConnUser(Global.db,user)
                     retOpt = Await.result(future, timeout.duration)
                         .asInstanceOf[Option[UserWrapper]]
-                }
-                case Some("2") => {
+
+                case Some("2") =>
                     //初始化user的sina openid
                     user.sopenid = Option(openid)
                     user.stoken = Option(token)
                     val future = uActor ? UsersActor.AddSConnUser(Global.db,user)
                     retOpt = Await.result(future, timeout.duration)
                         .asInstanceOf[Option[UserWrapper]]
-                }
+
                 case _ =>
             }
-
 
         if(retOpt.isDefined){
             Ok("/").withSession("uid" -> retOpt.get.uid.getOrElse(0L).toString)

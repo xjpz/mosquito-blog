@@ -7,58 +7,58 @@
 ###############
 # Application #
 ###############
-GET           /                                      controllers.Application.index(page:Option[Int])
+GET           /                                     controllers.Application.index(page:Option[Int])
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                          controllers.Assets.versioned(path="/public", file: Asset)
-GET           /resource/*file                        controllers.resourceCtrl.at(path="/",file)
+GET           /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
+GET           /resource/*file                       controllers.resourceCtrl.at(path="/",file)
 
-GET           /blog/to/login                         controllers.Application.toLogin
-GET           /blog/to/register                      controllers.Application.toReg
-GET           /blog/to/message                       controllers.Application.toMessage
-GET           /blog/logout                           controllers.Application.logOut
-GET           /blog/unfinished                       controllers.Application.unfinished
-GET           /blog/user                             controllers.Application.user
-GET           /blog/to/reset/password                controllers.Application.toResetPassword
+GET           /blog/to/login                        controllers.Application.toLogin
+GET           /blog/to/register                     controllers.Application.toReg
+GET           /blog/to/message                      controllers.Application.toMessage
+GET           /blog/logout                          controllers.Application.logOut
+GET           /blog/unfinished                      controllers.Application.unfinished
+GET           /blog/user                            controllers.Application.user
+GET           /blog/to/reset/password               controllers.Application.toResetPassword
 
-GET           /blog/to/article/:aid                  controllers.Application.toArticle(aid:Long)
-GET           /blog/to/add/article                   controllers.Application.toNewArticle
-GET           /blog/smile/:aid                       controllers.Application.smile(aid:Long)
-GET           /blog/to/user/article/:uid             controllers.Application.queryWithUid(uid:Long,page:Option[Int])
-GET           /blog/catalog/:catalog                 controllers.Application.toCatalogArticle(catalog:String)
-GET           /blog/to/update/article/:aid           controllers.Application.toUpdateArticle(aid:Long)
-GET           /blog/archives                         controllers.Application.archives
-GET           /blog/delete/article/:aid              controllers.Application.deleteArticle(aid:Long)
+GET           /blog/to/article/:aid                 controllers.Application.toArticle(aid:Long)
+GET           /blog/to/add/article                  controllers.Application.toNewArticle
+GET           /blog/smile/:aid                      controllers.Application.smile(aid:Long)
+GET           /blog/to/user/article/:uid            controllers.Application.queryWithUid(uid:Long,page:Option[Int])
+GET           /blog/catalog/:catalog                controllers.Application.toCatalogArticle(catalog:String)
+GET           /blog/to/update/article/:aid          controllers.Application.toUpdateArticle(aid:Long)
+GET           /blog/archives                        controllers.Application.archives
+GET           /blog/delete/article/:aid             controllers.Application.deleteArticle(aid:Long)
 
-GET           /blog/reply/article/smile/:rid         controllers.Application.smileReply2Article(rid:Long)
-GET           /blog/reply/message/smile/:rid         controllers.Application.smileReply2Message(rid:Long)
+GET           /blog/reply/article/smile/:rid        controllers.Application.smileReply2Article(rid:Long)
+GET           /blog/reply/message/smile/:rid        controllers.Application.smileReply2Message(rid:Long)
 
-POST          /blog/login                            controllers.Application.loginForm
-POST          /blog/register                         controllers.Application.registerForm
-POST          /blog/add/article                      controllers.Application.addArticleForm
-POST          /blog/add/reply/article                controllers.Application.addReplyForm
-POST          /blog/add/reply/meessage               controllers.Application.addMessageReplyForm
-POST          /blog/reset/password                   controllers.Application.updatePasswordForm
-POST          /blog/update/article                   controllers.Application.updateArticleForm
-POST          /blog/admin                            controllers.Application.checkAdminForm
+POST          /blog/login                           controllers.Application.loginForm
+POST          /blog/register                        controllers.Application.registerForm
+POST          /blog/add/article                     controllers.Application.addArticleForm
+POST          /blog/add/reply/article               controllers.Application.addReplyForm
+POST          /blog/add/reply/meessage              controllers.Application.addMessageReplyForm
+POST          /blog/reset/password                  controllers.Application.updatePasswordForm
+POST          /blog/update/article                  controllers.Application.updateArticleForm
+POST          /blog/admin                           controllers.Application.checkAdminForm
 
-POST          /blog/check/resume                     controllers.Application.checkResumeForm
-POST          /blog/user/connect                     controllers.Application.addConnUserForm
+POST          /blog/check/resume                    controllers.Application.checkResumeForm
+POST          /blog/user/connect                    controllers.Application.addConnUserForm
 #about
-GET           /blog/about                            controllers.Application.about
-GET           /blog/contactus                        controllers.Application.contactus
-GET           /blog/to/resume                        controllers.Application.toResume
+GET           /blog/about                           controllers.Application.about
+GET           /blog/contactus                       controllers.Application.contactus
+GET           /blog/to/resume                       controllers.Application.toResume
 
 #admin
-GET           /blog/to/admin                         controllers.Application.toAdmin
+GET           /blog/to/admin                        controllers.Application.toAdmin
 
-GET           /blog/tweet                            controllers.Application.tweet
+GET           /blog/tweet                           controllers.Application.tweet
 #QQConnect Test
-GET           /blog/test/qcback                      controllers.Application.testQcback
+GET           /blog/test/qcback                     controllers.Application.testQcback
 
 #Delete Cache
 
-GET          /blog/remove/cache/:action                     controllers.Application.removeCache(action:String)
+GET           /blog/remove/cache/:action            controllers.Application.removeCache(action:String)
 
 #=======================================================================================================================
 #RESTful APIs
@@ -66,23 +66,23 @@ GET          /blog/remove/cache/:action                     controllers.Applicat
 #############
 # User APIs #
 #############
-PUT           /blog/user                             controllers.UserCtrl.init
-GET           /blog/user/:action                     controllers.UserCtrl.query(action:String)
-GET           /blog/user/uid/:uid                    controllers.UserCtrl.retrieve(uid:Long)
-GET           /blog/user/name/:name                  controllers.UserCtrl.findByName(name:String)
-GET           /blog/user/email/:email                controllers.UserCtrl.findByEmail(email:String)
-GET           /blog/user/phone/:phone                controllers.UserCtrl.findByPhone(phone:String)
-PATCH         /blog/user/passwd                      controllers.UserCtrl.updatePassWord
-GET           /blog/user/isexists/:uname             controllers.UserCtrl.userIsExists(uname:String)
-GET           /blog/user/query/active                controllers.UserCtrl.queryActiveUser(page: Option[Int], size: Option[Int])
-PUT           /blog/user/connect                     controllers.UserCtrl.addConnUser
+PUT           /blog/user                            controllers.UserCtrl.init
+GET           /blog/user/:action                    controllers.UserCtrl.query(action:String)
+GET           /blog/user/uid/:uid                   controllers.UserCtrl.retrieve(uid:Long)
+GET           /blog/user/name/:name                 controllers.UserCtrl.findByName(name:String)
+GET           /blog/user/email/:email               controllers.UserCtrl.findByEmail(email:String)
+GET           /blog/user/phone/:phone               controllers.UserCtrl.findByPhone(phone:String)
+PATCH         /blog/user/passwd                     controllers.UserCtrl.updatePassWord
+GET           /blog/user/isexists/:uname            controllers.UserCtrl.userIsExists(uname:String)
+GET           /blog/user/query/active               controllers.UserCtrl.queryActiveUser(page: Option[Int], size: Option[Int])
+PUT           /blog/user/connect                    controllers.UserCtrl.addConnUser
 
 #UserInfo
-PUT           /blog/userinfo                         controllers.UserInfoCtrl.init
+PUT           /blog/userinfo                        controllers.UserInfoCtrl.init
 
 #UCustom
-PUT           /blog/custom                           controllers.UcustomCtrl.init
-GET           /blog/custom/:uid                      controllers.UcustomCtrl.retrieve(uid:Long)
+PUT           /blog/custom                          controllers.UcustomCtrl.init
+GET           /blog/custom/:uid                     controllers.UcustomCtrl.retrieve(uid:Long)
 
 ################
 ##Article APIs #
@@ -133,33 +133,33 @@ GET           /blog/custom/:uid                      controllers.UcustomCtrl.ret
 ###########
 
 #Link
-GET           /link                                  controllers.LinkCtrl.query(page:Option[Int],size:Option[Int])
-PUT           /link                                  controllers.LinkCtrl.init
-DELETE        /link/:lid                             controllers.LinkCtrl.remove(lid:Long)
-PATCH         /link                                  controllers.LinkCtrl.update
+GET           /link                                 controllers.LinkCtrl.query(page:Option[Int],size:Option[Int])
+PUT           /link                                 controllers.LinkCtrl.init
+DELETE        /link/:lid                            controllers.LinkCtrl.remove(lid:Long)
+PATCH         /link                                 controllers.LinkCtrl.update
 
 #simditor
-GET           /to/simditor                           controllers.SimditorCtrl.toEdit
-POST          /simditor                              controllers.SimditorCtrl.text2Html
+GET           /to/simditor                          controllers.SimditorCtrl.toEdit
+POST          /simditor                             controllers.SimditorCtrl.text2Html
 
 #upload
-GET           /to/upload                             controllers.UploadCtrl.toUpload
-POST          /upload                                controllers.UploadCtrl.upload()
+GET           /to/upload                            controllers.UploadCtrl.toUpload
+POST          /upload                               controllers.UploadCtrl.upload()
 
 #download
-GET           /to/download                           controllers.UploadCtrl.toDownload
-GET           /download/:path                        controllers.UploadCtrl.download(path:String)
+#GET           /to/download                           controllers.UploadCtrl.toDownload
+#GET           /download/:path                        controllers.UploadCtrl.download(path:String)
 
 #mail
-PUT           /mail/send                             controllers.MailCtrl.send
-PUT           /mail/recv                             controllers.MailCtrl.recv
+PUT           /mail/send                            controllers.MailCtrl.send
+PUT           /mail/recv                            controllers.MailCtrl.recv
 
 #captcha
-GET           /captcha/new                           controllers.Captcha.getCaptcha
+GET           /captcha/new                          controllers.Captcha.getCaptcha
 #GET           /captcha/text                          controllers.Captcha.getCaptchaText
 
 #error
-GET           /blog/error/:code                      controllers.Application.error40x(code:Int)
+GET           /blog/error/:code                     controllers.Application.error40x(code:Int)
 
 #############
 # Test APIs #

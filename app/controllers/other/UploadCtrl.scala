@@ -24,7 +24,7 @@ object UploadCtrl extends Controller{
 			println(Play.current.path)
 			picture.ref.moveTo(new File(Play.current.path+s"/res/$filename"))
 			//此处是存储在项目根目录下的public目录下,不能以/(如:/public)开头
-			Ok(Json.obj("success"->"true","file_path" -> s"http://xjpz.me/resource/res/$filename"))
+			Ok(Json.obj("success"->"true","file_path" -> s"http://${request.host}/resource/res/$filename"))
 		}.getOrElse {
 			Ok(Json.obj("success"->"false","message" ->"fail","file_path" -> ""))
 		}

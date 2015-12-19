@@ -16,30 +16,20 @@ import models.ReplysActor.{Init, Query, Retrieve,QueryChild,Smile}
 
 class Replys2ArticleActor extends Actor {
     def receive: Receive = {
-        case Init(db: Database, reply: Reply) => {
-            db.withSession { implicit session =>
-                sender ! models.Reply2Article.init(reply)
-            }
-        }
-        case Query(db: Database, aid: Long) => {
-            db.withSession { implicit session =>
-                sender !  models.Reply2Article.query(aid)
-            }
-        }
-        case QueryChild(db: Database, rid: Long) => {
-            db.withSession { implicit session =>
-                sender !  models.Reply2Article.queryChild(rid)
-            }
-        }
-        case Retrieve(db: Database, rid: Long) => {
-            db.withSession { implicit session =>
-                sender ! models.Reply2Article.retrieve(rid)
-            }
-        }
-        case Smile(db:Database,rid:Long) => {
-            db.withSession{ implicit session =>
-                sender ! models.Reply2Article.smile(rid)
-            }
-        }
+        case Init(db: Database, reply: Reply) =>
+            db.withSession ( implicit session => sender ! models.Reply2Article.init(reply))
+
+        case Query(db: Database, aid: Long) =>
+            db.withSession ( implicit session => sender !  models.Reply2Article.query(aid))
+
+        case QueryChild(db: Database, rid: Long) =>
+            db.withSession ( implicit session => sender !  models.Reply2Article.queryChild(rid))
+
+        case Retrieve(db: Database, rid: Long) =>
+            db.withSession ( implicit session => sender ! models.Reply2Article.retrieve(rid))
+
+        case Smile(db:Database,rid:Long) =>
+            db.withSession(implicit session => sender ! models.Reply2Article.smile(rid))
+
     }
 }

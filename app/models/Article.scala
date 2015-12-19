@@ -1,15 +1,14 @@
 package models
 
-import java.text.SimpleDateFormat
-
 import akka.actor.Actor
 import models.ArticlesActor.Update
 import play.api.Play.current
 import play.api.cache.Cache
-import play.api.libs.json.{JsValue, _}
+import play.api.libs.json._
 import utils.Snoopy
-import scala.language.postfixOps
+
 import scala.collection.mutable.ListBuffer
+import scala.language.postfixOps
 import scala.slick.driver.MySQLDriver.simple._
 
 /**
@@ -516,8 +515,7 @@ object Articles extends ArticleJSONTrait {
     }
 }
 
-import models.ArticlesActor.{Init, Query, QueryCatalog, QueryWithUid,
-ReadCount, Retrieve, SmileCount,ReplyCount,QueryAction,QueryWithCatalog,Delete}
+import models.ArticlesActor.{Delete, Init, Query, QueryAction, QueryCatalog, QueryWithCatalog, QueryWithUid, ReadCount, ReplyCount, Retrieve, SmileCount}
 
 object ArticlesActor {
 

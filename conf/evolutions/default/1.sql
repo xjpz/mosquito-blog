@@ -93,21 +93,7 @@ CREATE TABLE `reply2article` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-#留言
-CREATE TABLE `message` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL COMMENT '留言内容',
-  `uid` int(10) NOT NULL DEFAULT '0' COMMENT '留言用户id',
-  `name` varchar(100) NOT NULL COMMENT '用户名',
-  `init_time` int(10) unsigned DEFAULT '0',
-  `update_time` int(10) unsigned DEFAULT '0',
-  `tombstone` tinyint(1) unsigned DEFAULT '0' COMMENT '假删除字段',
-  PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-#每日心情
-CREATE TABLE `mood` (
+CREATE TABLE `news2mood` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL COMMENT '内容',
   `uid` int(10) NOT NULL COMMENT '用户id',
@@ -117,7 +103,7 @@ CREATE TABLE `mood` (
   `tombstone` tinyint(1) unsigned DEFAULT '0' COMMENT '假删除字段',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 #友情链接
 CREATE TABLE `link` (
