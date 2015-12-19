@@ -245,7 +245,7 @@
                 obj.src="@routes.Captcha.getCaptcha?id="+Math.random();
         }
 
-            $(document).keyup(function(event){
+            $(document).keydown(function(event){
                 if(event.keyCode ==13){
                     if($('#web_qr_login').css("display")=="block"){
                         $("#butt_login").trigger("click");
