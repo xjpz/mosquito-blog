@@ -66,19 +66,19 @@ GET           /blog/remove/cache/:action            controllers.Application.remo
 #############
 # User APIs #
 #############
-PUT           /blog/user                            controllers.UserCtrl.init
-GET           /blog/user/:action                    controllers.UserCtrl.query(action:String)
-GET           /blog/user/uid/:uid                   controllers.UserCtrl.retrieve(uid:Long)
-GET           /blog/user/name/:name                 controllers.UserCtrl.findByName(name:String)
-GET           /blog/user/email/:email               controllers.UserCtrl.findByEmail(email:String)
-GET           /blog/user/phone/:phone               controllers.UserCtrl.findByPhone(phone:String)
-PATCH         /blog/user/passwd                     controllers.UserCtrl.updatePassWord
-GET           /blog/user/isexists/:uname            controllers.UserCtrl.userIsExists(uname:String)
-GET           /blog/user/query/active               controllers.UserCtrl.queryActiveUser(page: Option[Int], size: Option[Int])
-PUT           /blog/user/connect                    controllers.UserCtrl.addConnUser
+#PUT           /blog/user                            controllers.UserCtrl.init
+#GET           /blog/user/:action                    controllers.UserCtrl.query(action:String)
+#GET           /blog/user/uid/:uid                   controllers.UserCtrl.retrieve(uid:Long)
+#GET           /blog/user/name/:name                 controllers.UserCtrl.findByName(name:String)
+#GET           /blog/user/email/:email               controllers.UserCtrl.findByEmail(email:String)
+#GET           /blog/user/phone/:phone               controllers.UserCtrl.findByPhone(phone:String)
+#PATCH         /blog/user/passwd                     controllers.UserCtrl.updatePassWord
+#GET           /blog/user/isexists/:uname            controllers.UserCtrl.userIsExists(uname:String)
+#GET           /blog/user/query/active               controllers.UserCtrl.queryActiveUser(page: Option[Int], size: Option[Int])
+#PUT           /blog/user/connect                    controllers.UserCtrl.addConnUser
 
 #UserInfo
-PUT           /blog/userinfo                        controllers.UserInfoCtrl.init
+#PUT           /blog/userinfo                        controllers.UserInfoCtrl.init
 
 #UCustom
 PUT           /blog/custom                          controllers.UcustomCtrl.init
@@ -138,10 +138,6 @@ PUT           /link                                 controllers.LinkCtrl.init
 DELETE        /link/:lid                            controllers.LinkCtrl.remove(lid:Long)
 PATCH         /link                                 controllers.LinkCtrl.update
 
-#simditor
-GET           /to/simditor                          controllers.SimditorCtrl.toEdit
-POST          /simditor                             controllers.SimditorCtrl.text2Html
-
 #upload
 GET           /to/upload                            controllers.UploadCtrl.toUpload
 POST          /upload                               controllers.UploadCtrl.upload()
@@ -151,8 +147,8 @@ POST          /upload                               controllers.UploadCtrl.uploa
 #GET           /download/:path                        controllers.UploadCtrl.download(path:String)
 
 #mail
-PUT           /mail/send                            controllers.MailCtrl.send
-PUT           /mail/recv                            controllers.MailCtrl.recv
+#PUT           /mail/send                            controllers.MailCtrl.send
+#PUT           /mail/recv                            controllers.MailCtrl.recv
 
 #captcha
 GET           /captcha/new                          controllers.Captcha.getCaptcha
@@ -165,7 +161,3 @@ GET           /blog/error/:code                     controllers.Application.erro
 # Test APIs #
 #############
 
-#GET           /test                                  controllers.TestCtrl.test1
-#GET           /test2                                 controllers.TestCtrl.test2
-#GET           /test3                                 controllers.TestCtrl.test3
-#GET           /test4/:start/:end                     controllers.TestCtrl.test4(start:Int,end:Int)

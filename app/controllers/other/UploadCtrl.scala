@@ -6,6 +6,7 @@ import play.api.Play.current
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
+import utils.MD5
 
 import scala.collection.mutable.ListBuffer
 
@@ -17,14 +18,14 @@ object UploadCtrl extends Controller{
 	}
 
 	def upload = Action(parse.multipartFormData) { request =>
-		request.body.file("fileDataFileName").map { picture =>
+		request.body.file("fileDataFileName").map { file =>
 
-			val filename = picture.filename
-			val contentType = picture.contentType
-			println(Play.current.path)
-			picture.ref.moveTo(new File(Play.current.path+s"/res/$filename"))
-			//此处是存储在项目根目录下的public目录下,不能以/(如:/public)开头
-			Ok(Json.obj("success"->"true","file_path" -> s"http://${request.host}/resource/res/$filename"))
+			val filename = file.filename
+			val fileType = filename.substring(filename.lastIndexOf("."))
+			val fileNameFinal = MD5.hash(file.ref.file.toString)+fileType
+			file.ref.moveTo(new File(Play.current.path+s"/res/$fileNameFinal"))
+
+			Ok(Json.obj("success"->"true","file_path" -> s"http://${request.host}/resource/res/$fileNameFinal"))
 		}.getOrElse {
 			Ok(Json.obj("success"->"false","message" ->"fail","file_path" -> ""))
 		}

@@ -1,5 +1,7 @@
 /*//发表部分*/
-
+.blogbody {
+	width: 100%;
+}
 
   #respond {
 	  font-size: 18px;
