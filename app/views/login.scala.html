@@ -10,9 +10,10 @@
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
             <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-        <script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/login.js")"></script>
 
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/login.css")" >
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
 
@@ -107,7 +108,7 @@
                                                 </div>
                                             </div>
 
-                                            <div style="padding-left : 50px ; margin-top : 20px ;"><input type="button" value="登 录" onclick="check_login()" style="width : 135px ;" class="button_blue" id="butt_login"/><a href="@routes.Application.toResetPassword()" class="zcxy" target="_blank">忘记密码</a>
+                                            <div style="padding-left : 50px ; margin-top : 20px ;"><input type="button" value="登 录" onclick="check_login()" style="width : 135px ;" class="button_blue" id="butt_login"/><a href="@routes.Application.toResetPassword()" class="zcxy">忘记密码</a>
                                                 <br>
                                                 <div id="other_login" class="other_login" >
                                                     其他账户登录：<a href="https://graph.qq.com/oauth/show?which=ConfirmPage&display=pc&client_id=101253933&response_type=token&scope=all&redirect_uri=http://xjpz.me/blog/test/qcback&scope=get_user_info"><img src="@routes.Assets.versioned("images/Connect_logo_1.png")">&nbsp;QQ登录</a>

@@ -148,7 +148,7 @@ a:link,a:visited{
 
 .blogbody {
     float:left;
-    width: 72%;
+    width: 71.5%;
     line-height: 1.8;
 }
 
@@ -157,7 +157,7 @@ a:link,a:visited{
     width: 28%;
     text-align:center;
     background-color:#F9F9F9;
-
+    margin-left: 0.4%;
 }
 
 .weiboIframe{
@@ -208,7 +208,7 @@ div#blogs {
     /*margin-bottom:8px;*/
     width:auto;
     overflow:hidden;
-   /*// -moz-box-shadow:5px 5px 7px rgb(33,33,33);*/
+    /*// -moz-box-shadow:5px 5px 7px rgb(33,33,33);*/
     /*//-webkit-box-shadow:5px 5px 7px rgb(33,33,1);*/
     /*box-shadow:5px 5px 7px rgb(33,33,1);*/
     /*-moz-transition: -moz-transform 0.25s;*/
@@ -217,7 +217,7 @@ div#blogs {
 }
 
 .catListTag h3{
-    line-height: 40px; color: #38485A; font-size: 12px; border-bottom: 1px solid #E6E6E6; height: 40px;
+    line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px;
 }
 
 .catListTag li:hover,ul li:focus{
@@ -240,6 +240,7 @@ div#blogs {
 .module-list ul li {
     height: 40px;
     line-height: 40px;
+    font-size: 13px;
 }
 .reader-ul li{
     height: 30px !important;
@@ -287,7 +288,7 @@ a {
 .links h3 span a { color: #999; padding: 0 5px; }
 .links h3 span a:hover { color: #F60; text-decoration: underline; }
 .links ul { background: #f9f9f9; padding: 10px; overflow: hidden; border: #e9e9e9 1px solid ;list-style:none;}
-.links ul li { float: left; padding: 5px 8px; }
+.links ul li { float: left; padding: 5px 8px; font-size: 13px;}
 .links ul li a:hover { color: #000; }
 
 #link_top {
