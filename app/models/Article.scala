@@ -12,8 +12,8 @@ import scala.language.postfixOps
 import scala.slick.driver.MySQLDriver.simple._
 
 /**
- * Created by xjpz_wz on 2015/7/16.
- */
+  * Created by xjpz_wz on 2015/7/16.
+  */
 case class Article(
                       var title: Option[String] = None,
                       var content: Option[String] = None,
@@ -29,7 +29,7 @@ case class Article(
                       var updtime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                       var tombstone: Option[Int] = Option(0),
                       var aid: Option[Long] = None
-                      )
+                  )
 
 case class ArticleWrapper(
                              val title: Option[String] = None,
@@ -46,18 +46,18 @@ case class ArticleWrapper(
                              val updtime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                              val tombstone: Option[Int] = Option(0),
                              val aid: Option[Long] = None
-                             )
+                         )
 
 
 case class ArticleListWrapper(
                                  val articles: Option[List[ArticleWrapper]],
                                  val count: Option[Int]
-                                 )
+                             )
 
 case class CatalogList(
                           val catalogs: Option[List[String]],
                           val count: Option[Int]
-                          )
+                      )
 
 class Articles(tag: Tag)
     extends Table[Article](tag, "article") {
@@ -80,7 +80,7 @@ class Articles(tag: Tag)
 
     def smile = column[Option[Int]]("smile")
 
-	def reply = column[Option[Int]]("reply")
+    def reply = column[Option[Int]]("reply")
 
     def descrp = column[Option[String]]("descrp")
 
@@ -90,7 +90,7 @@ class Articles(tag: Tag)
 
     def updtime = column[Option[Long]]("update_time")
 
-    def * = (title, content, catalog, uid, status, atype, read, smile,reply, descrp, inittime, updtime, tombstone, aid) <>(Article.tupled, Article.unapply)
+    def * = (title, content, catalog, uid, status, atype, read, smile, reply, descrp, inittime, updtime, tombstone, aid) <>(Article.tupled, Article.unapply)
 }
 
 trait ArticleJSONTrait {
@@ -104,9 +104,9 @@ object Articles extends ArticleJSONTrait {
     val table = TableQuery[Articles]
 
     //Cache
-	private lazy val CacheTime = 3600
+    private lazy val CacheTime = 3600
 
-    private lazy  val articleListKey = "articleList"
+    private lazy val articleListKey = "articleList"
     private lazy val articleUIDlistKey = "articleUIDlist"
     private lazy val articleCatalogListKey = "articleCatalogList"
     private lazy val articleActionRankKey = "articleActionRank:"
@@ -172,7 +172,7 @@ object Articles extends ArticleJSONTrait {
             article.atype,
             article.read,
             article.smile,
-	        article.reply,
+            article.reply,
             article.descrp,
             article.inittime,
             article.updtime,
@@ -191,7 +191,7 @@ object Articles extends ArticleJSONTrait {
         ret = Option(wrap(article))
 
         Cache.remove(articleListKey)
-	    Cache.remove(articleUIDlistKey)
+        Cache.remove(articleUIDlistKey)
         Cache.remove(articleCatalogListKey)
 
         ret
@@ -240,42 +240,37 @@ object Articles extends ArticleJSONTrait {
                 Option(articleListTOWrapper.slice(size * page, size * page + size)),
                 Option(count))
 
-            Cache.set(articleListKey, articleListWrapperCache,CacheTime)
+            Cache.set(articleListKey, articleListWrapperCache, CacheTime)
 
             ret = Option(articleListWrapperRet)
         }
-
         ret
     }
 
-	def queryWithUid(uid: Long,page: Int, size: Int)
-	                (implicit session: Session): Option[ArticleListWrapper] = {
-		var ret = None: Option[ArticleListWrapper]
+    def queryWithUid(uid: Long, page: Int, size: Int)
+                        (implicit session: Session): Option[ArticleListWrapper] = {
+        var ret = None: Option[ArticleListWrapper]
 
-//		val articleUIDListWrapperCache = Cache.getAs[ArticleListWrapper](articleUIDlistKey)
-//		if (articleUIDListWrapperCache.isDefined) {
-//			ret = articleUIDListWrapperCache
-//		} else {
-			val count = table.filter(_.uid === uid).filter(_.tombstone === 0).length.run
+        val articleListWrapper = Cache.getOrElse[ArticleListWrapper](articleUIDlistKey) {
+            val count = table.filter(_.uid === uid).filter(_.tombstone === 0).length.run
 
-			val queryArticleList = table.filter(_.uid === uid).filter(_.tombstone === 0)
-				.sortBy(_.aid.desc).list
-			val articleListTOWrapper = queryArticleList.map(
-				(article) => wrapForQuery(article)
-			)
-			val articleListWrapper = ArticleListWrapper(
-				Option(articleListTOWrapper),
-				Option(count))
+            val queryArticleList = table.filter(_.uid === uid).filter(_.tombstone === 0)
+                .sortBy(_.aid.desc).list
+            val articleListTOWrapper = queryArticleList.map(
+                (article) => wrapForQuery(article)
+            )
+            val articleListWrapper = ArticleListWrapper(
+                Option(articleListTOWrapper),
+                Option(count))
+            Cache.set(articleUIDlistKey,articleListWrapper,CacheTime)
+            articleListWrapper
+        }
+        ret = Option(articleListWrapper)
+        ret
+    }
 
-//			Cache.set(articleUIDlistKey, articleListWrapper,CacheTime)
-
-			ret = Option(articleListWrapper)
-//		}
-		ret
-	}
-
-    def queryAction(action:String,page: Int, size: Int)
-                          (implicit session: Session): Option[ArticleListWrapper] = {
+    def queryAction(action: String, page: Int, size: Int)
+                   (implicit session: Session): Option[ArticleListWrapper] = {
         var ret = None: Option[ArticleListWrapper]
 
         val count = table.filter(_.tombstone === 0).length.run
@@ -283,49 +278,49 @@ object Articles extends ArticleJSONTrait {
         var articleListFinal = new ListBuffer[Article]()
         action match {
             case "read" =>
-                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey+"read")
-                if(queryArticleReadRankCacheOpt.isDefined){
+                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey + "read")
+                if (queryArticleReadRankCacheOpt.isDefined) {
                     articleListFinal ++= queryArticleReadRankCacheOpt.get
-                }else{
+                } else {
                     val queryArticleList = table.filter(_.tombstone === 0).sortBy(_.aid.desc)
                         .sortBy(_.read.desc).drop(page * size).take(size).list
                     articleListFinal ++= queryArticleList
 
-                    Cache.set(articleActionRankKey+"read",queryArticleList,3600)
+                    Cache.set(articleActionRankKey + "read", queryArticleList, 3600)
                 }
             case "reply" =>
-                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey+"reply")
-                if(queryArticleReadRankCacheOpt.isDefined){
+                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey + "reply")
+                if (queryArticleReadRankCacheOpt.isDefined) {
                     articleListFinal ++= queryArticleReadRankCacheOpt.get
-                }else{
+                } else {
                     val queryArticleList = table.filter(_.tombstone === 0).sortBy(_.aid.desc)
                         .sortBy(_.reply.desc).drop(page * size).take(size).list
                     articleListFinal ++= queryArticleList
 
-                    Cache.set(articleActionRankKey+"reply",queryArticleList,3600)
+                    Cache.set(articleActionRankKey + "reply", queryArticleList, 3600)
                 }
             case "smile" =>
-                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey+"smile")
-                if(queryArticleReadRankCacheOpt.isDefined){
+                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey + "smile")
+                if (queryArticleReadRankCacheOpt.isDefined) {
                     articleListFinal ++= queryArticleReadRankCacheOpt.get
-                }else{
+                } else {
                     val queryArticleList = table.filter(_.tombstone === 0).sortBy(_.aid.desc)
                         .sortBy(_.smile.desc).drop(page * size).take(size).list
                     articleListFinal ++= queryArticleList
 
-                    Cache.set(articleActionRankKey+"smile",queryArticleList,3600)
+                    Cache.set(articleActionRankKey + "smile", queryArticleList, 3600)
                 }
             case _ =>
-                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey+"default")
+                val queryArticleReadRankCacheOpt = Cache.getAs[List[Article]](articleActionRankKey + "default")
 
-                if(queryArticleReadRankCacheOpt.isDefined){
+                if (queryArticleReadRankCacheOpt.isDefined) {
                     articleListFinal ++= queryArticleReadRankCacheOpt.get
-                }else{
+                } else {
                     val queryArticleList = table.filter(_.tombstone === 0)
                         .sortBy(_.aid.desc).drop(page * size).take(size).list
                     articleListFinal ++= queryArticleList
 
-                    Cache.set(articleActionRankKey+"default",queryArticleList,3600)
+                    Cache.set(articleActionRankKey + "default", queryArticleList, 3600)
                 }
         }
         val articleListTOWrapper = articleListFinal.toList.map(
@@ -355,10 +350,10 @@ object Articles extends ArticleJSONTrait {
             Cache.remove(articleListKey)
             Cache.remove(articleUIDlistKey)
 
-            Cache.remove(articleActionRankKey+"read")
-            Cache.remove(articleActionRankKey+"smile")
-            Cache.remove(articleActionRankKey+"reply")
-            Cache.remove(articleActionRankKey+"default")
+            Cache.remove(articleActionRankKey + "read")
+            Cache.remove(articleActionRankKey + "smile")
+            Cache.remove(articleActionRankKey + "reply")
+            Cache.remove(articleActionRankKey + "default")
         }
         ret
     }
@@ -379,46 +374,46 @@ object Articles extends ArticleJSONTrait {
             Cache.remove(articleListKey)
             Cache.remove(articleUIDlistKey)
 
-            Cache.remove(articleActionRankKey+"read")
-            Cache.remove(articleActionRankKey+"smile")
-            Cache.remove(articleActionRankKey+"reply")
-            Cache.remove(articleActionRankKey+"default")
+            Cache.remove(articleActionRankKey + "read")
+            Cache.remove(articleActionRankKey + "smile")
+            Cache.remove(articleActionRankKey + "reply")
+            Cache.remove(articleActionRankKey + "default")
         }
         ret
     }
 
-	def replyCount(aid:Long)
-	              (implicit session: Session): Boolean = {
-		var ret = false
-		val updtime = Option(System.currentTimeMillis() / 1000L)
-		val articleOpt = table.filter(_.aid === aid)
-			.filter(_.tombstone === 0).take(1).firstOption
-		if (articleOpt.isDefined) {
-			val article = articleOpt.get
-			val reply = article.reply.get
-			val updateReply = reply + 1
-			table.filter(_.aid === aid).filter(_.tombstone === 0)
-				.map(row => (row.reply, row.updtime)).update((Option(updateReply), updtime))
-			ret = true
+    def replyCount(aid: Long)
+                  (implicit session: Session): Boolean = {
+        var ret = false
+        val updtime = Option(System.currentTimeMillis() / 1000L)
+        val articleOpt = table.filter(_.aid === aid)
+            .filter(_.tombstone === 0).take(1).firstOption
+        if (articleOpt.isDefined) {
+            val article = articleOpt.get
+            val reply = article.reply.get
+            val updateReply = reply + 1
+            table.filter(_.aid === aid).filter(_.tombstone === 0)
+                .map(row => (row.reply, row.updtime)).update((Option(updateReply), updtime))
+            ret = true
             Cache.remove(articleListKey)
             Cache.remove(articleUIDlistKey)
 
-            Cache.remove(articleActionRankKey+"read")
-            Cache.remove(articleActionRankKey+"smile")
-            Cache.remove(articleActionRankKey+"reply")
-            Cache.remove(articleActionRankKey+"default")
-		}
-		ret
-	}
+            Cache.remove(articleActionRankKey + "read")
+            Cache.remove(articleActionRankKey + "smile")
+            Cache.remove(articleActionRankKey + "reply")
+            Cache.remove(articleActionRankKey + "default")
+        }
+        ret
+    }
 
-    def queryWithCatalog(catalog:String,page:Int,size:Int)
-                        (implicit session: Session):Option[ArticleListWrapper] = {
+    def queryWithCatalog(catalog: String, page: Int, size: Int)
+                        (implicit session: Session): Option[ArticleListWrapper] = {
         var ret = None: Option[ArticleListWrapper]
 
-        val count = table.filter(_.catalog like "%"+ catalog + "%")
+        val count = table.filter(_.catalog like "%" + catalog + "%")
             .filter(_.tombstone === 0).length.run
 
-        val queryArticleList = table.filter(_.catalog like "%"+ catalog + "%")
+        val queryArticleList = table.filter(_.catalog like "%" + catalog + "%")
             .filter(_.tombstone === 0).sortBy(_.aid.desc).drop(page * size).take(size).list
 
         val articleListTOWrapper = queryArticleList.map(
@@ -436,15 +431,12 @@ object Articles extends ArticleJSONTrait {
     def queryCatalog(implicit session: Session): Option[CatalogList] = {
         var ret = None: Option[CatalogList]
 
-        val queryCatalogCacheOpt = Cache.getAs[CatalogList](articleCatalogListKey)
-        if(queryCatalogCacheOpt.isDefined){
-            ret = Option(queryCatalogCacheOpt.get)
-        }else{
+        val queryCatalog = Cache.getOrElse[CatalogList](articleCatalogListKey){
             val catalogItemStr = new ListBuffer[String]
             val queryCatalogList = table.filter(_.tombstone === 0).map(_.catalog).run
             if (queryCatalogList.nonEmpty) {
                 for (item <- queryCatalogList) {
-                    if(item.isDefined){
+                    if (item.isDefined) {
                         if (item.getOrElse("").contains(",")) {
                             catalogItemStr ++= item.get.split(",").toList
                         } else {
@@ -452,14 +444,15 @@ object Articles extends ArticleJSONTrait {
                         }
                     }
                 }
-                val catalogList = CatalogList(
-                    Option(catalogItemStr.toList),
-                    Option(catalogItemStr.length)
-                )
-                ret = Option(catalogList)
-                Cache.set(articleCatalogListKey,catalogList,CacheTime)
             }
+            val catalogList = CatalogList(
+                Option(catalogItemStr.toList),
+                Option(catalogItemStr.length)
+            )
+            Cache.set(articleCatalogListKey, catalogList, CacheTime)
+            catalogList
         }
+        ret = Option(queryCatalog)
         ret
     }
 
@@ -471,12 +464,12 @@ object Articles extends ArticleJSONTrait {
 
         val articleOpt = table.filter(_.aid === article.aid).filter(_.uid === article.uid)
             .filter(_.tombstone === 0).take(1).firstOption
-        if(articleOpt.isDefined){
+        if (articleOpt.isDefined) {
             val queryArticle = articleOpt.get
 
             table.filter(_.aid === article.aid).filter(_.uid === article.uid).filter(_.tombstone === 0)
-                .map(row => (row.title,row.content,row.catalog,row.status, row.updtime))
-                .update(article.title,article.content,article.catalog,article.status,updtime)
+                .map(row => (row.title, row.content, row.catalog, row.status, row.updtime))
+                .update(article.title, article.content, article.catalog, article.status, updtime)
 
             queryArticle.title = article.title
             queryArticle.content = article.content
@@ -489,7 +482,7 @@ object Articles extends ArticleJSONTrait {
         ret
     }
 
-    def delete(aid:Long,uid:Long)(implicit session: Session): Option[ArticleWrapper] = {
+    def delete(aid: Long, uid: Long)(implicit session: Session): Option[ArticleWrapper] = {
         var ret = None: Option[ArticleWrapper]
 
         val updtime = Option(System.currentTimeMillis() / 1000L)
@@ -497,13 +490,13 @@ object Articles extends ArticleJSONTrait {
         val articleOpt = table.filter(_.aid === aid).filter(_.uid === uid)
             .filter(_.tombstone === 0).take(1).firstOption
 
-        if(articleOpt.isDefined){
+        if (articleOpt.isDefined) {
             val queryArticle = articleOpt.get
 
-            if(Option(aid) == queryArticle.aid && Option(uid) == queryArticle.uid){
+            if (Option(aid) == queryArticle.aid && Option(uid) == queryArticle.uid) {
                 table.filter(_.aid === aid).filter(_.uid === uid).filter(_.tombstone === 0)
                     .map(row => (row.tombstone, row.updtime))
-                    .update(Option(1),updtime)
+                    .update(Option(1), updtime)
 
                 queryArticle.tombstone = Option(1)
                 queryArticle.updtime = updtime
@@ -527,21 +520,21 @@ object ArticlesActor {
 
     case class SmileCount(db: Database, aid: Long)
 
-	case class ReplyCount(db: Database, aid: Long)
+    case class ReplyCount(db: Database, aid: Long)
 
     case class Query(db: Database, page: Int, size: Int)
 
-    case class QueryWithUid(db: Database, uid: Long,page: Int, size: Int)
+    case class QueryWithUid(db: Database, uid: Long, page: Int, size: Int)
 
     case class QueryCatalog(db: Database)
 
-    case class QueryAction(db: Database,action:String, page: Int, size: Int)
+    case class QueryAction(db: Database, action: String, page: Int, size: Int)
 
-    case class QueryWithCatalog(db:Database,catalog:String,page: Int, size: Int)
+    case class QueryWithCatalog(db: Database, catalog: String, page: Int, size: Int)
 
-    case class Update(db:Database,article: Article)
+    case class Update(db: Database, article: Article)
 
-    case class Delete(db:Database,aid:Long,uid:Long)
+    case class Delete(db: Database, aid: Long, uid: Long)
 
 }
 
@@ -573,16 +566,16 @@ class ArticlesActor extends Actor {
             }
 
         case ReplyCount(db: Database, aid: Long) =>
-	        db.withSession { implicit session =>
-		        sender ! models.Articles.replyCount(aid)
-	        }
-
-        case QueryWithUid(db: Database, uid: Long,page: Int, size: Int) =>
             db.withSession { implicit session =>
-                sender ! models.Articles.queryWithUid(uid,page, size)
+                sender ! models.Articles.replyCount(aid)
             }
 
-        case QueryAction(db: Database,action:String, page: Int, size: Int) =>
+        case QueryWithUid(db: Database, uid: Long, page: Int, size: Int) =>
+            db.withSession { implicit session =>
+                sender ! models.Articles.queryWithUid(uid, page, size)
+            }
+
+        case QueryAction(db: Database, action: String, page: Int, size: Int) =>
             db.withSession { implicit session =>
                 sender ! models.Articles.queryAction(action, page: Int, size: Int)
             }
@@ -592,19 +585,19 @@ class ArticlesActor extends Actor {
                 sender ! models.Articles.queryCatalog
             }
 
-        case QueryWithCatalog(db:Database,catalog:String,page:Int, size: Int) =>
-            db.withSession{ implicit session =>
-                sender ! models.Articles.queryWithCatalog(catalog,page,size)
+        case QueryWithCatalog(db: Database, catalog: String, page: Int, size: Int) =>
+            db.withSession { implicit session =>
+                sender ! models.Articles.queryWithCatalog(catalog, page, size)
             }
 
-        case Update(db:Database,article:Article) =>
-            db.withSession{ implicit session =>
+        case Update(db: Database, article: Article) =>
+            db.withSession { implicit session =>
                 sender ! models.Articles.update(article)
             }
 
-        case Delete(db:Database,aid:Long,uid:Long) =>
-            db.withSession{ implicit session =>
-                sender ! models.Articles.delete(aid,uid)
+        case Delete(db: Database, aid: Long, uid: Long) =>
+            db.withSession { implicit session =>
+                sender ! models.Articles.delete(aid, uid)
             }
 
     }
