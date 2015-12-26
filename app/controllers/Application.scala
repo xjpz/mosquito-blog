@@ -123,7 +123,9 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
     //登出
     def logOut = Action { request =>
-        Ok(views.html.index.render(0, 0)).withSession(request.session - "uid")
+        val returnUrl = request.getQueryString("url")
+        Redirect(returnUrl.getOrElse("/")).withSession(request.session - "uid")
+
     }
 
     //去修改密码页面
