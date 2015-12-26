@@ -13,10 +13,6 @@ import scala.collection.mutable.ListBuffer
 object UploadCtrl extends Controller{
 	val fileNameListBuffer = new ListBuffer[String]
 
-	def toUpload = Action{
-		Ok(views.html.upload())
-	}
-
 	def upload = Action(parse.multipartFormData) { request =>
 		request.body.file("fileDataFileName").map { file =>
 
