@@ -21,7 +21,10 @@
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article.css")" >
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
 
-            <!-- 新 Bootstrap 核心 CSS 文件 -->
+            <!-- qq登录-->
+        <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101253933" data-redirecturi="http://xjpz.me/blog/test/qcback" charset="utf-8"></script>
+
+        <!-- 新 Bootstrap 核心 CSS 文件 -->
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
             <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
@@ -152,12 +155,10 @@
                             <b>
                                 <a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
                                 <a href="javascript:" onclick="toLogin()">&raquo;去注册</a> &nbsp;
-                                @*<span id="qqLoginBtn"></span>*@
-                                @*<script type="text/javascript">*@
-                                                        @*QC.Login({*@
-                                                           @*btnId:"qqLoginBtn"    //插入按钮的节点id*@
-                                                    @*});*@
-                                                    @*</script>*@
+
+                                <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
+                                    <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
+
                             </b>
                         </div>
 

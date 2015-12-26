@@ -32,8 +32,16 @@
                             QC.Login.getMe(function(openId, accessToken){
                                 $.post('@routes.Application.addConnUserForm()',{name:s.data.nickname,openid:openId,otype:1,token:accessToken},function(data,status){
                                     if(status=="success"){
-                                        alert(s.data.nickname+"恭喜你,登录成功!");
-                                        location.href = "/";
+                                        try {
+                                            if (window.opener.location.href.indexOf("xjpz.me/blog/to/login") >= 0)
+                                                window.opener.location.href = "/";
+                                            else
+                                                window.opener.location.reload(true);//强制刷新
+                                        } catch (e) {
+                                            alert("自动刷新或跳转失败~");
+                                            location.href = "/";
+                                        }
+                                        window.close();
                                     }else{
                                         alert("获取用户信息成功！登录失败！");
                                         location.href = "/blog/to/login";
