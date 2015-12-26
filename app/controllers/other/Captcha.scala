@@ -22,17 +22,4 @@ object Captcha extends Controller {
 		}
 	}
 
-	def getCaptchaNew = Action {
-		implicit request => {
-			val captcha = CaptchaInfo.create()
-			Ok.chunked(Enumerator.fromStream(captcha.value)).as("image/png")
-				.withSession(request.session + ("captcha" -> captcha.text))
-		}
-	}
-
-    def getCaptchaText = Action { request =>
-        val captchaText = request.session.get("captcha").get
-        Ok(captchaText)
-    }
-
 }

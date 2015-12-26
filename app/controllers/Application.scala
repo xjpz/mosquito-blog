@@ -377,47 +377,53 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         var ret = false
         var resultAid = 0L
 
-        val aidListBuff = reqJson.get("aid")
-        val nameListBuffer = reqJson.get("name")
-        val emailListBuffer = reqJson.get("email")
-        val urlListBuffer = reqJson.get("url")
-        val contentListBuff = reqJson.get("content")
-        val quoteListBuffer = reqJson.get("quote")
+        val captchaText = request.session.get("captcha")
+        val captchaBuff = reqJson.get("captcha")
+        request.session.-("captcha")
 
-        if (aidListBuff.nonEmpty && contentListBuff.nonEmpty &&
-            quoteListBuffer.nonEmpty) {
+        if(uid !=0L || Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText ){
 
-            val name = if (nameListBuffer.isEmpty) null else nameListBuffer.head
-            val url = if (urlListBuffer.isEmpty) null else urlListBuffer.head
-            val email = if (emailListBuffer.isEmpty) null else emailListBuffer.head
+            val aidListBuff = reqJson.get("aid")
+            val nameListBuffer = reqJson.get("name")
+            val emailListBuffer = reqJson.get("email")
+            val urlListBuffer = reqJson.get("url")
+            val contentListBuff = reqJson.get("content")
+            val quoteListBuffer = reqJson.get("quote")
 
-            val aid = aidListBuff.head
-            val content = contentListBuff.head
-            val quote = quoteListBuffer.head
-            
-            val reply = Reply(
-                Option(aid.toLong),
-                Option(uid),
-                Option(name),
-                Option(url),
-                Option(email),
-                Option(content),
-                Option(quote.toLong)
-            )
+            if (aidListBuff.nonEmpty && contentListBuff.nonEmpty && quoteListBuffer.nonEmpty) {
 
-            val future = reply2ArticleActor ? ReplysActor.Init(Global.db, reply)
-            val replyOpt = Await.result(future, timeout.duration)
-                .asInstanceOf[Option[ReplyWrapper]]
+                val name = if (nameListBuffer.isEmpty) null else nameListBuffer.head
+                val url = if (urlListBuffer.isEmpty) null else urlListBuffer.head
+                val email = if (emailListBuffer.isEmpty) null else emailListBuffer.head
+                val aid = aidListBuff.head
+                val content = contentListBuff.head
+                val quote = quoteListBuffer.head
+                val contentFormat = if(quote!="0") content.substring(content.indexOf(":")+1) else content
 
-            if (replyOpt.isDefined) {
-                ret = true
-                resultAid = aid.toLong
+                val reply = Reply(
+                    Option(aid.toLong),
+                    Option(uid),
+                    Option(name),
+                    Option(url),
+                    Option(email),
+                    Option(contentFormat),
+                    Option(quote.toLong)
+                )
+
+                val future = reply2ArticleActor ? ReplysActor.Init(Global.db, reply)
+                val replyOpt = Await.result(future, timeout.duration)
+                    .asInstanceOf[Option[ReplyWrapper]]
+
+                if (replyOpt.isDefined) {
+                    ret = true
+                    resultAid = aid.toLong
+                }
             }
         }
         if (ret) {
             Redirect("/blog/to/article/"+resultAid+"#article_comment")
         } else {
-            Redirect("/")
+            InternalServerError(views.html.error50x("评论失败！请重试，如无法解决请联系管理员。"))
         }
     }
 
@@ -437,52 +443,59 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val reqJson = request.body.asFormUrlEncoded
 
         val uid = request.session.get("uid").getOrElse("0").toLong
-
         var ret = false
         var resultAid = 0L
 
-        val aidListBuff = reqJson.get("aid")
-        val nameListBuffer = reqJson.get("name")
-        val emailListBuffer = reqJson.get("email")
-        val urlListBuffer = reqJson.get("url")
-        val contentListBuff = reqJson.get("content")
-        val quoteListBuffer = reqJson.get("quote")
+        val captchaText = request.session.get("captcha")
+        val captchaBuff = reqJson.get("captcha")
+        request.session.-("captcha")
 
+        if(uid !=0L || Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText ){
+            val aidListBuff = reqJson.get("aid")
+            val nameListBuffer = reqJson.get("name")
+            val emailListBuffer = reqJson.get("email")
+            val urlListBuffer = reqJson.get("url")
+            val contentListBuff = reqJson.get("content")
+            val quoteListBuffer = reqJson.get("quote")
 
-        if (aidListBuff.nonEmpty && contentListBuff.nonEmpty &&
-            quoteListBuffer.nonEmpty) {
+            if (aidListBuff.nonEmpty && contentListBuff.nonEmpty &&
+                quoteListBuffer.nonEmpty) {
 
-            val name = if (nameListBuffer.isEmpty) null else nameListBuffer.head
-            val url = if (urlListBuffer.isEmpty) null else urlListBuffer.head
-            val email = if (emailListBuffer.isEmpty) null else emailListBuffer.head
+                val name = if (nameListBuffer.isEmpty) null else nameListBuffer.head
+                val url = if (urlListBuffer.isEmpty) null else urlListBuffer.head
+                val email = if (emailListBuffer.isEmpty) null else emailListBuffer.head
 
-            val aid = aidListBuff.head
-            val content = contentListBuff.head
-            val quote = quoteListBuffer.head
+                val aid = aidListBuff.head
+                val content = contentListBuff.head
+                val quote = quoteListBuffer.head
 
-            val reply = Reply(
-                Option(aid.toLong),
-                Option(uid),
-                Option(name),
-                Option(url),
-                Option(email),
-                Option(content),
-                Option(quote.toLong)
-            )
+                val contentFormat = if(quote!="0") content.substring(content.indexOf(":")+1) else content
 
-            val future = reply2MessageActor ? ReplysActor.Init(Global.db, reply)
-            val replyOpt = Await.result(future, timeout.duration)
-                .asInstanceOf[Option[ReplyWrapper]]
+                val reply = Reply(
+                    Option(aid.toLong),
+                    Option(uid),
+                    Option(name),
+                    Option(url),
+                    Option(email),
+                    Option(contentFormat),
+                    Option(quote.toLong)
+                )
 
-            if (replyOpt.isDefined) {
-                ret = true
-                resultAid = aid.toLong
+                val future = reply2MessageActor ? ReplysActor.Init(Global.db, reply)
+                val replyOpt = Await.result(future, timeout.duration)
+                    .asInstanceOf[Option[ReplyWrapper]]
+
+                if (replyOpt.isDefined) {
+                    ret = true
+                    resultAid = aid.toLong
+                }
             }
         }
+
         if (ret) {
             Redirect(routes.Application.toMessage())
         } else {
-            Redirect("/")
+            InternalServerError(views.html.error50x("留言失败！请重试，如无法解决请联系管理员。"))
         }
     }
 

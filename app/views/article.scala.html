@@ -21,9 +21,6 @@
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article.css")" >
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
 
-            <!-- qq登录-->
-        <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101253933" data-redirecturi="http://xjpz.me/blog/test/qcback" charset="utf-8"></script>
-
         <!-- 新 Bootstrap 核心 CSS 文件 -->
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
@@ -115,7 +112,7 @@
                                     &nbsp;&nbsp;&nbsp;&nbsp; @queryArticleReplyList(i).content
                                 <br>
                                 <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryArticleReplyList(i).inittime.get * 1000L)) &nbsp;&nbsp;
-                                <a href="#comment" onclick="ClieckReply(@queryArticleReplyList(i).rid.getOrElse(0));">回复</a> &nbsp;|&nbsp;
+                                <a href="#comment" onclick="ClieckReply(@queryArticleReplyList(i).rid.getOrElse(0),'@queryArticleReplyList(i).name');">回复</a> &nbsp;|&nbsp;
                                 <a href="javascript:" onclick="reply_smile_numfun(@queryArticleReplyList(i).rid.getOrElse(0),'reply_smile_num@queryArticleReplyList(i).rid.getOrElse(0)')">赞(<span id="reply_smile_num@queryArticleReplyList(i).rid.getOrElse(0)">@queryArticleReplyList(i).smile.getOrElse(0)</span>)</a> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></div>
 
                                 @defining(controllers.Service.queryArticleReplyChild(queryArticleReplyList(i).rid.getOrElse(0))) { queryArticleReplyChildList =>
@@ -130,7 +127,7 @@
                                                 &nbsp;&nbsp;&nbsp;&nbsp; @queryArticleReplyChildList(j).content
                                             <div>
                                                 @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryArticleReplyChildList(j).inittime.get * 1000L)) &nbsp;&nbsp;
-                                            <a href="#comment" onclick="ClieckReplyChild(@queryArticleReplyChildList(j).rid.getOrElse(0),'@queryArticleReplyChildList(j).name')">回复</a> &nbsp;|&nbsp;
+                                            <a href="#comment" onclick="ClieckReply(@queryArticleReplyChildList(j).rid.getOrElse(0),'@queryArticleReplyChildList(j).name')">回复</a> &nbsp;|&nbsp;
                                             <a href="javascript:" onclick="reply_smile_numfun(@queryArticleReplyChildList(j).rid.getOrElse(0),'reply_smile_num_child@queryArticleReplyChildList(j).rid.getOrElse(0)')" >赞(<span id="reply_smile_num_child@queryArticleReplyChildList(j).rid.getOrElse(0)">@queryArticleReplyChildList(j).smile.getOrElse(0)</span>)</a>
                                             </div>
                                             <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
@@ -169,7 +166,7 @@
                                     value="@(controllers.Service.getUname(uid))" readonly="readonly"
                                 } else {
                                     value=""
-                                } size="25" tabindex="1" class="comment_input" required/></p>
+                                } size="25" tabindex="1" class="comment_input" required/> * </p>
 
                             <div @if(uid != 0) {
                                 style="display: none;" }>
@@ -178,14 +175,48 @@
                                         type="hidden"
                                     } else {
                                         type="email"
-                                    } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/></p>
+                                    } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/> *
+                                </p>
 
                                 <p><label for="url">网址:</label>
                                     <input @if(uid != 0) {
                                         type="hidden"
                                     } else {
                                         type="text"
-                                    } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" /></p>
+                                    } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" />
+                                </p>
+                                <p><label for="url">验证码:</label>
+                                    <input @if(uid != 0) {
+                                        type="hidden"
+                                    } else {
+                                        type="text"
+                                    } name="captcha" id="captcha" value="" size="3" tabindex="3" class="comment_input" required onfocus="showMenu();changeFlag(true);" onblur="changeFlag(false);hideMenu();" onclick="showMenu();" />&nbsp;&nbsp;<a href="javascript:_rvi();document.getElementById('captcha').focus();">换一个</a> *
+                                </p>
+                                <div id="f_vcode_menu" style="position: absolute; z-index: 301; left: 559.75px; top: 2122.33px; display: none;"><img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"> <br>
+                                </div>
+                                <script>
+                                        groupFlag = false;
+                                        function changeFlag(flag){
+                                            groupFlag = flag;
+                                        }
+                                        function showMenu(){
+                                            var left = $("#captcha").position().left;
+                                            var top = $("#captcha").position().top - 40;
+
+                                            $("#f_vcode_menu").css({"left":left,"top":top});
+                                            if($("#f_vcode_menu img").size() == 0){
+                                                $("#f_vcode_menu").prepend('<img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"/> <br/>');
+                                            }
+                                            $("#f_vcode_menu").show();
+                                        }
+                                        function hideMenu(){
+                                            if(!groupFlag)
+                                                $("#f_vcode_menu").hide();
+                                        }
+
+                                        function _rvi(){document.getElementById('img_vcode').src = 'http://xjpz.me/captcha/new?t='+Math.random(1000);}
+
+                                </script>
 
                             </div>
                             <p><textarea name="content" id="comment" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea></p>
@@ -366,15 +397,9 @@
 	}
 
 	//评论
-    function ClieckReply(quote){
-//        textareaContent = top.document.getElementsByName("content");
-//        textareaContent[0].value = "";
-        input=top.document.getElementsByName("quote");
-        input[0].value=quote;
-    }
-    function ClieckReplyChild(quote,name){
-//        textareaContent = top.document.getElementsByName("content");
-//        textareaContent[0].value = "回复 "+name +" :"
+    function ClieckReply(quote,name){
+        textareaContent = top.document.getElementsByName("content");
+        textareaContent[0].value = "回复 "+name +" :";
 
         input=top.document.getElementsByName("quote");
         input[0].value=quote;

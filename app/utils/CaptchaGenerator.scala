@@ -196,7 +196,7 @@ object CaptchaGenerator {
 			val affine = new AffineTransform
 			affine.setToRotation(Math.PI / 4 * random.nextDouble * (if (random.nextBoolean) 1 else -1), (w / verifySize) * i + fontSize / 2, h / 2)
 			g2.setTransform(affine)
-			g2.drawChars(chars, i, 1, ((w - 10) / verifySize) * i + 5, h / 2 + fontSize / 2 - 10)
+			g2.drawChars(chars, i, 1, ((w - 2) / verifySize) * i + 2, h / 2 + fontSize / 2 - 1)
 		}
 
 		g2.dispose()
