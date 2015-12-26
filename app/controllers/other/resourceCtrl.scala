@@ -5,7 +5,7 @@ import java.io.File
 import play.api.mvc.{Action, AnyContent, Controller}
 import play.{Logger, Play}
 
-object resourceCtrl extends Controller{
+object ResourceCtrl extends Controller{
 
 	val AbsolutePath = """^(/|[a-zA-Z]:\\).*""".r
 
@@ -15,7 +15,9 @@ object resourceCtrl extends Controller{
 
 		val fileToServe = rootPath.replace("/","\\") match {              //不知为何，传入的path与系统获取的不一样
 			case AbsolutePath(_) => new File(rootPath, fileUrlDeCode)
-			case _ => new File(Play.application.getFile(rootPath), fileUrlDeCode)
+//			case _ => new File(Play.application.getFile(rootPath), fileUrlDeCode)
+			case _ => new File("/data/resource/" , fileUrlDeCode)
+//			case _ => new File("D:\\mosquito-project\\github\\upload\\" , fileUrlDeCode)
 		}
 
 		if (fileToServe.exists) {
