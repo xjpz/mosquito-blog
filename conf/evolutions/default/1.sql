@@ -29,7 +29,7 @@ CREATE TABLE `article` (
   `title` varchar(100) DEFAULT '' COMMENT '标题',
   `content` text COMMENT '内容',
   `catalog` text COMMENT '标签',
-  `uid` tinyint(1) NOT NULL COMMENT '用户id',
+  `uid` int(10) NOT NULL COMMENT '用户id',
   `status` tinyint(1) DEFAULT '0' COMMENT '状态',
   `type` int(2) DEFAULT NULL COMMENT '类型',
   `read` int(10) DEFAULT NULL COMMENT '阅读次数',
@@ -45,7 +45,7 @@ CREATE TABLE `article` (
 
 
 CREATE TABLE `urecord` (
-  `uid` int(11) NOT NULL COMMENT '用户ID',
+  `uid` int(10) NOT NULL COMMENT '用户ID',
   `records` text,
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   `init_time` int(10) unsigned NOT NULL DEFAULT '0',
@@ -107,7 +107,7 @@ CREATE TABLE `news2mood` (
 
 #友情链接
 CREATE TABLE `link` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '链接id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '链接id',
   `name` varchar(100) NOT NULL COMMENT '用户名',
   `author` varchar(100) COMMENT '密码',
   `content` text COMMENT '密码',
