@@ -379,13 +379,15 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
         val captchaText = request.session.get("captcha")
         val captchaBuff = reqJson.get("captcha")
+        val nameListBuffer = reqJson.get("name")
+        val emailListBuffer = reqJson.get("email")
         request.session.-("captcha")
 
-        if(uid !=0L || Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText ){
+        val geustAuth = Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText && nameListBuffer.nonEmpty && emailListBuffer.nonEmpty
+
+        if(uid !=0L || geustAuth ){
 
             val aidListBuff = reqJson.get("aid")
-            val nameListBuffer = reqJson.get("name")
-            val emailListBuffer = reqJson.get("email")
             val urlListBuffer = reqJson.get("url")
             val contentListBuff = reqJson.get("content")
             val quoteListBuffer = reqJson.get("quote")
@@ -411,8 +413,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 )
 
                 val future = reply2ArticleActor ? ReplysActor.Init(Global.db, reply)
-                val replyOpt = Await.result(future, timeout.duration)
-                    .asInstanceOf[Option[ReplyWrapper]]
+                val replyOpt = Await.result(future, timeout.duration).asInstanceOf[Option[ReplyWrapper]]
 
                 if (replyOpt.isDefined) {
                     ret = true
@@ -433,7 +434,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val isAjax = if(request.headers.get("X-Requested-With")==Option("XMLHttpRequest")) true else false
         val uid = request.session.get("uid").getOrElse("0").toLong
         if(isAjax ){
-            val articleFuture = aActor ? ArticlesActor.SmileCount(Global.db, aid)
+            aActor ? ArticlesActor.SmileCount(Global.db, aid)
         }
         Ok(views.html.index.render(uid, 0))
     }
@@ -448,12 +449,14 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
         val captchaText = request.session.get("captcha")
         val captchaBuff = reqJson.get("captcha")
+        val nameListBuffer = reqJson.get("name")
+        val emailListBuffer = reqJson.get("email")
         request.session.-("captcha")
 
-        if(uid !=0L || Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText ){
+        val geustAuth = Option(MD5.hash(captchaBuff.head.toUpperCase))==captchaText && nameListBuffer.nonEmpty && emailListBuffer.nonEmpty
+
+        if(uid !=0L || geustAuth ){
             val aidListBuff = reqJson.get("aid")
-            val nameListBuffer = reqJson.get("name")
-            val emailListBuffer = reqJson.get("email")
             val urlListBuffer = reqJson.get("url")
             val contentListBuff = reqJson.get("content")
             val quoteListBuffer = reqJson.get("quote")
@@ -482,8 +485,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 )
 
                 val future = reply2MessageActor ? ReplysActor.Init(Global.db, reply)
-                val replyOpt = Await.result(future, timeout.duration)
-                    .asInstanceOf[Option[ReplyWrapper]]
+                val replyOpt = Await.result(future, timeout.duration).asInstanceOf[Option[ReplyWrapper]]
 
                 if (replyOpt.isDefined) {
                     ret = true

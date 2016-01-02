@@ -78,7 +78,7 @@ input#author, input#email, input#url, textarea#comment,textarea#new_article ,sel
 }
 
 textarea#comment {
-    width: 500px;
+    width: 90%;;
     height: 160px;
 }
 

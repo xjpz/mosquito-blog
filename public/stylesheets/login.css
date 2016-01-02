@@ -221,7 +221,7 @@ h1 sup{
 .web_login .captchaImage{
 	float: left;
 	margin-left: 0.5em;
-
+	margin-top: 3px;
 }
 
 .web_login .input-tips2 {

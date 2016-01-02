@@ -2,18 +2,18 @@
 SET NAMES utf8;
 #用户表
 CREATE TABLE `user` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户id',
   `name` varchar(100) NOT NULL COMMENT '用户名',
   `password` char(50) NOT NULL COMMENT '密码',
   `email` varchar(100) DEFAULT '' COMMENT '邮箱',
   `phone` char(11) DEFAULT '' COMMENT '电话',
-  `descrp` text COMMENT '描述',
-  `type` tinyint(1) unsigned DEFAULT '0',
-  `status` tinyint(1) DEFAULT '0',
-	`qopenid` VARCHAR(100) COMMENT 'QqConnect OpenId',
-	`qtoken` text COMMENT 'QqConnect token',
-	`sopenid` VARCHAR(100) COMMENT 'sina WEIBO OpenId',
-	`stoken` text COMMENT 'Sina WEIBO token',
+  `descrp` varchar(255) COMMENT '描述',
+  `type` tinyint(2) unsigned DEFAULT '0' COMMENT '类型',
+  `status` tinyint(1) DEFAULT '0' COMMENT '状态',
+	`qopenid` VARCHAR(100) COMMENT 'QqConnect OpenId' COMMENT 'QQ Openid',
+	`qtoken` VARCHAR(255)  COMMENT 'QqConnect token' COMMENT 'QQ Token',
+	`sopenid` VARCHAR(100) COMMENT 'sina WEIBO OpenId' COMMENT '微博 Openid',
+	`stoken` VARCHAR(255) COMMENT 'Sina WEIBO token' COMMENT '微博 Token',
   `init_time` int(10) unsigned DEFAULT '0',
   `update_time` int(10) unsigned DEFAULT '0',
   `tombstone` tinyint(1) unsigned DEFAULT '0',
@@ -28,14 +28,14 @@ CREATE TABLE `article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '' COMMENT '标题',
   `content` text COMMENT '内容',
-  `catalog` text COMMENT '标签',
-  `uid` tinyint(1) NOT NULL COMMENT '用户id',
+  `catalog` VARCHAR(255) COMMENT '标签',
+  `uid` int(10) NOT NULL COMMENT '用户id',
   `status` tinyint(1) DEFAULT '0' COMMENT '状态',
-  `type` int(2) DEFAULT NULL COMMENT '类型',
+  `type` tinyint(2) DEFAULT NULL COMMENT '类型',
   `read` int(10) DEFAULT NULL COMMENT '阅读次数',
   `smile` int(10) DEFAULT NULL COMMENT '点赞次数',
   `reply` int(10) DEFAULT NULL COMMENT '评论次数',
-  `descrp` text COMMENT '评论',
+  `descrp` varchar(100) COMMENT '描述',
   `init_time` int(10) unsigned DEFAULT '0',
   `update_time` int(10) unsigned DEFAULT '0',
   `tombstone` tinyint(1) unsigned DEFAULT '0' COMMENT '假删除字段',
@@ -43,23 +43,24 @@ CREATE TABLE `article` (
   KEY `uid` (`uid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-
+#用户记录表
 CREATE TABLE `urecord` (
-  `uid` int(11) NOT NULL COMMENT '用户ID',
-  `records` text,
+  `uid` int(10) NOT NULL COMMENT '用户ID',
+  `records` text COMMENT '记录详情Json',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0',
   `init_time` int(10) unsigned NOT NULL DEFAULT '0',
   `tombstone` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+#留言表
 CREATE TABLE `reply2message` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `aid` int(10) NOT NULL COMMENT '话题id',
-  `uid` int(10) NOT NULL COMMENT '评论用户id',
+  `aid` int(10) NOT NULL COMMENT '留言id',
+  `uid` int(10) NOT NULL COMMENT '留言用户id',
   `name` varchar(100) NOT NULL COMMENT '用户名',
-  `url` varchar(100)  COMMENT 'url',
-  `email` varchar(100)  COMMENT 'email',
+  `url` varchar(100)  COMMENT 'url' COMMENT '游客留言url',
+  `email` varchar(100)  COMMENT 'email' COMMENT '游客留言email',
   `content` text NOT NULL COMMENT '评论内容',
   `quote` int(10) NOT NULL COMMENT '0：未引用 非0：引用楼层id',
   `smile` int(10) DEFAULT NULL COMMENT '点赞',
@@ -73,13 +74,14 @@ CREATE TABLE `reply2message` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+#文章评论表
 CREATE TABLE `reply2article` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `aid` int(10) NOT NULL COMMENT '话题id',
+  `aid` int(10) NOT NULL COMMENT '文章id',
   `uid` int(10) NOT NULL COMMENT '评论用户id',
   `name` varchar(100) NOT NULL COMMENT '用户名',
-  `url` varchar(100)  COMMENT 'url',
-  `email` varchar(100)  COMMENT 'email',
+  `url` varchar(100)  COMMENT 'url' COMMENT '游客url',
+  `email` varchar(100)  COMMENT 'email' COMMENT '游客email',
   `content` text NOT NULL COMMENT '评论内容',
   `quote` int(10) NOT NULL COMMENT '0：未引用 非0：引用楼层id',
   `smile` int(10) DEFAULT NULL COMMENT '点赞',
@@ -93,6 +95,7 @@ CREATE TABLE `reply2article` (
   KEY `email` (`email`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+#每日心情表
 CREATE TABLE `news2mood` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL COMMENT '内容',
@@ -107,10 +110,10 @@ CREATE TABLE `news2mood` (
 
 #友情链接
 CREATE TABLE `link` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '链接id',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '链接id',
   `name` varchar(100) NOT NULL COMMENT '用户名',
-  `author` varchar(100) COMMENT '密码',
-  `content` text COMMENT '密码',
+  `author` varchar(100) COMMENT '作者',
+  `content` varchar(100)  COMMENT '链接地址',
   `init_time` int(10) unsigned DEFAULT '0',
   `update_time` int(10) unsigned DEFAULT '0',
   `tombstone` tinyint(1) unsigned DEFAULT '0',

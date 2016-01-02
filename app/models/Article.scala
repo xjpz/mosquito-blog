@@ -107,7 +107,7 @@ object Articles extends ArticleJSONTrait {
     private lazy val CacheTime = 3600
 
     private lazy val articleListKey = "articleList"
-    private lazy val articleUIDlistKey = "articleUIDlist"
+    private lazy val articleUIDlistKey = "articleUIDlist:"
     private lazy val articleCatalogListKey = "articleCatalogList"
     private lazy val articleActionRankKey = "articleActionRank:"
 
@@ -251,7 +251,7 @@ object Articles extends ArticleJSONTrait {
                         (implicit session: Session): Option[ArticleListWrapper] = {
         var ret = None: Option[ArticleListWrapper]
 
-        val articleListWrapper = Cache.getOrElse[ArticleListWrapper](articleUIDlistKey) {
+        val articleListWrapper = Cache.getOrElse[ArticleListWrapper](articleUIDlistKey+uid) {
             val count = table.filter(_.uid === uid).filter(_.tombstone === 0).length.run
 
             val queryArticleList = table.filter(_.uid === uid).filter(_.tombstone === 0)
@@ -262,7 +262,7 @@ object Articles extends ArticleJSONTrait {
             val articleListWrapper = ArticleListWrapper(
                 Option(articleListTOWrapper),
                 Option(count))
-            Cache.set(articleUIDlistKey,articleListWrapper,CacheTime)
+            Cache.set(articleUIDlistKey+uid,articleListWrapper,CacheTime)
             articleListWrapper
         }
         ret = Option(articleListWrapper)
@@ -348,7 +348,6 @@ object Articles extends ArticleJSONTrait {
                 .map(row => (row.read, row.updtime)).update((Option(updateRead), updtime))
             ret = true
             Cache.remove(articleListKey)
-            Cache.remove(articleUIDlistKey)
 
             Cache.remove(articleActionRankKey + "read")
             Cache.remove(articleActionRankKey + "smile")
@@ -372,7 +371,6 @@ object Articles extends ArticleJSONTrait {
                 .map(row => (row.smile, row.updtime)).update((Option(updateSmile), updtime))
             ret = true
             Cache.remove(articleListKey)
-            Cache.remove(articleUIDlistKey)
 
             Cache.remove(articleActionRankKey + "read")
             Cache.remove(articleActionRankKey + "smile")
@@ -396,7 +394,6 @@ object Articles extends ArticleJSONTrait {
                 .map(row => (row.reply, row.updtime)).update((Option(updateReply), updtime))
             ret = true
             Cache.remove(articleListKey)
-            Cache.remove(articleUIDlistKey)
 
             Cache.remove(articleActionRankKey + "read")
             Cache.remove(articleActionRankKey + "smile")
