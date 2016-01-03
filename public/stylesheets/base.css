@@ -80,11 +80,10 @@ a:link,a:visited{
 .ntopbar_menu span.link a, .ntopbar_menu span.link a:link {
     float: left;
     text-decoration: none;
-    padding: 0 16px 0 12px;
-    padding-top: 0px;
-    padding-right: 16px;
-    padding-bottom: 0px;
-    padding-left: 12px;
+    padding-top: 0;
+    padding-right: 8px;
+    padding-bottom:0;
+    padding-left: 8px;
 }
 
 .nsinatopbar a, .nsinatopbar a:link, .nsinatopbar a:visited {
@@ -142,7 +141,7 @@ a:link,a:visited{
 
 .blog_name{
     margin-left:26%;
-    text-shadow: 0px 5px 5px #555;
+    text-shadow: 0 5px 5px #555;
     font-size: 20px;
 }
 
@@ -162,7 +161,7 @@ a:link,a:visited{
 
 .weiboIframe{
     clear:both;
-    margin:0px;
+    margin:0;
 }
 
 .blogbody_author{
@@ -379,9 +378,7 @@ a {
     width:auto;
     height:auto;
     max-width:none;
-    min-width:none;
     max-height:none;
-    min-height:none;
     border-radius:0;
     box-shadow:none;
     transition:none;
