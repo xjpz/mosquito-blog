@@ -42,8 +42,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     //清除缓存的接口
     def removeCache(action:String) = Action{
         action match {
-            case "all" =>{
-
+            case "all" =>
                 Cache.remove("new2MoodHead")
                 Cache.remove("new2Mood:List")
 
@@ -58,10 +57,9 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 Cache.remove("articleActionRank:reply")
                 Cache.remove("articleActionRank:default")
 
-            }
-            case _ =>{
+            case _ =>
                 Cache.remove(action)
-            }
+
         }
         Ok(Json.obj("code"->"200","message"->"success"))
     }
@@ -335,7 +333,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
             val catalogListBuffer = reqJson("catalog")
             val atypeListBuffer = reqJson("type")
 
-            if (titleListBuff.nonEmpty && contentListBuff.nonEmpty) {
+            if (contentListBuff.nonEmpty && titleListBuff.head.trim!="") {
                 val title = titleListBuff.head
                 val content = contentListBuff.head
 
@@ -364,7 +362,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         if (ret) {
             Redirect("/")
         } else {
-            Redirect(routes.Application.toLogin())
+            InternalServerError(views.html.error50x("发表失败！请重试，如无法解决请联系管理员。"))
         }
     }
 

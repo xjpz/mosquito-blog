@@ -12,18 +12,13 @@
 
             <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
         <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
-
         @*音乐播放器*@
-        @*<script src="@routes.Assets.versioned("javascripts/jquery.js")"></script>*@
         <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
-
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article.css")" >
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
-
         <!-- 新 Bootstrap 核心 CSS 文件 -->
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
-
             <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </head>
@@ -38,32 +33,46 @@
                 </div>
 
                 <div class="ntopbar_menu">
+                @if(uid == 0){
                     <div class="dropdown">
+                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="/">注册/登录</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="/blog/to/login">注册</a></li>
+                            <li><a href="/blog/to/login">登录</a></li>
+                            <li><a href="/blog/to/reset/password">修改密码</a></li>
+                        </ul>
 
-                        @if(uid == 0){
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a >注册/登录</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="javascript:" onclick="toLogin()">登录</a></li>
-                                <li><a href="javascript:" onclick="toLogin()">注册</a></li>
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                            </ul>
-                        }else{
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                                <li><a href="/blog/logout?url=/blog/to/article/@article.aid.getOrElse(0)">退出</a></li>
-                            </ul>
-                        }
-                        @*<span class="link" ><a href="@routes.Application.user()">个人中心</a>|</span>*@
                         @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                    <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                    <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
                     </div>
+                }else{
+                    <div class="dropdown" style="float: left;">
+                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
+                            <li><a href="/blog/to/reset/password">修改密码</a></li>
+                            <li><a href="@routes.Application.logOut()">退出</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown" style="float: left;">
+                        <span class="link" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="@routes.Application.user()">个人中心</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li><a href="@routes.Application.queryWithUid(uid,Option(1))">我的博客</a></li>
+                        </ul>
+
+                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
+                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                    </div>
+                }
                 </div>
             </div>
         </div>
@@ -85,7 +94,7 @@
                     <div id="blogs" class="blogs">
                         <h4>@article.title </h4>
                         @Html(article.content.getOrElse("None"))
-                        <br><br>
+                        <br>
                         <div id="blogbody_author" class="blogbody_author">
                             posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="@routes.Application.queryWithUid(article.uid.get,Option(0))">
                                 @(controllers.Service.getUname(article.uid.get))</a></div>

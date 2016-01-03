@@ -46,32 +46,47 @@
 
                 <div class="ntopbar_menu">
 
-                    <div class="dropdown">
-
                         @if(uid == 0){
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a href="/">注册/登录</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="/blog/to/login">注册</a></li>
-                                <li><a href="/blog/to/login">登录</a></li>
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                            </ul>
+                            <div class="dropdown">
+                                <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                    <a href="/">注册/登录</a>|
+                                </span>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="/blog/to/login">注册</a></li>
+                                    <li><a href="/blog/to/login">登录</a></li>
+                                    <li><a href="/blog/to/reset/password">修改密码</a></li>
+                                </ul>
+
+                                @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
+                                <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                                <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                            </div>
                         }else{
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                                <li><a href="@routes.Application.logOut()">退出</a></li>
-                            </ul>
+                            <div class="dropdown" style="float: left;">
+                                <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                    <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
+                                </span>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
+                                    <li><a href="/blog/to/reset/password">修改密码</a></li>
+                                    <li><a href="@routes.Application.logOut()">退出</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="dropdown" style="float: left;">
+                                <span class="link" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                    <a href="@routes.Application.user()">个人中心</a>|
+                                </span>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <li><a href="@routes.Application.queryWithUid(uid,Option(1))">我的博客</a></li>
+                                </ul>
+
+                                @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
+                                <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                                <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                            </div>
                         }
-                        @*<span class="link" ><a href="@routes.Application.user()">个人中心</a>|</span>*@
-                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -95,7 +110,7 @@
                             <div id="blogs" class="blogs">
                                 <h4><a href="@routes.Application.toArticle(item.aid.getOrElse(1))" target="_blank">@(new SimpleDateFormat("yyyy-MM-dd").format(item.inittime.get * 1000L)) &nbsp;&nbsp;&nbsp;&nbsp; @item.title</a></h4>
                                 @(item.content.getOrElse("None")) <br> <br>
-                                <div id="blogbody_author" class="blogbody_author">posted @@ @(new SimpleDateFormat("MM月dd日 HH:mm").format(item.inittime.get * 1000L)) &nbsp;&nbsp; <a href="@routes.Application.queryWithUid(item.uid.get,Option(0))">@(controllers.Service.getUname(item.uid.get))</a></div>
+                                <div id="blogbody_author" class="blogbody_author">posted @@ @(new SimpleDateFormat("MM月dd日 HH:mm").format(item.inittime.get * 1000L)) &nbsp;&nbsp; <a href="/blog/to/user/article/@item.uid.get">@(controllers.Service.getUname(item.uid.get))</a></div>
                                 <div id="blogbody_read" class="blogbody_read">
                                     <a href="@routes.Application.toArticle(item.aid.getOrElse(1))" target="_blank">评论(@item.reply)</a> &nbsp;|&nbsp;
                                     <a href="javascript:" onclick="smile_numfun(@item.aid.getOrElse(0))">赞(<span id="smile_num@item.aid.getOrElse(1)">@item.smile</span>)</a> &nbsp;|&nbsp;

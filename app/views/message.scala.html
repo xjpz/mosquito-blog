@@ -34,32 +34,46 @@
                 </div>
 
                 <div class="ntopbar_menu">
+                @if(uid == 0){
                     <div class="dropdown">
+                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="/">注册/登录</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="/blog/to/login">注册</a></li>
+                            <li><a href="/blog/to/login">登录</a></li>
+                            <li><a href="/blog/to/reset/password">修改密码</a></li>
+                        </ul>
 
-                        @if(uid == 0){
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a href="/">注册/登录</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="javascript:" onclick="toLogin()">注册</a></li>
-                                <li><a href="javascript:" onclick="toLogin()">登录</a></li>
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                            </ul>
-                        }else{
-                            <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                                <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
-                            </span>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
-                                <li><a href="/blog/to/reset/password">修改密码</a></li>
-                                <li><a href="/blog/logout?url=/blog/to/message">退出</a></li>
-                            </ul>
-                        }
-                        @*<span class="link" ><a href="@routes.Application.user()">个人中心</a>|</span>*@
                         @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
                         <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
                         <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
                     </div>
+                }else{
+                    <div class="dropdown" style="float: left;">
+                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
+                            <li><a href="/blog/to/reset/password">修改密码</a></li>
+                            <li><a href="@routes.Application.logOut()">退出</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="dropdown" style="float: left;">
+                        <span class="link" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                            <a href="@routes.Application.user()">个人中心</a>|
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            <li><a href="@routes.Application.queryWithUid(uid,Option(1))">我的博客</a></li>
+                        </ul>
+
+                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
+                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
+                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
+                    </div>
+                }
                 </div>
             </div>
         </div>
