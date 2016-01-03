@@ -107,7 +107,6 @@ object Articles extends ArticleJSONTrait {
     private lazy val CacheTime = 3600
 
     private lazy val articleListKey = "articleList"
-    private lazy val articleUIDlistKey = "articleUIDlist:"
     private lazy val articleCatalogListKey = "articleCatalogList"
     private lazy val articleActionRankKey = "articleActionRank:"
 
@@ -191,7 +190,6 @@ object Articles extends ArticleJSONTrait {
         ret = Option(wrap(article))
 
         Cache.remove(articleListKey)
-        Cache.remove(articleUIDlistKey)
         Cache.remove(articleCatalogListKey)
 
         ret
@@ -248,23 +246,18 @@ object Articles extends ArticleJSONTrait {
     }
 
     def queryWithUid(uid: Long, page: Int, size: Int)
-                        (implicit session: Session): Option[ArticleListWrapper] = {
+                    (implicit session: Session): Option[ArticleListWrapper] = {
         var ret = None: Option[ArticleListWrapper]
 
-        val articleListWrapper = Cache.getOrElse[ArticleListWrapper](articleUIDlistKey+uid) {
-            val count = table.filter(_.uid === uid).filter(_.tombstone === 0).length.run
-
-            val queryArticleList = table.filter(_.uid === uid).filter(_.tombstone === 0)
-                .sortBy(_.aid.desc).list
-            val articleListTOWrapper = queryArticleList.map(
-                (article) => wrapForQuery(article)
-            )
-            val articleListWrapper = ArticleListWrapper(
-                Option(articleListTOWrapper),
-                Option(count))
-            Cache.set(articleUIDlistKey+uid,articleListWrapper,CacheTime)
-            articleListWrapper
-        }
+        val count = table.filter(_.uid === uid).filter(_.tombstone === 0).length.run
+        val queryArticleList = table.filter(_.uid === uid).filter(_.tombstone === 0)
+            .sortBy(_.aid.desc).list
+        val articleListTOWrapper = queryArticleList.map(
+            (article) => wrapForQuery(article)
+        )
+        val articleListWrapper = ArticleListWrapper(
+            Option(articleListTOWrapper),
+            Option(count))
         ret = Option(articleListWrapper)
         ret
     }
@@ -428,7 +421,7 @@ object Articles extends ArticleJSONTrait {
     def queryCatalog(implicit session: Session): Option[CatalogList] = {
         var ret = None: Option[CatalogList]
 
-        val queryCatalog = Cache.getOrElse[CatalogList](articleCatalogListKey){
+        val queryCatalog = Cache.getOrElse[CatalogList](articleCatalogListKey) {
             val catalogItemStr = new ListBuffer[String]
             val queryCatalogList = table.filter(_.tombstone === 0).map(_.catalog).run
             if (queryCatalogList.nonEmpty) {
@@ -475,6 +468,8 @@ object Articles extends ArticleJSONTrait {
             queryArticle.updtime = updtime
 
             ret = Option(wrap(queryArticle))
+
+            Cache.remove(articleListKey)
         }
         ret
     }
@@ -498,6 +493,8 @@ object Articles extends ArticleJSONTrait {
                 queryArticle.tombstone = Option(1)
                 queryArticle.updtime = updtime
                 ret = Option(wrap(queryArticle))
+
+                Cache.remove(articleListKey)
             }
         }
 
