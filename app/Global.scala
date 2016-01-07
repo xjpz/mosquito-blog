@@ -15,7 +15,7 @@ import scala.concurrent.Future
 import scala.slick.driver.MySQLDriver.simple._
 
 
-object Global extends WithFilters(LoggingFilter, CORSFilter,new GzipFilter()) with GlobalSettings {
+object Global extends WithFilters(LoggingFilter,new GzipFilter()) with GlobalSettings {
 
     implicit lazy val shaEncoder = MessageDigest.getInstance("SHA-1")
     implicit lazy val db = Database.forDataSource(DB.getDataSource("default"))

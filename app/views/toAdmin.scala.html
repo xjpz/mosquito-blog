@@ -49,8 +49,8 @@
         <div style="width:300px;margin:0 auto;">
           <div class="login_title"><h2>请登录！</h2> </div><br>
           <div>用户:<input type="text" id="uname" name="uname" style="width:200px" onkeydown="EnterSubmit(event);"/></div><br>
-          <div>密码:<input type="password" id="password" name="password" style="width:200px" onkeydown="EnterSubmit(event);"/></div><br>
-          <div>口令:<input type="password" id="code" name="code" style="width:200px" onkeydown="EnterSubmit(event);"/></div><br>
+          <div>密码:<input type="password" id="password" name="password" autocomplete="off" data-val="true" data-val-required="密码不能为空" style="width:200px" onkeydown="EnterSubmit(event);"/></div><br>
+          <div>口令:<input type="password" id="code" name="code" autocomplete="off" style="width:200px" onkeydown="EnterSubmit(event);"/></div><br>
           <div class="but_submit"><input type="submit" id="btn_submit" value="确定" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="btn_button" value="取消" onclick="window.history.back()"/></div>
         </div>
       </div>
