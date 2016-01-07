@@ -71,7 +71,7 @@
                                 <li>
                                     <label for="passwd" class="input-tips2">密码：</label>
                                     <div class="inputOuter2">
-                                        <input type="password" id="passwd" name="password" minlength="6" maxlength="16" class="inputstyle2"/>
+                                        <input type="password" id="passwd" name="password" minlength="6" maxlength="16" autocomplete="off" data-val="true" data-val-required="密码不能为空" class="inputstyle2"/>
                                     </div>
 
                                 </li>
@@ -79,7 +79,7 @@
                                 <li>
                                     <label for="captcha" class="input-tips2">验证码：</label>
                                     <div class="inputOuter2">
-                                        <input type="text" id="captcha" name="captcha" maxlength="6" class="inputstyle2" required="required" />
+                                        <input type="text" id="captcha" name="captcha" maxlength="6" class="inputstyle2" autocomplete="off" required="required" />
                                         <img id="captchaImage" class="captchaImage" src="/captcha/new" onclick="javascript:refresh(this)">
                                     </div>
 

@@ -168,14 +168,14 @@
                                         <li>
                                             <label for="passwd" class="input-tips2">密码：</label>
                                             <div class="inputOuter2">
-                                                <input type="password" id="passwd" name="password" minlength="6" maxlength="16" class="inputstyle2"/>
+                                                <input type="password" id="passwd" name="password" minlength="6" maxlength="16" autocomplete="off" data-val="true" data-val-required="密码不能为空" class="inputstyle2"/>
                                             </div>
 
                                         </li>
                                         <li>
                                             <label for="passwd2" class="input-tips2">确认密码：</label>
                                             <div class="inputOuter2">
-                                                <input type="password" id="passwd2" name="" maxlength="16" class="inputstyle2" />
+                                                <input type="password" id="passwd2" name="" maxlength="16" autocomplete="off" data-val="true" data-val-required="密码不能为空" class="inputstyle2" />
                                             </div>
 
                                         </li>
@@ -225,7 +225,7 @@
 
 <script type="text/javascript" language="javascript">
     function disp_alert(){
-		alert("协议还没有起草。但，最终解释权归本站所有。")
+		alert("协议还没有起草。但，最终解释权归本站所有。");
     }
 
     function qc_login(){
