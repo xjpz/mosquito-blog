@@ -1,6 +1,7 @@
 @(uid: Long,loginUID:Long, page: Int)
 @import java.text.SimpleDateFormat
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>@(controllers.Service.getUname(uid))文章列表 - 心尖偏左</title>
@@ -11,8 +12,7 @@
             <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
         <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
-
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/index.css")" >
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
 
             <!-- 新 Bootstrap 核心 CSS 文件 -->

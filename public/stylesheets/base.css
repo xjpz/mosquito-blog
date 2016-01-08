@@ -448,11 +448,7 @@ a {
     vertical-align: top;
     text-align: center;
     width: 40px;
-    /*IE67 submit width fix*/
-    /*width: 1;
-    *overflow: visible;
-    /*fix IE6 submit height but width still bug*/
-//_overflow: hidden;
+
 
     border-color:#e6e6e6;
     height:20px;
