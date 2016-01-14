@@ -75,13 +75,13 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //去登录页面
-    def toLogin = Action {
-        Ok(views.html.login.render())
+    def toLogin = Action { request =>
+        Ok(views.html.login.render(request))
     }
 
     //去注册页面
-    def toReg = Action {
-        Ok(views.html.login.render())
+    def toReg = Action { request =>
+        Ok(views.html.login.render(request))
     }
 
     //关于本站页面
@@ -95,8 +95,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //去个人简历页面
-    def toResume = Action{
-        Ok(views.html.toResume.render())
+    def toResume = Action{ request =>
+        Ok(views.html.toResume.render(request))
     }
 
 //    def resume = Action {
@@ -106,7 +106,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     //去留言板页面
     def toMessage = Action { request =>
         val uid = request.session.get("uid").getOrElse("0").toLong
-        Ok(views.html.message.render(uid))
+        Ok(views.html.message.render(uid,request))
     }
 
     //TODO
@@ -115,8 +115,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //去后台管理页面
-    def toAdmin = Action{
-        Ok(views.html.toAdmin.render())
+    def toAdmin = Action{ request =>
+        Ok(views.html.toAdmin.render(request))
     }
 
     //登出
@@ -127,8 +127,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //去修改密码页面
-    def toResetPassword = Action{
-        Ok(views.html.updatePasswd.render())
+    def toResetPassword = Action{ request =>
+        Ok(views.html.updatePasswd.render(request))
     }
 
     //404、500错误页面
@@ -150,8 +150,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     //qqConnect Test.....................
 
     //QQ授权登录回调页面
-    def testQcback = Action {
-        Ok(views.html.qcback.render())
+    def testQcback = Action { request =>
+        Ok(views.html.qcback.render(request))
     }
 
 	//根据文章Aid获取文章信息
@@ -171,7 +171,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 val userOpt = Await.result(userFuture, timeout.duration)
                     .asInstanceOf[Option[UserWrapper]]
 
-                Ok(views.html.article.render(userOpt.get, article, uid))
+                Ok(views.html.article.render(userOpt.get, article, uid,request))
 
             case _ => NotFound(views.html.error40x(404))
         }
@@ -183,8 +183,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val uid = request.session.get("uid").getOrElse("0").toLong
 
 	    uid match {
-		    case 0 => Ok(views.html.login.render())
-		    case _ => Ok(views.html.article_new.render(uid))
+		    case 0 => Ok(views.html.login.render(request))
+		    case _ => Ok(views.html.article_new.render(uid,request))
 	    }
 
     }
@@ -515,7 +515,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
             .asInstanceOf[Option[UserWrapper]]
 
         if(userOpt.isDefined){
-            Ok(views.html.article.render(userOpt.get, article, uid))
+            Ok(views.html.article.render(userOpt.get, article, uid,request))
         }else{
             NotFound(views.html.error40x(404))
         }
@@ -613,7 +613,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val articleOpt = Await.result(articleFuture, timeout.duration).asInstanceOf[Option[ArticleWrapper]]
 
         if(articleOpt.isDefined && articleOpt.get.uid.getOrElse(0) == uid){
-            Ok(views.html.article_update.render(uid,articleOpt.get))
+            Ok(views.html.article_update.render(uid,articleOpt.get,request))
         }else{
             Ok(views.html.error40x(404))
         }

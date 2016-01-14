@@ -1,3 +1,4 @@
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -45,7 +46,7 @@
                 <div class="web_login" id="web_login">
 
                     <div class="login-box">
-                        <form name="form2" id="regUser" accept-charset="utf-8"  action="/blog/reset/password" method="post">
+                        <form name="form2" id="regUser" accept-charset="utf-8"  action="@helper.CSRF(routes.Application.updatePasswordForm())" method="post">
                             <input type="hidden" name="to" value="reg"/>
                             <input type="hidden" name="did" value="0"/>
                             <ul class="reg_form" id="reg-ul">

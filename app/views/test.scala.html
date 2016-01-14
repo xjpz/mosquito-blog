@@ -1,3 +1,4 @@
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,27 @@
 </head>
 <body>
 <p>Hello World!</p>
-  <a href="javascript:" onclick="toLogin()">goto</a>
+  @*<a href="javascript:" onclick="toLogin()">goto</a>*@
+
+  @import helper._
+  @form(CSRF(routes.TestCtrl.test())) {
+    <input name="name" > <br><br>
+    <input name="descrp">
+    <p>
+      <input type="submit" >
+    </p>
+  }
+
+  @*<form action="/test?csrfToken=5" method="POST" >*@
+
+    @*<input name="name" > <br><br>*@
+    @*<input name="descrp">*@
+    @*<p>*@
+      @*<input type="submit" >*@
+    @*</p>*@
+
+  @*</form>*@
+
 </body>
 </html>
 

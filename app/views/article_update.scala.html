@@ -1,5 +1,4 @@
-@import controllers.UploadCtrl
-@(uid: Long)(article: ArticleWrapper)
+@(uid: Long)(article: ArticleWrapper)(implicit req: RequestHeader)
   @import play.api.Play
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +49,7 @@
                     toolbar : toolbar,  //工具栏
                     defaultImage : '@routes.Assets.versioned("simditor/images/image.png")', //编辑器插入图片时使用的默认图片
                     upload : {
-                        url : '@routes.UploadCtrl.upload', //文件上传的接口地址
+                        url : '@controllers.UploadCtrl.upload', //文件上传的接口地址
                         params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
                         fileKey: 'fileDataFileName', //服务器端获取文件数据的参数名
                         connectionCount: 3,
@@ -134,7 +133,7 @@
         <div class="blogbody" id="blogbody">
           <h1>发表文章<sup>V2015.beta</sup></h1>
 
-          <form action="@routes.Application.updateArticleForm()" method="post" id="commentform">
+          <form action="@helper.CSRF(routes.Application.updateArticleForm())" method="post" id="commentform">
             <div id="new_article_form" class="new_article_form">
               <p><label for="title">&nbsp;&nbsp;标题:</label>
                 <input type="text" name="title" id="author" value="@article.title.getOrElse("")" size="25" tabindex="1" class="comment_input" required/></p>

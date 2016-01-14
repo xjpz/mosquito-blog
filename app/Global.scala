@@ -9,13 +9,14 @@ import play.api.db.DB
 import play.api.libs.json._
 import play.api.mvc.Results._
 import play.api.mvc._
+import play.filters.csrf.CSRFFilter
 import play.filters.gzip.GzipFilter
 
 import scala.concurrent.Future
 import scala.slick.driver.MySQLDriver.simple._
 
 
-object Global extends WithFilters(LoggingFilter,new GzipFilter()) with GlobalSettings {
+object Global extends WithFilters(CSRFFilter(),LoggingFilter,CORSFilter,new GzipFilter()) with GlobalSettings {
 
     implicit lazy val shaEncoder = MessageDigest.getInstance("SHA-1")
     implicit lazy val db = Database.forDataSource(DB.getDataSource("default"))

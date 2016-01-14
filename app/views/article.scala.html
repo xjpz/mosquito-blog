@@ -1,4 +1,4 @@
-@(userAuthor: UserWrapper)(article: ArticleWrapper)(uid: Long)
+@(userAuthor: UserWrapper)(article: ArticleWrapper)(uid: Long)(implicit req: RequestHeader)
 @import play.api.Play
 @import java.text.SimpleDateFormat
 <!DOCTYPE html>
@@ -168,7 +168,7 @@
                             </b>
                         </div>
 
-                        <form action="@routes.Application.addReplyForm()" method="post" id="commentform">
+                        <form action="@helper.CSRF(routes.Application.addReplyForm())" method="post" id="commentform">
 
                             <p><label for="author">用户:</label>
                                 <input type="text" name="name" id="author" @if(uid != 0) {

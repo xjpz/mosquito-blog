@@ -1,5 +1,5 @@
 @import play.api.Play
-@import controllers.Captcha
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -87,7 +87,7 @@
                                 <div class="login-box">
 
                                     <div class="login_form">
-                                        <form action="@routes.Application.loginForm()" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
+                                        <form action="@helper.CSRF(routes.Application.loginForm())" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
                                             <input type="hidden" name="did" value="0"/>
                                             <input type="hidden" name="to" value="log"/>
                                             <div class="uinArea" id="uinArea">
@@ -133,7 +133,7 @@
                         <div class="qlogin" id="qlogin" style="display : none ; ">
 
                             <div class="web_login">
-                                <form name="form2" id="regUser" accept-charset="utf-8" action="@routes.Application.registerForm()" method="post">
+                                <form name="form2" id="regUser" accept-charset="utf-8" action="@helper.CSRF(routes.Application.registerForm())" method="post">
                                     <input type="hidden" name="to" value="reg"/>
                                     <input type="hidden" name="did" value="0"/>
                                     <ul class="reg_form" id="reg-ul">
@@ -184,7 +184,7 @@
                                             <label for="captcha" class="input-tips2">验证码：</label>
                                             <div class="inputOuter2">
                                                 <input type="text" id="captcha" name="captcha" maxlength="6" class="inputstyle2" required="required" />
-                                                <img id="captchaImage" class="captchaImage" src="@routes.Captcha.getCaptcha" onclick="javascript:refresh(this)">
+                                                <img id="captchaImage" class="captchaImage" src="@controllers.Captcha.getCaptcha" onclick="javascript:refresh(this)">
                                             </div>
 
                                         </li>
@@ -234,7 +234,7 @@
 
 	        <!-- 验证码-->
 	function refresh(obj){
-                obj.src="@routes.Captcha.getCaptcha?id="+Math.random();
+                obj.src="@controllers.Captcha.getCaptcha?id="+Math.random();
         }
 
             $(document).keydown(function(event){
@@ -421,7 +421,7 @@
             }
                 //刷新验证码
             function change() {
-                    $("#captchaImage").attr("src", "@routes.Captcha.getCaptcha?id=" + new Date().getTime());
+                    $("#captchaImage").attr("src", "@controllers.Captcha.getCaptcha?id=" + new Date().getTime());
             }
             </script>
 
