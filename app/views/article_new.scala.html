@@ -46,7 +46,7 @@
                     toolbar : toolbar,  //工具栏
                     defaultImage : '@routes.Assets.versioned("simditor/images/image.png")', //编辑器插入图片时使用的默认图片
                     upload : {
-                        url : '@controllers.UploadCtrl.upload', //文件上传的接口地址
+                        url : '@controllers.other.routes.UploadCtrl.upload', //文件上传的接口地址
                         params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
                         fileKey: 'fileDataFileName', //服务器端获取文件数据的参数名
                         connectionCount: 3,

@@ -139,7 +139,7 @@ DELETE        /link/:lid                            controllers.LinkCtrl.remove(
 PATCH         /link                                 controllers.LinkCtrl.update
 
 #upload
-POST          /upload                               controllers.UploadCtrl.upload()
+POST          /upload                               controllers.other.UploadCtrl.upload()
 
 #download
 #GET           /to/download                           controllers.UploadCtrl.toDownload
