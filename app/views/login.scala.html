@@ -184,7 +184,7 @@
                                             <label for="captcha" class="input-tips2">验证码：</label>
                                             <div class="inputOuter2">
                                                 <input type="text" id="captcha" name="captcha" maxlength="6" class="inputstyle2" required="required" />
-                                                <img id="captchaImage" class="captchaImage" src="@controllers.Captcha.getCaptcha" onclick="javascript:refresh(this)">
+                                                <img id="captchaImage" class="captchaImage" src="/captcha/new" onclick="javascript:refresh(this)">
                                             </div>
 
                                         </li>
@@ -234,7 +234,7 @@
 
 	        <!-- 验证码-->
 	function refresh(obj){
-                obj.src="@controllers.Captcha.getCaptcha?id="+Math.random();
+                obj.src="/captcha/new?id="+Math.random();
         }
 
             $(document).keydown(function(event){
