@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 import utils.MD5
 //play.Cache
 import play.api.Play.current
-import play.api.cache.Cache
+import play.api.cache.{Cached, Cache}
 import play.api.mvc._
 
 import scala.language.postfixOps
@@ -65,13 +65,15 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //主页index
-    def index(pageOpt: Option[Int]) = Action { request =>
+    def index(pageOpt: Option[Int]) = Cached((_: RequestHeader) => "index:" ,30){
+        Action { request =>
 
-        val uid = request.session.get("uid").getOrElse("0").toLong
+            val uid = request.session.get("uid").getOrElse("0").toLong
 
-        val page = if (pageOpt.getOrElse(1) < 1) 0 else pageOpt.getOrElse(1) - 1
+            val page = if (pageOpt.getOrElse(1) < 1) 0 else pageOpt.getOrElse(1) - 1
 
-        Ok(views.html.index.render(uid, page))
+            Ok(views.html.index.render(uid, page))
+        }
     }
 
     //去登录页面
