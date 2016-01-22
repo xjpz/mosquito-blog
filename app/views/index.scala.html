@@ -5,24 +5,13 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>首页 - 心尖偏左</title>
-        <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
-        <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+        <title>首页 - Belong-属于我们的代码世界</title>
+        <meta name="keywords" content="Belong，belong，unity，代码世界" />
+        <meta name="description" content="Belong-属于我们的代码世界" />
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-        <!-- Baidu token-->
-        <meta baidu-gxt-verify-token="543156f215dec24c3063ada0c293bb7a">
-
-        <!-- Qconnect token-->
-        <meta property="qc:admins" content="72063461402655" />
-        <!-- Bing token-->
-        <meta name="msvalidate.01" content="7F16F233D9FAFA8077BBB32446E6A2D2" />
-        <!-- Sina weibo token-->
-        <meta property="wb:webmaster" content="93c04523a7a83b6a" />
 
         <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
         <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
-        @*音乐播放器*@
-        <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
 
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
@@ -40,7 +29,8 @@
         <div class="topbar" id="topbar">
             <div class="ntopbar_main">
                 <div class="ntopbar_floatL">
-                    <div><script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=17542041042688205263' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
+                    <div>
+                        <script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=4038157158560618234' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
                     </div>
                 </div>
 
@@ -134,18 +124,6 @@
 
                 <div class="blogright" id="blogright">
 
-                    <div class="catListTag">
-                        <h3 class="catListTitle">活跃用户</h3>
-                        <div class="module-list scroll-list">
-                            <ul>
-                                @if(controllers.Service.queryActiveUser().isDefined && controllers.Service.queryActiveUser().get.users.isDefined){
-                                    @for(userIter <- controllers.Service.queryActiveUser().get.users.get){
-                                        <li ><a id="CatList_LinkList_0_Link_0" href="@routes.Application.queryWithUid(userIter.uid.get,Option(1))" target="_blank" >@userIter.name</a><small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                    </div>
                     <div class="cloud">
                         <h3>标签云</h3>
                         <ul>
@@ -215,20 +193,11 @@
         <footer>
             <div id="musicPlayer"></div>
 
-            <script>
-				$(function () {
-					$("#musicPlayer").simplemusic({
-						autoplay: false,  //autoplay 自动播放
-						loop:false,      //loop 循环播放
-						urls: ["http://blog.xjpz9999.com/music/gz.mp3","http://blog.xjpz9999.com/music/sxcs.mp3" ]
-					});
-				});
-			</script>
             <div class="ft-copyright">
-                <p class="copyright">Copyright &copy;2015 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
-                    鄂ICP备15016359号-1</a><br>
+                <p class="copyright">Copyright &copy;2015 Belong  <span><a href="http://www.miitbeian.gov.cn/">
+                    豫ICP备15025302号</a><br>
                 </span>
-                    <a href="@routes.Application.about()" target="_blank" >关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()" target="_blank">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()" target="_blank">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()" target="_blank">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
+                    <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257361981'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257361981' type='text/javascript'%3E%3C/script%3E"));</script>
                 </p>
 
                     <!-- top -->

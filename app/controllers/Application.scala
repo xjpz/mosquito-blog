@@ -142,18 +142,6 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
     }
 
-    //动弹一下
-    def tweet = Action {
-        Ok(views.html.tweets.render())
-    }
-
-    //qqConnect Test.....................
-
-    //QQ授权登录回调页面
-    def testQcback = Action { request =>
-        Ok(views.html.qcback.render(request))
-    }
-
 	//根据文章Aid获取文章信息
     def toArticle(aid: Long) = Action { request =>
 

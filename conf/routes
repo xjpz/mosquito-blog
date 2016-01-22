@@ -52,10 +52,6 @@ GET           /blog/to/resume                       controllers.Application.toRe
 #admin
 GET           /blog/to/admin                        controllers.Application.toAdmin
 
-GET           /blog/tweet                           controllers.Application.tweet
-#QQConnect Test
-GET           /blog/test/qcback                     controllers.Application.testQcback
-
 #Delete Cache
 
 GET           /blog/remove/cache/:action            controllers.Application.removeCache(action:String)
@@ -160,5 +156,3 @@ GET           /blog/error/:code                     controllers.Application.erro
 # Test APIs #
 #############
 
-POST       /test                                    controllers.TestCtrl.test()
-GET        /to/test                                    controllers.TestCtrl.toTest

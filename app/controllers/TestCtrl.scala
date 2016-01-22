@@ -16,9 +16,5 @@ object TestCtrl extends Controller {
         println(token)
         Ok("Success")
     }
-
-    def toTest = Action{ request =>
-        Ok(views.html.test.render(request))
-    }
     
 }

@@ -5,9 +5,9 @@
     <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>@article.title - 心尖偏左</title>
-        <meta name="keywords" content="@article.title - 心尖偏左" />
-        <meta name="description" content="心尖偏左Blog - @article.title - @if(article.content.getOrElse("").length>=160){@article.content.get.substring(0,160)...}else{@article.content.getOrElse("")}" />
+        <title>@article.title - Belong-属于我们的代码世界</title>
+        <meta name="keywords" content="@article.title - Belong" />
+        <meta name="description" content="BelongBlog - @article.title - @if(article.content.getOrElse("").length>=160){@article.content.get.substring(0,160)...}else{@article.content.getOrElse("")}" />
         <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
             <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
@@ -28,7 +28,8 @@
         <div class="topbar">
             <div class="ntopbar_main">
                 <div class="ntopbar_floatL">
-                    <div><script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=17542041042688205263' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
+                    <div>
+                        <script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=4038157158560618234' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
                     </div>
                 </div>
 
@@ -162,9 +163,6 @@
                                 <a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
                                 <a href="javascript:" onclick="toLogin()">&raquo;去注册</a> &nbsp;
 
-                                <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
-                                    <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
-
                             </b>
                         </div>
 
@@ -223,7 +221,7 @@
                                                 $("#f_vcode_menu").hide();
                                         }
 
-                                        function _rvi(){document.getElementById('img_vcode').src = 'http://xjpz.me/captcha/new?t='+Math.random(1000);}
+                                        function _rvi(){document.getElementById('img_vcode').src = 'http://www.timeslip.cn/captcha/new?t='+Math.random(1000);}
 
                                 </script>
 
@@ -245,18 +243,6 @@
 
                 <div class="blogright" id="blogright">
 
-                    <div class="catListTag">
-                        <h3 class="catListTitle">活跃用户</h3>
-                        <div class="module-list scroll-list">
-                            <ul>
-                            @if(controllers.Service.queryActiveUser().isDefined && controllers.Service.queryActiveUser().get.users.isDefined){
-                                @for(userIter <- controllers.Service.queryActiveUser().get.users.get){
-                                    <li ><a id="CatList_LinkList_0_Link_0" href="@routes.Application.queryWithUid(userIter.uid.get,Option(1))">@userIter.name</a><small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
-                                }
-                            }
-                            </ul>
-                        </div>
-                    </div>
                     <div class="cloud">
                         <h3>标签云</h3>
                         <ul>
@@ -287,7 +273,7 @@
                         @if(Service.queryArticleAction("smile",Option(0),Option(5)).articles.isDefined) {
                             @defining(Service.queryArticleAction("smile",Option(0),Option(5)).articles.get){ articleList=>
                                 <ul>
-                                    @for(i <- 0 until articleList.length) {
+                                    @for(i <- articleList.indices) {
                                         <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).smile.getOrElse(0)) </a></li>
                                     }
                                 </ul>
@@ -300,7 +286,7 @@
                         @if(Service.queryArticleAction("read",Option(0),Option(5)).articles.isDefined) {
                             @defining(Service.queryArticleAction("read",Option(0),Option(5)).articles.get){ articleList=>
                                 <ul>
-                                    @for(i <- 0 until articleList.length) {
+                                    @for(i <- articleList.indices) {
                                         <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).read.getOrElse(0)) </a></li>
                                     }
                                 </ul>
@@ -313,7 +299,7 @@
                         @if(Service.queryArticleAction("reply",Option(0),Option(5)).articles.isDefined) {
                             @defining(Service.queryArticleAction("reply",Option(0),Option(5)).articles.get){ articleList=>
                                 <ul>
-                                    @for(i <- 0 until articleList.length) {
+                                    @for(i <- articleList.indices) {
                                         <li><a href="@routes.Application.toArticle(articleList(i).aid.getOrElse(0))" target="_blank">@(i+1) . @articleList(i).title.getOrElse("") (@articleList(i).reply.getOrElse(0)) </a></li>
                                     }
                                 </ul>
@@ -327,19 +313,11 @@
         <footer>
             <div id="musicPlayer"></div>
 
-            <script>
-				$(function () {
-					$("#musicPlayer").simplemusic({
-						autoplay: false,
-						urls: ["http://blog.xjpz9999.com/music/gz.mp3","http://blog.xjpz9999.com/music/sxcs.mp3" ]
-					});
-				});
-			</script>
             <div class="ft-copyright">
-                <p class="copyright">Copyright &copy;2015 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
-                    鄂ICP备15016359号-1</a><br>
+                <p class="copyright">Copyright &copy;2015 Belong  <span><a href="http://www.miitbeian.gov.cn/">
+                    豫ICP备15025302号</a><br>
                 </span>
-                    <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
+                    <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257361981'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257361981' type='text/javascript'%3E%3C/script%3E"));</script>
                 </p>
 
                     <!-- top -->
