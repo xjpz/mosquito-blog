@@ -40,8 +40,10 @@
             <!-- ntopbar -->
         <div class="topbar" id="topbar">
             <div class="ntopbar_main">
-                <div>
-                    <script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=4038157158560618234' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
+                <div class="ntopbar_floatL">
+                    <div>
+                        <script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=4038157158560618234' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
+                    </div>
                 </div>
 
                 <div class="ntopbar_menu">
@@ -129,7 +131,18 @@
                 </div>
 
                 <div class="blogright" id="blogright">
-
+                    <div class="catListTag">
+                        <h3 class="catListTitle">活跃用户</h3>
+                        <div class="module-list scroll-list">
+                            <ul>
+                            @if(controllers.Service.queryActiveUser().isDefined && controllers.Service.queryActiveUser().get.users.isDefined){
+                                @for(userIter <- controllers.Service.queryActiveUser().get.users.get){
+                                    <li ><a id="CatList_LinkList_0_Link_0" href="@routes.Application.queryWithUid(userIter.uid.get,Option(1))" target="_blank" >@userIter.name</a><small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
+                                }
+                            }
+                            </ul>
+                        </div>
+                    </div>
                     <div class="cloud">
                         <h3>标签云</h3>
                         <ul>

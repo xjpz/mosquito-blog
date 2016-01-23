@@ -248,8 +248,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val captchaListBuff = reqJson.get("captcha")
         val usernameListBuff = reqJson.get("username")
         val passwdListBuff = reqJson.get("password")
-        val emailListBuff = reqJson.get("email")
-        val phoneListBuff = reqJson.get("phone")
+//        val emailListBuff = reqJson.get("email")
+//        val phoneListBuff = reqJson.get("phone")
 
         val captchaText = request.session.get("captcha").get
 
@@ -257,39 +257,38 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
         if (isAjax && captchaText == MD5.hash(captchaListBuff.head.toUpperCase) ) {
 
-            if (usernameListBuff.nonEmpty && passwdListBuff.nonEmpty &&
-                emailListBuff.nonEmpty && phoneListBuff.nonEmpty) {
+            if (usernameListBuff.nonEmpty && passwdListBuff.nonEmpty) {
 
                 val username = usernameListBuff.head
                 val passwd = passwdListBuff.head
-                val email = emailListBuff.head
-                val phone = phoneListBuff.head
+//                val email = emailListBuff.head
+//                val phone = phoneListBuff.head
                 val updtime = Option(System.currentTimeMillis() / 1000L)
 
                 Global.db.withSession { implicit session =>
                     flag match {
                         case x if models.Users.userIsExists(username) => flag = 2
-                        case x if models.Users.userIsExists(phone) => flag = 3
-                        case x if models.Users.userIsExists(email) => flag = 4
+//                        case x if models.Users.userIsExists(phone) => flag = 3
+//                        case x if models.Users.userIsExists(email) => flag = 4
                         case _ =>
-                            val user = User(Option(username), Option(passwd), Option(email),
-                                Option(phone), None, Option(1), Option(0), None, None, None, None, updtime, updtime)
+                            val user = User(Option(username), Option(passwd), Option(""+System.currentTimeMillis() / 1000L),
+                                Option(""+System.currentTimeMillis() / 1000L), None, Option(1), Option(0), None, None, None, None, updtime, updtime)
                             //*************
                             //邮件通知   *
                             //*************
                             //邮件正文
-                            val mailcontent =
-                                s"""$username 您好！欢迎注册！
-
-                    您注册的的帐号:$username
-                    密码是:$passwd
-                    请您妥善保管!
-
-祝您使用愉快！"""
-                            val mail = Mail(adminEmailOpt, Option(email),
-                                Option("欢迎注册【心尖偏左Blog】"), Option(mailcontent), adminEmailOpt, adminEmailPwdOpt)
-
-                            Mails.send(mail)
+//                            val mailcontent =
+//                                s"""$username 您好！欢迎注册！
+//
+//                    您注册的的帐号:$username
+//                    密码是:$passwd
+//                    请您妥善保管!
+//
+//祝您使用愉快！"""
+//                            val mail = Mail(adminEmailOpt, Option(email),
+//                                Option("欢迎注册【心尖偏左Blog】"), Option(mailcontent), adminEmailOpt, adminEmailPwdOpt)
+//
+//                            Mails.send(mail)
 
                             val future = uActor ? UsersActor.Init(Global.db, user)
                             val userOpt = Await.result(future, timeout.duration).asInstanceOf[Option[UserWrapper]]
@@ -563,23 +562,23 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                             //邮件通知   *
                             //*************
 
-                            val username = user.name.get
-                            val mailcontent =
-                                s"""$username 您好！你的 【心尖偏左Blog】 密码已重置
-
-                                如非本人操作，请立即更改密码，并联系管理员。
-
-祝你使用愉快!"""
-                            val mail = Mail(
-                                adminEmailOpt,
-                                Option(email),
-                                Option("你的密码已重置【心尖偏左个人博客】"),
-                                Option(mailcontent),
-                                adminEmailOpt,
-                                adminEmailPwdOpt
-                            )
-
-                            Mails.send(mail)
+//                            val username = user.name.get
+//                            val mailcontent =
+//                                s"""$username 您好！你的 【心尖偏左Blog】 密码已重置
+//
+//                                如非本人操作，请立即更改密码，并联系管理员。
+//
+//祝你使用愉快!"""
+//                            val mail = Mail(
+//                                adminEmailOpt,
+//                                Option(email),
+//                                Option("你的密码已重置【心尖偏左个人博客】"),
+//                                Option(mailcontent),
+//                                adminEmailOpt,
+//                                adminEmailPwdOpt
+//                            )
+//
+//                            Mails.send(mail)
 
                             ret = true
                         }

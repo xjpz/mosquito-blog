@@ -242,7 +242,18 @@
                 </div>
 
                 <div class="blogright" id="blogright">
-
+                    <div class="catListTag">
+                        <h3 class="catListTitle">活跃用户</h3>
+                        <div class="module-list scroll-list">
+                            <ul>
+                            @if(controllers.Service.queryActiveUser().isDefined && controllers.Service.queryActiveUser().get.users.isDefined){
+                                @for(userIter <- controllers.Service.queryActiveUser().get.users.get){
+                                    <li ><a id="CatList_LinkList_0_Link_0" href="@routes.Application.queryWithUid(userIter.uid.get,Option(1))" target="_blank" >@userIter.name</a><small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
+                                }
+                            }
+                            </ul>
+                        </div>
+                    </div>
                     <div class="cloud">
                         <h3>标签云</h3>
                         <ul>
