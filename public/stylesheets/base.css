@@ -36,7 +36,8 @@ a:link,a:visited{
     border-top: 5px solid #92d13d;
     border-top-width: 5px;
     border-top-style: solid;
-    border-top-color: rgb(146, 209, 61);
+    border-top-color: rgb(241, 52, 86);
+    /*border-top-color: rgb(146, 209, 61);*/
 }
 
 .ntopbar_floatL {
@@ -56,8 +57,10 @@ a:link,a:visited{
 .link a:hover {
     background:rgba(235,235,235,0.3);
     color:#FFFFFF;
-    -webkit-box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;
-    box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;
+    /*-webkit-box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;*/
+    -webkit-box-shadow:inset 0 4px 0 rgb(241, 52, 86),inset 0 0 3px #ebebeb;
+    box-shadow:inset 0 4px 0 rgb(241, 52, 86),inset 0 0 3px #ebebeb;
+    /*box-shadow:inset 0 4px 0 #92d13d,inset 0 0 3px #ebebeb;*/
     -webkit-transition:all 150ms ease-in-out;
     -moz-transition:all 150ms ease-in-out;
     -o-transition:all 150ms ease-in-out;
@@ -132,6 +135,7 @@ a:link,a:visited{
     margin: 0 auto;
     z-index: 10;
     background-color:#92D13D;
+    background: url("http://xjpz.me/resource/6bd5fda00292f6c2fee72056d3f7fa10.png");
 
 }
 .bloghead a{
