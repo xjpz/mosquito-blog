@@ -57,6 +57,8 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 Cache.remove("articleActionRank:reply")
                 Cache.remove("articleActionRank:default")
 
+                Cache.remove("linkList")
+
             case _ =>
                 Cache.remove(action)
 
