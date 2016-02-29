@@ -132,6 +132,7 @@ a:link,a:visited{
     margin: 0 auto;
     z-index: 10;
     background-color:#92D13D;
+    /*background: url("http://xjpz.me/resource/6bd5fda00292f6c2fee72056d3f7fa10.png");*/
 
 }
 .bloghead a{
@@ -448,11 +449,7 @@ a {
     vertical-align: top;
     text-align: center;
     width: 40px;
-    /*IE67 submit width fix*/
-    /*width: 1;
-    *overflow: visible;
-    /*fix IE6 submit height but width still bug*/
-//_overflow: hidden;
+
 
     border-color:#e6e6e6;
     height:20px;

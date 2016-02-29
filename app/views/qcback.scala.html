@@ -1,4 +1,6 @@
-<html>
+@(implicit req: RequestHeader)
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -30,7 +32,7 @@
                     QC.api("get_user_info")
                         .success(function(s){//成功回调
                             QC.Login.getMe(function(openId, accessToken){
-                                $.post('@routes.Application.addConnUserForm()',{name:s.data.nickname,openid:openId,otype:1,token:accessToken},function(data,status){
+                                $.post('@helper.CSRF(routes.Application.addConnUserForm())',{name:s.data.nickname,openid:openId,otype:1,token:accessToken},function(data,status){
                                     if(status=="success"){
                                         try {
                                             if (window.opener.location.href.indexOf("xjpz.me/blog/to/login") >= 0)

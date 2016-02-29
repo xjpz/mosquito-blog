@@ -1,8 +1,8 @@
-@(userAuthor: UserWrapper)(article: ArticleWrapper)(uid: Long)
+@(userAuthor: UserWrapper)(article: ArticleWrapper)(uid: Long)(implicit req: RequestHeader)
 @import play.api.Play
 @import java.text.SimpleDateFormat
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+    <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>@article.title - 心尖偏左</title>
@@ -168,7 +168,7 @@
                             </b>
                         </div>
 
-                        <form action="@routes.Application.addReplyForm()" method="post" id="commentform">
+                        <form action="@helper.CSRF(routes.Application.addReplyForm())" method="post" id="commentform">
 
                             <p><label for="author">用户:</label>
                                 <input type="text" name="name" id="author" @if(uid != 0) {
@@ -336,7 +336,7 @@
 				});
 			</script>
             <div class="ft-copyright">
-                <p class="copyright">Copyright &copy;2015 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
+                <p class="copyright">Copyright &copy;2015-2016 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
                     鄂ICP备15016359号-1</a><br>
                 </span>
                     <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>

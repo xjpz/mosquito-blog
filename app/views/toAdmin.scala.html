@@ -1,6 +1,6 @@
-
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>密码验证 - 后台管理</title>
@@ -44,7 +44,7 @@
     </script>
   </head>
   <body>
-    <form method="post" action="@routes.Application.checkAdminForm" onsubmit="return check()">
+    <form method="post" action="@helper.CSRF(routes.Application.checkAdminForm)" onsubmit="return check()">
       <div style="margin-top:50px">
         <div style="width:300px;margin:0 auto;">
           <div class="login_title"><h2>请登录！</h2> </div><br>

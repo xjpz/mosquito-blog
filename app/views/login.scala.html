@@ -1,7 +1,7 @@
 @import play.api.Play
-@import controllers.Captcha
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>登录注册 - 心尖偏左</title>
@@ -87,7 +87,7 @@
                                 <div class="login-box">
 
                                     <div class="login_form">
-                                        <form action="@routes.Application.loginForm()" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
+                                        <form action="@helper.CSRF(routes.Application.loginForm())" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
                                             <input type="hidden" name="did" value="0"/>
                                             <input type="hidden" name="to" value="log"/>
                                             <div class="uinArea" id="uinArea">
@@ -133,7 +133,7 @@
                         <div class="qlogin" id="qlogin" style="display : none ; ">
 
                             <div class="web_login">
-                                <form name="form2" id="regUser" accept-charset="utf-8" action="@routes.Application.registerForm()" method="post">
+                                <form name="form2" id="regUser" accept-charset="utf-8" action="@helper.CSRF(routes.Application.registerForm())" method="post">
                                     <input type="hidden" name="to" value="reg"/>
                                     <input type="hidden" name="did" value="0"/>
                                     <ul class="reg_form" id="reg-ul">
@@ -184,7 +184,7 @@
                                             <label for="captcha" class="input-tips2">验证码：</label>
                                             <div class="inputOuter2">
                                                 <input type="text" id="captcha" name="captcha" maxlength="6" class="inputstyle2" required="required" />
-                                                <img id="captchaImage" class="captchaImage" src="@routes.Captcha.getCaptcha" onclick="javascript:refresh(this)">
+                                                <img id="captchaImage" class="captchaImage" src="/captcha/new" onclick="javascript:refresh(this)">
                                             </div>
 
                                         </li>
@@ -210,7 +210,7 @@
         </div>
         <footer>
             <div class="ft-copyright">
-                <p class="copyright">Copyright &copy;2015 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
+                <p class="copyright">Copyright &copy;2015-2016 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
                     鄂ICP备15016359号-1</a><br>
                 </span>
                     <a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
@@ -234,7 +234,7 @@
 
 	        <!-- 验证码-->
 	function refresh(obj){
-                obj.src="@routes.Captcha.getCaptcha?id="+Math.random();
+                obj.src="/captcha/new?id="+Math.random();
         }
 
             $(document).keydown(function(event){
@@ -421,7 +421,7 @@
             }
                 //刷新验证码
             function change() {
-                    $("#captchaImage").attr("src", "@routes.Captcha.getCaptcha?id=" + new Date().getTime());
+                    $("#captchaImage").attr("src", "@controllers.Captcha.getCaptcha?id=" + new Date().getTime());
             }
             </script>
 

@@ -1,6 +1,6 @@
-
+@(implicit req: RequestHeader)
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>密码验证 - 心尖偏左个人简历</title>
@@ -28,14 +28,14 @@
     </script>
   </head>
   <body>
-    <form method="post" action="@routes.Application.checkResumeForm" onsubmit="return check()">
-      <div style="margin-top:50px">
-        <div style="width:300px;margin:0 auto;">
-          <div>请输入阅读密码: </div>
-          <div><input type="password" id="password" name="password" autocomplete="off" data-val="true" data-val-required="密码不能为空" style="width:200px" onkeydown="EnterSubmit(event);"/></div>
-          <div><input type="submit" id="btn_submit" value="确定"/></div>
+    <form method="post" action="@helper.CSRF(routes.Application.checkResumeForm)" onsubmit="return check()">
+        <div style="margin-top:50px">
+            <div style="width:300px;margin:0 auto;">
+                <div>请输入阅读密码: </div>
+                <div><input type="password" id="password" name="password" autocomplete="off" data-val="true" data-val-required="密码不能为空" style="width:200px" onkeydown="EnterSubmit(event);"/></div>
+                <div><input type="submit" id="btn_submit" value="确定"/></div>
+            </div>
         </div>
-      </div>
     </form>
   </body>
 </html>
