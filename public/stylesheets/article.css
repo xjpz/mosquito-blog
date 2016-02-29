@@ -120,15 +120,6 @@ input#author:focus, input#email:focus, input#url:focus, textarea#comment:focus {
 	line-height: 40px; color: #38485A; font-size: 18px; border-bottom: 1px solid #E6E6E6; height: 40px;
 }
 
-.catListTag li:hover,ul li:focus{
-	-moz-box-shadow:10px 10px 7px rgb(255,255,255);
-	-webkit-box-shadow:5px 5px 7px rgb(255,255,255);
-	box-shadow:5px 5px 7px rgb(255,255,255);
-	-webkit-transform:scale(1.1);
-	-o-transform:scale(1.1);
-	-moz-transform:scale(1.1);
-	z-index:3;
-}
 .scroll-list{height:240px;overflow:hidden;}
 .scroll-list ul li a{
 	width: 220px !important;
