@@ -1,6 +1,7 @@
 body{
-    margin:0px;
+    margin:0;
     background-color:#FFFFFF;
+    word-wrap:break-word
 }
 
 .blogright ul {
@@ -12,6 +13,10 @@ body{
 a {
     color: #258fb8;
 }
+
+a{word-wrap: break-word;}
+
+img{ width: 100%; height: auto;max-width: 100%; display: block; }
 
 a:link,a:visited{
     text-decoration:none;  /*超链接无下划线*/
