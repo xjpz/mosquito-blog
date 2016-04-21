@@ -18,7 +18,7 @@
     <ul>
     @if(controllers.Service.queryCatalog.isDefined && controllers.Service.queryCatalog.get.catalogs.isDefined) {
       @for(catalogIter <- controllers.Service.queryCatalog.get.catalogs.get) {
-        <li><a href="@(routes.Application.toCatalogArticle(catalogIter))" target="_blank">@catalogIter</a></li>
+        <li><a href="/blog/catalog?word=@catalogIter" target="_blank">@catalogIter</a></li>
       }
     }
 

@@ -25,7 +25,7 @@ GET           /blog/to/article/:aid                 controllers.Application.toAr
 GET           /blog/to/add/article                  controllers.Application.toNewArticle
 GET           /blog/smile/:aid                      controllers.Application.smile(aid:Long)
 GET           /blog/to/user/article/:uid            controllers.Application.queryWithUid(uid:Long,page:Option[Int])
-GET           /blog/catalog/:catalog                controllers.Application.toCatalogArticle(catalog:String)
+GET           /blog/catalog                         controllers.Application.toCatalogArticle(word:Option[String])
 GET           /blog/to/update/article/:aid          controllers.Application.toUpdateArticle(aid:Long)
 GET           /blog/archives                        controllers.Application.archives
 GET           /blog/delete/article/:aid             controllers.Application.deleteArticle(aid:Long)
