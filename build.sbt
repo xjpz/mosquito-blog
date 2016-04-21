@@ -1,4 +1,4 @@
-name := """mosquito"""
+name := """mosquito-blog"""
 
 version := "1.0"
 

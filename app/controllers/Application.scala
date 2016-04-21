@@ -503,11 +503,11 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     }
 
     //查询标签
-    def toCatalogArticle(catalog: String) = Action { request =>
+    def toCatalogArticle(catalog: Option[String]) = Action { request =>
 
         val uid = request.session.get("uid").getOrElse("0").toLong
 
-        val articleFuture = aActor ? ArticlesActor.QueryWithCatalog(Global.db, catalog, 0, 10)
+        val articleFuture = aActor ? ArticlesActor.QueryWithCatalog(Global.db, catalog.getOrElse(""), 0, 10)
         val articleOpt = Await.result(articleFuture, timeout.duration)
             .asInstanceOf[Option[ArticleListWrapper]]
 
