@@ -245,20 +245,20 @@ object Users extends UserJSONTrait {
     def findOpenid(otype:Int,openid:String)(implicit session: Session):Option[UserWrapper] = {
         var retOpt = None: Option[UserWrapper]
         otype match {
-            case 1 => {
+            case 1 =>
                 //x==1 qopenid  腾讯QQ
                 val userOpt = table.filter(_.qopenid===openid).filter(_.tombstone===0).take(1).firstOption
                 if(userOpt.isDefined){
                     retOpt = Option(wrap(userOpt.get))
                 }
-            }
-            case 2 =>{
+
+            case 2 =>
                 //x==2 sopenid 新浪微博
                 val userOpt = table.filter(_.sopenid===openid).filter(_.tombstone===0).take(1).firstOption
                 if(userOpt.isDefined){
                     retOpt = Option(wrap(userOpt.get))
                 }
-            }
+
             case _ => //不匹配，不做任何操作
         }
         retOpt
@@ -281,29 +281,29 @@ object Users extends UserJSONTrait {
         val queryUserOpt = table.filter(_.qopenid===user.qopenid).take(1).firstOption
 
         queryUserOpt match {
-            case x if queryUserOpt.isDefined =>{
+            case x if queryUserOpt.isDefined =>
                 //Openid 存在。写入cookie，使用户为登录状态
                 retOpt = Option(wrap(queryUserOpt.get))
-            }
-            case _ =>{
+
+            case _ =>
                 //Openid不存在
                 val unameIsExistsUserOpt = table.filter(_.name===user.name).take(1).firstOption
                 unameIsExistsUserOpt match{
-                    case x if unameIsExistsUserOpt.isDefined =>{
+                    case x if unameIsExistsUserOpt.isDefined =>
                         //用户名存在。提醒用户是否验证并与之绑定。如果用户选择验证，并验证通过，则与之绑定。写入cookie，使用户为登录状态，到此结束。
                         //TODO...................... 以后再说
                         //retOpt = Option(wrap(unameIsExistsUserOpt.get))
-                    }
-                    case _ =>{
+
+                    case _ =>
                         //用户名不存在，生成新的本地用户，并绑定uid与openid。写入cookie，使用户为登录状态。
                         user.password = Option((System.currentTimeMillis()/1000).toString)
                         pack(user)
                         val uid = (table returning table.map(_.uid)) += user
                         user.uid = uid
                         retOpt = Option(wrap(user))
-                    }
+
                 }
-            }
+
         }
 
         Cache.remove(activeUserListKey)
@@ -316,20 +316,20 @@ object Users extends UserJSONTrait {
         val queryUserOpt = table.filter(_.sopenid===user.sopenid).take(1).firstOption
 
         queryUserOpt match {
-            case x if queryUserOpt.isDefined =>{
+            case x if queryUserOpt.isDefined =>
                 //Openid 存在。写入cookie，使用户为登录状态
                 retOpt = Option(wrap(queryUserOpt.get))
-            }
-            case _ =>{
+
+            case _ =>
                 //Openid不存在
                 val unameIsExistsUserOpt = table.filter(_.name===user.name).take(1).firstOption
                 unameIsExistsUserOpt match{
-                    case x if unameIsExistsUserOpt.isDefined =>{
+                    case x if unameIsExistsUserOpt.isDefined =>
                         //用户名存在。提醒用户是否验证并与之绑定。如果用户选择验证，并验证通过，则与之绑定。写入cookie，使用户为登录状态，到此结束。
                         //TODO...................... 以后再说
                         //retOpt = Option(wrap(unameIsExistsUserOpt.get))
-                    }
-                    case _ =>{
+
+                    case _ =>
                         //用户名不存在，生成新的本地用户，并绑定uid与openid。写入cookie，使用户为登录状态。
                         user.password = Option((System.currentTimeMillis()/1000).toString)
                         pack(user)
@@ -337,9 +337,9 @@ object Users extends UserJSONTrait {
                         val uid = (table returning table.map(_.uid)) += user
                         user.uid = uid
                         retOpt = Option(wrap(user))
-                    }
+
                 }
-            }
+
         }
 		retOpt
 	}

@@ -11,9 +11,9 @@ object ResourceCtrl extends Controller{
 
 	def at(rootPath: String, file: String): Action[AnyContent] = Action { request =>
 
-		val fileUrlDeCode = java.net.URLDecoder.decode(file,"utf-8");   //中文需要URLDecoder
+		val fileUrlDeCode = java.net.URLDecoder.decode(file,"utf-8")
 
-		val fileToServe = rootPath.replace("/","\\") match {              //不知为何，传入的path与系统获取的不一样
+		val fileToServe = rootPath.replace("/","\\") match {
 			case AbsolutePath(_) => new File(rootPath, fileUrlDeCode)
 //			case _ => new File(Play.application.getFile(rootPath), fileUrlDeCode)
 			case _ => new File("/data/resource/" , fileUrlDeCode)

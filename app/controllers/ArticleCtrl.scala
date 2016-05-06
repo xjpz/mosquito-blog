@@ -4,7 +4,6 @@ import globals.Global
 import models._
 import play.api.libs.json._
 import play.api.mvc._
-// Play cached support
 import scala.language.postfixOps
 
 // Akka imports

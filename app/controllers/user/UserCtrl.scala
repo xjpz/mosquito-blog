@@ -118,13 +118,13 @@ object UserCtrl extends Controller with UserJSONTrait {
 		val emailPattern = """[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?""".r
 
 		emailPattern.findFirstIn(action) match {
-			case Some(action) => {
+			case Some(`action`) =>
 				//Email
 				val future = uActor ? UsersActor.FindByEmail(Global.db, action)
 				ret = Await.result(future, timeout.duration)
 					.asInstanceOf[Option[UserWrapper]]
-			}
-			case _ => {
+
+			case _ =>
 				//phone or uname
 				if(action.length==11 && action.startsWith("1")){
 					val future = uActor ? UsersActor.FindByPhone(Global.db, action)
@@ -135,7 +135,7 @@ object UserCtrl extends Controller with UserJSONTrait {
 					ret = Await.result(future, timeout.duration)
 						.asInstanceOf[Option[UserWrapper]]
 				}
-			}
+
 		}
 
 		if (ret.isDefined) {
@@ -221,7 +221,7 @@ object UserCtrl extends Controller with UserJSONTrait {
 
 		if(otype.isDefined){
 			otype match{
-				case Some(1) => {
+				case Some(1) =>
                     //初始化user的qopenid
                     user.qopenid = openid
                     user.qtoken = token
@@ -229,15 +229,15 @@ object UserCtrl extends Controller with UserJSONTrait {
 					val future = uActor ? UsersActor.AddQConnUser(Global.db,user)
 					 retOpt = Await.result(future, timeout.duration)
 						.asInstanceOf[Option[UserWrapper]]
-				}
-				case Some(2) => {
+
+				case Some(2) =>
                     //初始化user的qopenid
                     user.sopenid = openid
                     user.stoken = token
 					val future = uActor ? UsersActor.AddSConnUser(Global.db,user)
                     retOpt = Await.result(future, timeout.duration)
 						.asInstanceOf[Option[UserWrapper]]
-				}
+
 				case _ =>
 			}
 		}

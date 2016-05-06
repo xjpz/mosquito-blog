@@ -14,7 +14,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" % "slick_2.11" % "2.1.0",
   "org.slf4j" % "slf4j-nop" % "1.6.4",
   "mysql" % "mysql-connector-java" % "5.1.27",
-//  "com.typesafe.akka" % "akka-actor_2.10" % "2.3.5",
   "commons-codec" % "commons-codec" % "1.9",
   "org.xerial.snappy" % "snappy-java" % "1.1.0",
   "org.apache.commons" % "commons-email" % "1.4",

@@ -11,7 +11,7 @@ import play.api.libs.json.Json
 import utils.MD5
 //play.Cache
 import play.api.Play.current
-import play.api.cache.{Cached, Cache}
+import play.api.cache.Cache
 import play.api.mvc._
 
 import scala.language.postfixOps
@@ -30,10 +30,9 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
     implicit val timeout = Timeout(10 seconds)
     implicit lazy val system = ActorSystem()
     implicit lazy val aActor = system.actorOf(Props(new ArticlesActor()))
-    implicit lazy val uActor = system.actorOf(Props(new UsersActor()))
+    implicit lazy val uActor = system.actorOf(Props[UsersActor])
     implicit lazy val reply2ArticleActor = system.actorOf(Props(new Replys2ArticleActor()))
     implicit lazy val reply2MessageActor = system.actorOf(Props(new Replys2MessageActor()))
-//    implicit lazy val messageActor = system.actorOf(Props(new News2MessagesActor))
 
     private def config = Play.current.configuration
     private val adminEmailOpt = config.getString("site_admin_email")
@@ -60,8 +59,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                 Cache.remove("articleActionRank:reply")
                 Cache.remove("articleActionRank:default")
 
-            case _ =>
-                Cache.remove(action)
+            case _ => Cache.remove(action)
 
         }
         Ok(Json.obj("code"->"200","message"->"success"))
@@ -77,14 +75,16 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         Ok(views.html.index.render(uid, page))
     }
 
-    //去登录页面
+    //登录页面
     def toLogin = Action { request =>
-        Ok(views.html.login.render(request))
+        val uid = request.session.get("uid").getOrElse("0").toLong
+        Ok(views.html.login.render(uid,request))
     }
 
-    //去注册页面
+    //注册页面
     def toReg = Action { request =>
-        Ok(views.html.login.render(request))
+        val uid = request.session.get("uid").getOrElse("0").toLong
+        Ok(views.html.login.render(uid,request))
     }
 
     //关于本站页面
@@ -97,16 +97,12 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         Ok(views.html.contactus.render())
     }
 
-    //去个人简历页面
+    //个人简历页面
     def toResume = Action{ request =>
         Ok(views.html.toResume.render(request))
     }
 
-//    def resume = Action {
-//        Ok(views.html.resume.render())
-//    }
-
-    //去留言板页面
+    //留言板页面
     def toMessage = Action { request =>
         val uid = request.session.get("uid").getOrElse("0").toLong
         Ok(views.html.message.render(uid,request))
@@ -117,7 +113,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         Ok(views.html.unfinished.render())
     }
 
-    //去后台管理页面
+    //后台管理页面
     def toAdmin = Action{ request =>
         Ok(views.html.toAdmin.render(request))
     }
@@ -129,7 +125,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
     }
 
-    //去修改密码页面
+    //修改密码页面
     def toResetPassword = Action{ request =>
         Ok(views.html.updatePasswd.render(request))
     }
@@ -181,12 +177,12 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
 
     }
 
-	//去发表文章页面
+	//发表文章页面
     def toNewArticle = Action { request =>
         val uid = request.session.get("uid").getOrElse("0").toLong
 
 	    uid match {
-		    case 0 => Ok(views.html.login.render(request))
+		    case 0 => Ok(views.html.login.render(uid,request))
 		    case _ => Ok(views.html.article_new.render(uid,request))
 	    }
 
@@ -216,16 +212,16 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                         .asInstanceOf[Option[UserWrapper]]
 
                 case _ =>
-                    //phone or uname
-                    if (loginAction.length == 11 && loginAction.startsWith("1")) {
-                        val future = uActor ? UsersActor.FindByPhone(Global.db, loginAction)
-                        Await.result(future, timeout.duration)
-                            .asInstanceOf[Option[UserWrapper]]
-                    } else {
+//                    //phone or uname
+//                    if (loginAction.length == 11 && loginAction.startsWith("1")) {
+//                        val future = uActor ? UsersActor.FindByPhone(Global.db, loginAction)
+//                        Await.result(future, timeout.duration)
+//                            .asInstanceOf[Option[UserWrapper]]
+//                    } else {
                         val future = uActor ? UsersActor.FindByName(Global.db, loginAction)
                         Await.result(future, timeout.duration)
                             .asInstanceOf[Option[UserWrapper]]
-                    }
+//                    }
 
             }
 
@@ -262,7 +258,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val usernameListBuff = reqJson.get("username")
         val passwdListBuff = reqJson.get("password")
         val emailListBuff = reqJson.get("email")
-        val phoneListBuff = reqJson.get("phone")
+//        val phoneListBuff = reqJson.get("phone")
 
         val captchaText = request.session.get("captcha").get
 
@@ -271,22 +267,22 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         if (isAjax && captchaText == MD5.hash(captchaListBuff.head.toUpperCase) ) {
 
             if (usernameListBuff.nonEmpty && passwdListBuff.nonEmpty &&
-                emailListBuff.nonEmpty && phoneListBuff.nonEmpty) {
+                emailListBuff.nonEmpty) {
 
                 val username = usernameListBuff.head
                 val passwd = passwdListBuff.head
                 val email = emailListBuff.head
-                val phone = phoneListBuff.head
+//                val phone = phoneListBuff.head
                 val updtime = Option(System.currentTimeMillis() / 1000L)
 
                 Global.db.withSession { implicit session =>
                     flag match {
                         case x if models.Users.userIsExists(username) => flag = 2
-                        case x if models.Users.userIsExists(phone) => flag = 3
+//                        case x if models.Users.userIsExists(phone) => flag = 3
                         case x if models.Users.userIsExists(email) => flag = 4
                         case _ =>
                             val user = User(Option(username), Option(passwd), Option(email),
-                                Option(phone), None, Option(1), Option(0), None, None, None, None, updtime, updtime)
+                                Option(""), None, Option(1), Option(0), None, None, None, None, updtime, updtime)
                             //*************
                             //邮件通知   *
                             //*************
@@ -570,7 +566,7 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
                         val queryEmail = user.email.getOrElse("")
                         val queryName = user.name.getOrElse("")
                         if(name== queryName && email.toUpperCase == queryEmail.toUpperCase){
-                            val updPasswdFuture = uActor ? UsersActor.UpdatePassWord(Global.db, user.uid.get, passwordBase64ForSHA)
+                            uActor ? UsersActor.UpdatePassWord(Global.db, user.uid.get, passwordBase64ForSHA)
 
                             //*************
                             //邮件通知   *
@@ -729,27 +725,13 @@ object Application extends Controller with ArticleJSONTrait with MailJsonTrait {
         val tokenListBuff = reqJson.get("token")
         val otypeListBuff = reqJson.get("otype")
 
-        val updtime = Option(System.currentTimeMillis() / 1000L)
         val name = nameListBuff.head
         val otype = otypeListBuff.head
         val openid = openidListBuff.head
         val token = tokenListBuff.head
 
-        val user = User(
-            Option(name),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            updtime,
-            updtime
-        )
+        val user = User(Option(name))
+
             Option(otype) match{
                 case Some("1") =>
                     //初始化user的qq openid

@@ -125,7 +125,7 @@ trait ReplysTrait extends ReplyJSONTrait {
         reply.rid = id
         ret = Option(wrap(reply))
 
-        val future = aActor ! ArticlesActor.ReplyCount(Global.db, reply.aid.get)
+        aActor ! ArticlesActor.ReplyCount(Global.db, reply.aid.get)
 //        val flag = Await.result(future, timeout.duration)
 //            .asInstanceOf[Boolean]
 

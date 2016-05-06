@@ -21,22 +21,6 @@ object MailCtrl extends Controller with MailJsonTrait{
     implicit lazy val system = ActorSystem()
     implicit lazy val mailActor = system.actorOf(Props(new MailsActor()))
 
-    /*
-    send-host:smtp.126.com
-    recv-host:pop.126.com
-    sendPort: java.lang.Integer = 465
-    recvPort: java.lang.Integer = 995
-        {
-          "host" : "smtp.126.com",
-          "from" : "xxxx.com",
-          "to" : "xxxx@qq.com",
-          "username" : "xjpz9999@126.com",
-          "password" : "xxxx",
-          "subject" : "test",
-          "content" : "hahahhhahahhahahaha"
-        }
-    * */
-
     def send = Action { request =>
         val reqJson = request.body.asJson.get
 
