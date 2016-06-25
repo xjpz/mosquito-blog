@@ -1,0 +1,74 @@
+@import play.api.Play.current
+
+@import java.text.SimpleDateFormat
+<div class="blogright" id="blogright">
+
+  <div class="catListTag">
+    <h3 class="catListTitle">活跃用户</h3>
+    <div class="module-list scroll-list">
+      <ul>
+
+      @for(userIter <- services.ViewAccessPoint.Implicits.myDao.queryUserList){
+        <li ><a id="CatList_LinkList_0_Link_0" href="/blog/user/article/@userIter.uid.get" target="_blank" >@userIter.name</a><small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get* 1000L))</small> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></li>
+      }
+
+      </ul>
+    </div>
+  </div>
+  <div class="cloud">
+    <h3>标签云</h3>
+    <ul>
+    @for(catalogIter <- services.ViewAccessPoint.Implicits.myDao.queryCatalogList) {
+      <li><a href="/blog/catalog?word=@catalogIter" target="_blank">@catalogIter</a></li>
+    }
+
+    </ul>
+  </div>
+
+  <div class="links">
+    <h3>友情链接</h3>
+    <ul>
+
+    @for(linkIter <- services.ViewAccessPoint.Implicits.myDao.queryLinList){
+      <li><a id="CatList_LinkList_0_Link_0" target="_blank" href="@linkIter.content">@linkIter.name</a> </li>
+    }
+
+    </ul>
+  </div>
+
+  <div class="rank">
+    <h3>推荐排行</h3>
+
+      @defining(services.ViewAccessPoint.Implicits.myDao.queryArticleBySmileRank){ articleList=>
+        <ul>
+          @for(i <- articleList.indices) {
+            <li><a href="/blog/article/@articleList(i).aid.get" target="_blank">@(i+1) . @articleList(i).title (@articleList(i).smile) </a></li>
+          }
+        </ul>
+      }
+
+  </div>
+
+  <div class="rank">
+    <h3>阅读排行</h3>
+    @defining(services.ViewAccessPoint.Implicits.myDao.queryArticleByReadRank){ articleList=>
+      <ul>
+        @for(i <- articleList.indices) {
+          <li><a href="/blog/article/@articleList(i).aid.get" target="_blank">@(i+1) . @articleList(i).title (@articleList(i).read) </a></li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="rank">
+    <h3>评论排行</h3>
+    @defining(services.ViewAccessPoint.Implicits.myDao.queryArticleByReplyRank){ articleList=>
+      <ul>
+        @for(i <- articleList.indices) {
+          <li><a href="/blog/article/@articleList(i).aid.get" target="_blank">@(i+1) . @articleList(i).title (@articleList(i).reply) </a></li>
+        }
+      </ul>
+    }
+  </div>
+
+</div>

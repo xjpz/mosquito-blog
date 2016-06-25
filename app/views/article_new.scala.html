@@ -1,182 +1,92 @@
-@(uid: Long)(implicit req: RequestHeader)
-    @import play.api.Play
+@(uid: Long,uname:String)
 <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>发表文章 - 心尖偏左</title>
-        <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
-        <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>发表文章 - 心尖偏左</title>
+    <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
+    <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-            <!--音乐播放器 -->
-        <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
-            <!-- simditor 富文本编辑器 -->
+      <!--音乐播放器 -->
+    <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+      <!-- simditor 富文本编辑器 -->
 
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/module.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/hotkeys.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/uploader.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/simditor.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/module.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/hotkeys.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/uploader.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/simditor.js")"></script>
 
-        <!--  simditor-markdown  -->
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/marked.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/to-markdown.js")"></script>
-        <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/simditor-markdown.js")"></script>
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("simditor/styles/simditor-markdown.css")" media="screen" charset="utf-8" />
+      <!--  simditor-markdown  -->
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/marked.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/to-markdown.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("simditor/scripts/simditor-markdown.js")"></script>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("simditor/styles/simditor-markdown.css")" media="screen" charset="utf-8" />
 
-        <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("simditor/styles/simditor.css")" media="screen" charset="utf-8" />
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article_new.css")" >
-        <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.versioned("simditor/styles/simditor.css")" media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article_new.css")" >
+    <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
 
-            <!-- 新 Bootstrap 核心 CSS 文件 -->
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
+      <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
-            <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script type="text/javascript">
+      <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
 
-          $(function(){
-               toolbar = [ 'title', 'bold', 'italic', 'underline', 'strikethrough',
-                        'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|',
-                        'link', 'image', 'hr', '|', 'indent', 'outdent','markdown' ];
-                var editor = new Simditor( {
-                    textarea : $('#editor'),
-                    placeholder : '这里输入内容...',
-                    toolbar : toolbar,  //工具栏
-                    defaultImage : '@routes.Assets.versioned("simditor/images/image.png")', //编辑器插入图片时使用的默认图片
-                    upload : {
-                        url : '@controllers.other.routes.UploadCtrl.upload', //文件上传的接口地址
-                        params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
-                        fileKey: 'fileDataFileName', //服务器端获取文件数据的参数名
-                        connectionCount: 3,
-                        leaveConfirm: '正在上传文件'
-                    }
-                });
-           })
-
-           </script>
-    </head>
-
-    <body>
-            <!-- ntopbar -->
-        <div class="topbar">
-            <div class="ntopbar_main">
-                <div class="ntopbar_floatL">
-                    <div><script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=17542041042688205263' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
-                    </div>
-                </div>
-
-                <div class="ntopbar_menu">
-                @if(uid == 0){
-                    <div class="dropdown">
-                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="/">注册/登录</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a href="/blog/to/login">注册</a></li>
-                            <li><a href="/blog/to/login">登录</a></li>
-                            <li><a href="/blog/to/reset/password">修改密码</a></li>
-                        </ul>
-
-                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
-                    </div>
-                }else{
-                    <div class="dropdown" style="float: left;">
-                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
-                            <li><a href="/blog/to/reset/password">修改密码</a></li>
-                            <li><a href="@routes.Application.logOut()">退出</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="dropdown" style="float: left;">
-                        <span class="link" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="@routes.Application.user()">个人中心</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a href="@routes.Application.queryWithUid(uid,Option(1))">我的博客</a></li>
-                        </ul>
-
-                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
-                    </div>
+            $(function(){
+              toolbar = [ 'title', 'bold', 'italic', 'underline', 'strikethrough',
+                'color', '|', 'ol', 'ul', 'blockquote', 'code', 'table', '|',
+                'link', 'image', 'hr', '|', 'indent', 'outdent','markdown' ];
+              var editor = new Simditor( {
+                textarea : $('#editor'),
+                placeholder : '这里输入内容...',
+                toolbar : toolbar,  //工具栏
+                defaultImage : '@routes.Assets.versioned("simditor/images/image.png")', //编辑器插入图片时使用的默认图片
+                upload : {
+                  url : '@routes.HomeController.upload()', //文件上传的接口地址
+                  params: null, //键值对,指定文件上传接口的额外参数,上传的时候随文件一起提交
+                  fileKey: 'fileDataFileName', //服务器端获取文件数据的参数名
+                  connectionCount: 3,
+                  leaveConfirm: '正在上传文件'
                 }
-                </div>
-            </div>
-        </div>
+              });
+            })
 
+    </script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+              var s = document.getElementsByTagName("script")[0];
+              s.parentNode.insertBefore(hm, s);
+            })();
+    </script>
 
-            <!-- blog -->
-        <div class="bloga" id="bloga">
-            <div class="bloghead" id="bloghead">
-                <br>
-                <div class="blog_name" id="blog_name">
-                    <a href="/">@Play.current.configuration.getString("site_name").getOrElse("")</a>
-                    <span>@Service.findNews2MoodHead.getOrElse("Scala满足了我对编程语言的所有幻想")</span>
-                </div>
-            </div>
-            <div class="blogb" id="blogb">
+  </head>
 
-                <div class="blogbody" id="blogbody">
-                    <h1>发表文章<sup>V2015.beta</sup></h1>
-                    @import helper._
-                    @form(CSRF(routes.Application.addArticleForm())) {
-                        <div id="new_article_form" class="new_article_form">
-                            <p><label for="title">&nbsp;&nbsp;标题:</label>
-                                <input type="text" name="title" id="author" value="" size="25" tabindex="1" class="comment_input" required/></p>
+  <body>
 
-                            <p><label for="catalog">&nbsp;&nbsp;标签:</label>
-                                <input type="text" name="catalog" id="author" value="" size="25" tabindex="1" class="comment_input" /></p>
+    @blog.blog_topbar(uid, uname)
 
-                            <p><label for="admin">&nbsp;&nbsp;权限:</label>
-                                <select id="admin" name="type">
-                                    <option value="0">
-                                        普通
-                                    </option>
-                                    <option value="1">
-                                        仅自己
-                                    </option>
-                                    <option value="2">
-                                        禁止评论
-                                    </option>
-                                    @*<option value="3">*@
-                                    @*删除*@
-                                    @*</option>*@
-                                </select>
-                                <br>
-                            </p>
-                            <p><label for="url">&nbsp;&nbsp;网址:</label>
-                                <input type="text" name="url" id="url" value="" size="25" tabindex="3" class="comment_input" /></p>
+    <!-- blog -->
+  <div class="bloga" id="bloga">
+      <!-- bloghead -->
+    @blog.blog_head()
 
-                            @*<textarea name="content" id="new_article" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea>*@
+    <div class="blogb" id="blogb">
+        <!-- blogbody -->
+      @blog.blog_article_new()
 
-                            <textarea id="editor" name="content" placeholder="请输入：" autofocus required ></textarea>
+    </div>
 
-                            <p><input name="submit" type="submit" id="submit" tabindex="5" value="发表" class="button" /></p>
-                            <input type="hidden" name="comment_post_ID" value="542" />
+  </div>
 
-                            <p style="display : none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
-                            <p><input type="hidden" id="ak_js" name="ak_js" value="87"/></p>
-                        </div>
-                    }
-                    @*<form action="@routes.Application.addArticleForm()" method="post" id="commentform">*@
-                        @**@
-                    @*</form>*@
+    @footer.index_footer(2)
 
-
-                </div>
-
-            </div>
-        </div>
-        @index_footer(2)
-    </body>
+  </body>
 
 </html>
 

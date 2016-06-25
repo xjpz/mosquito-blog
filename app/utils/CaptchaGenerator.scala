@@ -22,24 +22,24 @@ object CaptchaGenerator {
 
 	lazy val random = new Random(System.currentTimeMillis)
 
-	//验证码图片宽度
-	lazy val width = 80
+//	//验证码图片宽度
+//	lazy val width = 80
+//
+//	//验证码图片宽度
+//	lazy val height = 30
 
-	//验证码图片宽度
-	lazy val height = 30
 
+//	def getImage() = {
+//		val captchaText = generateCaptchaText(4)
+//		val image = generateCaptchaImage(width, height, captchaText)
+//		val os = new ByteArrayOutputStream()
+//		ImageIO.write(image, "gif", os)
+//		new ByteArrayInputStream(os.toByteArray)
+//	}
 
-	def getImage() = {
+	def getCpatcha(w: Int, h: Int): (String, InputStream) = {
 		val captchaText = generateCaptchaText(4)
-		val image = generateCaptchaImage(width, height, captchaText)
-		val os = new ByteArrayOutputStream()
-		ImageIO.write(image, "gif", os)
-		new ByteArrayInputStream(os.toByteArray)
-	}
-
-	def getCpatcha: (String, InputStream) = {
-		val captchaText = generateCaptchaText(4)
-		val image = generateCaptchaImage(width, height, captchaText)
+		val image = generateCaptchaImage(w, h, captchaText)
 		val os = new ByteArrayOutputStream()
 		ImageIO.write(image, "gif", os)
 		val captchaValue = new ByteArrayInputStream(os.toByteArray)
@@ -175,7 +175,7 @@ object CaptchaGenerator {
 		}
 
 		//		 添加噪点
-		val yawpRate = 0.05f // 噪声率
+		val yawpRate = 0.02f // 噪声率
 		val area = (yawpRate * w * h).toInt
 		for (i <- 0 until area) {
 			val x = random.nextInt(w)
@@ -188,7 +188,8 @@ object CaptchaGenerator {
 		//		warp(g2, w, h, c)
 
 		g2.setColor(getRandomColor(100, 160))
-		val fontSize = h - 2
+//		val fontSize = h - 2
+		val fontSize = if (h >= 40) 16 else h - 15
 		val font = new Font("Algerian", Font.ITALIC, fontSize)
 		g2.setFont(font)
 		val chars = captchaText.toCharArray

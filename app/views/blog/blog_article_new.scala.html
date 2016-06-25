@@ -1,0 +1,45 @@
+
+<div class="blogbody" id="blogbody">
+  <h1>发表文章<sup>V2015.beta</sup></h1>
+  @import helper._
+  @form(routes.ArticleController.init()) {
+    <div id="new_article_form" class="new_article_form">
+      <p><label for="title">&nbsp;&nbsp;标题:</label>
+        <input type="text" name="title" id="author" value="" size="25" tabindex="1" class="comment_input" required/></p>
+
+      <p><label for="catalog">&nbsp;&nbsp;标签:</label>
+        <input type="text" name="catalog" id="author" value="" size="25" tabindex="1" class="comment_input" /></p>
+
+      <p><label for="admin">&nbsp;&nbsp;权限:</label>
+        <select id="admin" name="type">
+          <option value="0">
+            普通
+          </option>
+          <option value="1">
+            仅自己
+          </option>
+          <option value="2">
+            禁止评论
+          </option>
+          @*<option value="3">*@
+          @*删除*@
+          @*</option>*@
+        </select>
+        <br>
+      </p>
+      <p><label for="url">&nbsp;&nbsp;网址:</label>
+        <input type="text" name="url" id="url" value="" size="25" tabindex="3" class="comment_input" /></p>
+
+      @*<textarea name="content" id="new_article" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea>*@
+
+      <textarea id="editor" name="content" placeholder="请输入：" autofocus required ></textarea>
+
+      <p><input name="submit" type="submit" id="submit" tabindex="5" value="发表" class="button" /></p>
+      <input type="hidden" name="comment_post_ID" value="542" />
+
+      <p style="display : none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
+      <p><input type="hidden" id="ak_js" name="ak_js" value="87"/></p>
+    </div>
+  }
+
+</div>

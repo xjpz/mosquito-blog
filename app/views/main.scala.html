@@ -1,0 +1,24 @@
+@(uid: Long, uname: String)(userList: Seq[User], catalogList: Seq[String], rank: (Seq[Article], Seq[Article], Seq[Article]))(blogbody: Html)
+@import views.html.blog
+
+
+    <!-- ntopbar -->
+@blog.blog_topbar(uid, uname)
+
+    <!-- blog -->
+<div class="bloga" id="bloga">
+        <!-- bloghead -->
+    @blog.blog_head()
+
+    <div class="blogb" id="blogb">
+            <!-- blogbody -->
+        @blogbody
+
+            <!-- index_right-->
+        @blog.blog_right()
+    </div>
+
+</div>
+
+@footer.index_footer(2)
+

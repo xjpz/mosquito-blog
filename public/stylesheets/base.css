@@ -21,8 +21,6 @@ a{word-wrap: break-word;}
     height: auto;
 }
 
-img{ width: 100%; height: auto;max-width: 100%;}
-
 a:link,a:visited{
     text-decoration:none;  /*超链接无下划线*/
 }

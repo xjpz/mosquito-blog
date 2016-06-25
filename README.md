@@ -2,7 +2,7 @@
 
 演示地址：[http://xjpz.me](http://xjpz.me "首页")
 
-`mosquito-blog`是一个用`Scala`+`Play`搭建的`webservice`博客系统。
+`mosquito-blog`是一个用`Scala`+`Play`搭建的博客系统。
 
 前端是由`play`模板渲染(`html`模板也是借用play的，向play致敬！)。
 
@@ -10,13 +10,12 @@
 
 ## 技术栈 ##
 
-- `Scala` - version 2.11.6
-- `Play` - version 2.3.10
-- `Sbt` - version 0.13.8
+- `Scala` - version 2.11.7
+- `Play` - version 2.5.4
+- `Sbt` - version 0.13.11
 - `Activator` - version 1.3.7
 - `MySql` - version 5.6.17
-- `Akka` - version 2.3.5
-- `Slick` - version 2.10
+- `Slick` - version 3.1
 
 ## 功能实现 ##
 

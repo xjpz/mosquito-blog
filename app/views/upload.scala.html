@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <title>mstudy-upload</title>
+        <link rel="shortcut icon" href="/assets/images/favicon.png" />
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+
+    </head>
+    <body>
+    @helper.form(action = controllers.routes.HomeController.upload(), 'enctype -> "multipart/form-data") {
+
+        <input type="file" name="fileDataFileName" multiple="multiple"> <br><br>
+
+        <input name="descrp">
+
+        <p>
+            <label for="url">路径:</label>
+            <select name="path" id="path">
+                <option >blog/</option>
+                <option >docs/</option>
+                <option >images/</option>
+                <option >other/</option>
+                <option >test/</option>
+            </select>
+        </p>
+
+        <p>
+            <input type="submit" >
+        </p>
+
+    }
+    </body>
+</html>

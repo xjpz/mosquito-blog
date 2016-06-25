@@ -1,4 +1,4 @@
-@(code:Int)
+@(code:Int,message:String)
 <html>
     <head>
         <title>Free error @code</title>
@@ -73,6 +73,16 @@
         color: black;
         }
         </style>
+        <script>
+                var _hmt = _hmt || [];
+                (function() {
+                    var hm = document.createElement("script");
+                    hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                    var s = document.getElementsByTagName("script")[0];
+                    s.parentNode.insertBefore(hm, s);
+                })();
+        </script>
+
     </head>
 
 
@@ -81,7 +91,7 @@
             <div class="logo">
                 <h1>@code</h1>
                 <p>Error occured! - A client error occurred</p>
-                <p>@if(code==404){NotFound}else{BadRequest}</p>
+                <p>@message</p>
                 <div class="sub">
                     <p><a href="/">Back</a></p>
                 </div>
@@ -94,10 +104,9 @@
         <footer>
 
         <div class="ft-copyright">
-            <p class="copyright">Copyright &copy;2015-2016 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">
-                鄂ICP备15016359号-1</a><br>
+            <p class="copyright">Copyright &copy;2015-2016 心尖偏左  <span><a href="http://www.miitbeian.gov.cn/">鄂ICP备15016359号</a><br>
             </span>
-                <a href="/">首页</a>&nbsp; | &nbsp;<a href="@routes.Application.about()">关于我们</a>&nbsp; | &nbsp;<a href="@routes.Application.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.Application.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.Application.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
+                <a href="/">首页</a>&nbsp; | &nbsp;<a href="@routes.HomeController.about()">关于本站</a>&nbsp; | &nbsp;<a href="@routes.HomeController.contactus()">联系我们</a>&nbsp; | &nbsp;<a href="@routes.HomeController.toResume()">个人简历</a>&nbsp; | &nbsp;<a href="@routes.HomeController.toAdmin()">后台管理</a>&nbsp; | &nbsp;<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256391631'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1256391631' type='text/javascript'%3E%3C/script%3E"));</script>
             </p>
 
         </div>
