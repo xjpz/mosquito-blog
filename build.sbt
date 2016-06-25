@@ -1,32 +1,21 @@
 name := """mosquito-blog"""
 
-version := "1.0"
+version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
   filters,
-  "com.typesafe.slick" % "slick_2.11" % "2.1.0",
-  "org.slf4j" % "slf4j-nop" % "1.6.4",
-  "mysql" % "mysql-connector-java" % "5.1.27",
-  "commons-codec" % "commons-codec" % "1.9",
-  "org.xerial.snappy" % "snappy-java" % "1.1.0",
-  "org.apache.commons" % "commons-email" % "1.4",
-  "org.apache.commons" % "commons-math3" % "3.3"
+  "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test,
+  "com.typesafe.play" %% "play-slick" % "2.0.0",
+  //"com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
+  "mysql" % "mysql-connector-java" % "5.1.34",
+  "com.typesafe.play" %% "play-mailer" % "5.0.0-M1"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
-
-// Play provides two styles of routers, one expects its actions to be injected, the
-// other, legacy style, accesses its actions statically.
-
-mappings in Universal ++=
-    (baseDirectory.value / "res" * "*" get) map
-        (x => x -> ("res/" + x.getName))
-
-scalacOptions += "-feature"

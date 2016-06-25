@@ -214,14 +214,24 @@ h1 sup{
 .web_login .inputstyle2 {border-radius:2px;width:210px;}
 
 .web_login #captcha{
-	width:103px;
+	width:110px;
 	float: left;
 }
 
 .web_login .captchaImage{
 	float: left;
 	margin-left: 0.5em;
-	margin-top: 3px;
+	margin-top: 1px;
+
+	cursor: pointer;
+	display: inline-block;
+	/*width: 128px;*/
+	/*height: 40px;*/
+	background: #E8E8E8;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	position: absolute;
 }
 
 .web_login .input-tips2 {

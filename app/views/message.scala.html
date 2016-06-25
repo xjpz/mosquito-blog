@@ -1,6 +1,5 @@
-@(uid: Long)(implicit req: RequestHeader)
-@import play.api.Play
-@import java.text.SimpleDateFormat
+@import models.reply.ReplyListTree
+@(uid: Long,uname:String)(replyListTree: Seq[ReplyListTree])
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,216 +20,38 @@
 
             <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
 
     </head>
 
     <body>
-            <!-- ntopbar -->
-        <div class="topbar">
-            <div class="ntopbar_main">
-                <div class="ntopbar_floatL">
-                    <div><script type="text/javascript">(function(){document.write(unescape('%3Cdiv id="bdcs"%3E%3C/div%3E'));var bdcs = document.createElement('script');bdcs.type = 'text/javascript';bdcs.async = true;bdcs.src = 'http://znsv.baidu.com/customer_search/api/js?sid=17542041042688205263' + '&plate_url=' + encodeURIComponent(window.location.href) + '&t=' + Math.ceil(new Date()/3600000);var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(bdcs, s);})();</script>
-                    </div>
-                </div>
 
-                <div class="ntopbar_menu">
-                @if(uid == 0){
-                    <div class="dropdown">
-                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="/">注册/登录</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a href="javascript:" onclick="toLogin()">注册</a></li>
-                            <li><a href="javascript:" onclick="toLogin()">登录</a></li>
-                            <li><a href="/blog/to/reset/password">修改密码</a></li>
-                        </ul>
-
-                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
-                    </div>
-                }else{
-                    <div class="dropdown" style="float: left;">
-                        <span class="link" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="/">@controllers.Service.getUname(uid).getOrElse("")</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            @*<li><a href="/blog/to/login">个人资料修改</a></li>*@
-                            <li><a href="/blog/to/reset/password">修改密码</a></li>
-                            <li><a href="/blog/logout?url=/blog/to/message">退出</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="dropdown" style="float: left;">
-                        <span class="link" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                            <a href="@routes.Application.user()">个人中心</a>|
-                        </span>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a href="@routes.Application.queryWithUid(uid,Option(1))">我的博客</a></li>
-                        </ul>
-
-                        @*<span class="link" ><a href="@routes.Application.archives()">归档</a>|</span>*@
-                        <span class="link" ><a href="@routes.Application.toNewArticle()">发博客</a>|</span>
-                        <span class="link" ><a href="@routes.Application.toMessage()">留言</a></span>
-                    </div>
-                }
-                </div>
-            </div>
-        </div>
-
+        @blog.blog_topbar(uid, uname)
 
             <!-- blog -->
         <div class="bloga" id="bloga">
-            <div class="bloghead" id="bloghead">
-                <br>
-                <div class="blog_name" id="blog_name">
-                    <a href="/">@Play.current.configuration.getString("site_name").getOrElse("")</a>
-                    <span>@Service.findNews2MoodHead.getOrElse("Scala满足了我对编程语言的所有幻想")</span>
-                </div>
-            </div>
+                <!-- bloghead -->
+            @blog.blog_head()
+
             <div class="blogb" id="blogb">
-                    <!-- 留言-->
-                <div class="blogbody" id="blogbody">
+                    <!-- blogbody -->
+                @blog.blog_message(uid,uname,replyListTree: Seq[ReplyListTree])
 
-                    <h1>留言板(@Service.queryMessageReply(0).length)<sup>V2015</sup></h1>
-
-                    <div id="article_comment" class="article_comment">
-                    @defining(controllers.Service.queryMessageReply(0)) { queryMessageReplyList =>
-
-                        @for(i <- queryMessageReplyList.indices) {
-                            <div id="comment_body" class="comment_body">
-                                <div> @(i + 1)#&nbsp;&nbsp;<a href="#">@queryMessageReplyList(i).name</a> &nbsp;：</div>
-                                    &nbsp;&nbsp;&nbsp;&nbsp; @queryMessageReplyList(i).content
-                                <br>
-                                <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryMessageReplyList(i).inittime.get * 1000L)) &nbsp;&nbsp;
-                                    <a href="#comment" onclick="ClieckReply(@queryMessageReplyList(i).rid.getOrElse(0),'@queryMessageReplyList(i).name');">回复</a> &nbsp;|&nbsp;
-                                    <a  href="javascript:" onclick="reply_smile_numfun(@queryMessageReplyList(i).rid.getOrElse(0),'reply_smile_num@queryMessageReplyList(i).rid.getOrElse(0)')">赞(<span id="reply_smile_num@queryMessageReplyList(i).rid.getOrElse(0)">@queryMessageReplyList(i).smile.getOrElse(0)</span>)</a>
-                                <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
-                                </div>
-
-                                @defining(controllers.Service.queryMessageReplyChild(queryMessageReplyList(i).rid.getOrElse(0))) { queryMessageReplyChildList =>
-                                    @for(j <- queryMessageReplyChildList.indices) {
-
-                                        <div id="comment_footer" class="comment_footer">
-
-                                            <div>
-                                                <a href="#">@queryMessageReplyChildList(j).name</a> &nbsp;回复&nbsp;
-                                                <a href="#">@controllers.Service.findReply2MessageUName(queryMessageReplyChildList(j).quote.get)</a>：
-                                            </div>
-                                                &nbsp;&nbsp;&nbsp;&nbsp; @queryMessageReplyChildList(j).content
-                                            <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(queryMessageReplyChildList(j).inittime.get * 1000L)) &nbsp;&nbsp;
-                                                <a href="#comment" onclick="ClieckReply(@queryMessageReplyChildList(j).rid.getOrElse(0),'@queryMessageReplyChildList(j).name')">回复</a> &nbsp;|&nbsp;
-                                                <a href="javascript:" onclick="reply_smile_numfun(@queryMessageReplyChildList(j).rid.getOrElse(0),'reply_smile_num_child@queryMessageReplyChildList(j).rid.getOrElse(0)')">赞(<span id="reply_smile_num_child@queryMessageReplyChildList(j).rid.getOrElse(0)">@queryMessageReplyChildList(j).smile.getOrElse(0)</span>)</a>
-                                            </div>
-                                            <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        }
-                    }
-                    </div>
-
-                        <!-- 发表评论 -->
-                    <br/>
-                    <div id="commentform">
-
-                    <div class='login_info' @if(uid == 0) {
-                        style="display:none;"} ><b>发表评论</b></div>
-
-                    <div class='login_info' @if(uid != 0) {
-                        style="display:none;"} > 还没有登陆？可以登录后再评论哦。
-                        <b><a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
-                            <a href="javascript:" onclick="toLogin()">&raquo;去注册</a>&nbsp;
-                                <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
-                                <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
-                        </b>
-                    </div>
-
-                    <form action="@helper.CSRF(routes.Application.addMessageReplyForm())" method="post" id="commentform">
-
-                        <p><label for="author">用户:</label>
-                            <input type="text" name="name" id="author" @if(uid != 0) {
-                                value="@(controllers.Service.getUname(uid))" readonly="readonly"
-                            } else {
-                                value=""
-                            } size="25" tabindex="1" class="comment_input" required/> * </p>
-
-                        <div @if(uid != 0) {
-                            style="display: none;" }>
-                            <p><label for="email">邮箱:</label>
-                                <input @if(uid != 0) {
-                                    type="hidden"
-                                } else {
-                                    type="email"
-                                } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/> * </p>
-
-                            <p><label for="url">网址:</label>
-                                <input @if(uid != 0) {
-                                    type="hidden"
-                                } else {
-                                    type="text"
-                                } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" />
-                            </p>
-
-                            <p><label for="url">验证码:</label>
-                                <input @if(uid != 0) {
-                                    type="hidden"
-                                } else {
-                                    type="text"
-                                } name="captcha" id="captcha" value="" size="3" tabindex="3" class="comment_input" required onfocus="showMenu();changeFlag(true);" onblur="changeFlag(false);hideMenu();" onclick="showMenu();" />&nbsp;&nbsp;<a href="javascript:_rvi();document.getElementById('captcha').focus();">换一个</a> *
-                            </p>
-                            <div id="f_vcode_menu" style="position: absolute; z-index: 301; left: 559.75px; top: 2122.33px; display: none;"><img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"> <br>
-                            </div>
-                            <script>
-                                        groupFlag = false;
-                                        function changeFlag(flag){
-                                            groupFlag = flag;
-                                        }
-                                        function showMenu(){
-                                            var left = $("#captcha").position().left;
-                                            var top = $("#captcha").position().top - 40;
-
-                                            $("#f_vcode_menu").css({"left":left,"top":top});
-                                            if($("#f_vcode_menu img").size() == 0){
-                                                $("#f_vcode_menu").prepend('<img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"/> <br/>');
-                                            }
-                                            $("#f_vcode_menu").show();
-                                        }
-                                        function hideMenu(){
-                                            if(!groupFlag)
-                                                $("#f_vcode_menu").hide();
-                                        }
-
-                                        function _rvi(){document.getElementById('img_vcode').src = '/captcha/new?t='+Math.random(1000);}
-
-                                </script>
-
-
-                        </div>
-
-                        <p><textarea name="content" id="comment" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea></p>
-
-                        <p>&nbsp;<input name="submit" type="submit" id="submit" tabindex="5" value="发表评论" class="button" /></p>
-                        <input type="hidden" name="comment_post_ID" value="542" />
-
-                        <p style="display : none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
-                        <p><input type="hidden" id="ak_js" name="aid" value="0" /></p>
-                        <p><input type="hidden" id="ak_js" name="quote" value="0" /></p>
-                        <p><input type="hidden" id="ak_js" name="uid" value="@uid" /></p>
-
-                    </form>
-                    </div>
-
-                </div>
-
-                @index_right()
-
+                    <!-- index_right-->
+                @blog.blog_right()
             </div>
+
         </div>
 
-        @index_footer(2)
-
+        @footer.index_footer(2)
     </body>
 
 </html>

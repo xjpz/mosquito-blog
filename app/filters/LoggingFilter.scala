@@ -1,22 +1,32 @@
 package filters
 
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+/**
+  * Created by xjpz on 2016/5/30.
+  */
+
+import javax.inject.{Inject, Singleton}
+
+import akka.stream.Materializer
+import play.api.Logger
 import play.api.mvc._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-object LoggingFilter extends Filter {
-    def apply(nextFilter: (RequestHeader) => Future[Result])
+@Singleton
+class LoggingFilter @Inject() (implicit val mat: Materializer, ec: ExecutionContext) extends Filter {
+
+    def apply(nextFilter: RequestHeader => Future[Result])
              (requestHeader: RequestHeader): Future[Result] = {
+
         val startTime = System.currentTimeMillis
-        //        val ip = requestHeader.host
+
         nextFilter(requestHeader).map { result =>
+
             val endTime = System.currentTimeMillis
             val requestTime = endTime - startTime
-            val msg = s"${requestHeader.host} ${requestHeader.method} ${requestHeader.uri} " +
-                s"took ${requestTime}ms and returned ${result.header.status}"
-            play.Logger.of("access").info(msg)
-            // Logger.info(msg)
+
+            play.Logger.of("access").info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
+
             result.withHeaders("Request-Time" -> requestTime.toString)
         }
     }

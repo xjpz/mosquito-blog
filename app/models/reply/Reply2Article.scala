@@ -1,35 +1,15 @@
-package models
+package models.reply
 
-import akka.actor.Actor
-import scala.slick.driver.MySQLDriver.simple._
+import slick.driver.MySQLDriver.api._
+
+import scala.language.postfixOps
 
 /**
- * Created by xjpz_wz on 2015/9/7.
- */
-object Reply2Article extends ReplysTrait{
-    override val table = TableQuery[ReplysTable](
-        (tag: Tag) => new ReplysTable(tag, "reply2article")
-    )
-}
+  * Created by wenzh on 2016/5/29.
+  */
 
-import models.ReplysActor.{Init, Query, Retrieve,QueryChild,Smile}
-
-class Replys2ArticleActor extends Actor {
-    def receive: Receive = {
-        case Init(db: Database, reply: Reply) =>
-            db.withSession ( implicit session => sender ! models.Reply2Article.init(reply))
-
-        case Query(db: Database, aid: Long) =>
-            db.withSession ( implicit session => sender !  models.Reply2Article.query(aid))
-
-        case QueryChild(db: Database, rid: Long) =>
-            db.withSession ( implicit session => sender !  models.Reply2Article.queryChild(rid))
-
-        case Retrieve(db: Database, rid: Long) =>
-            db.withSession ( implicit session => sender ! models.Reply2Article.retrieve(rid))
-
-        case Smile(db:Database,rid:Long) =>
-            db.withSession(implicit session => sender ! models.Reply2Article.smile(rid))
-
-    }
+object Reply2Article extends Replys{
+  override val table = TableQuery[ReplysTable](
+    (tag: Tag) => new ReplysTable(tag, "reply2article")
+  )
 }

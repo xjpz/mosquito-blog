@@ -1,0 +1,119 @@
+@(uid: Long,uname:String)(user: User,articleList:Seq[Article], page: Int)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@user.name 文章列表 - 心尖偏左</title>
+    <meta name="keywords" content="心尖偏左Blog,@user.name" />
+    <meta name="description" content="@user.name - 心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+
+      <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+    <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
+    <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
+
+      <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
+
+      <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <style type="text/css">
+    .article_editor{
+      float: right;
+      font-size: 12px;
+    }
+    .article_title{
+      float:left;
+    }
+    .article_head{
+      margin-bottom: 1em;;
+    }
+    </style>
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+
+  </head>
+
+  <body>
+
+      <!-- ntopbar -->
+    @blog.blog_topbar(uid,uname)
+
+      <!-- blog -->
+    <div class="bloga" id="bloga">
+        <!-- bloghead -->
+      <div class="bloghead" id="bloghead">
+        <br>
+        <div class="blog_name" id="blog_name">
+          <a href="/">@user.name</a>
+          <span>@user.descrp.getOrElse("Scala满足了我对编程语言的所有幻想.")</span>
+        </div>
+      </div>
+
+      <div class="blogb" id="blogb">
+          <!-- blogbody -->
+        @blog.blog_myblogs(uid,user,articleList,page)
+          <!-- index_right-->
+
+        @blog.blog_right()
+      </div>
+
+    </div>
+
+    @footer.index_footer(2)
+
+  </body>
+
+</html>
+
+<script type="text/javascript" language="javascript">
+        //异步刷新点赞数
+        function smile_numfun(aid){
+          //为了保证体验（速度），不判断是否执行成功，直接+1
+          var num = document.getElementById("smile_num"+aid).innerText;
+          document.getElementById("smile_num"+aid).innerHTML = parseInt(num)+1;
+          $.ajax({
+            type: "GET",
+            url: "/blog/smile/"+aid,
+            data: {},
+            success: function(data){
+              //执行成功。。。
+            }
+          });
+        }
+        //删除
+        function isdelete(aid,name){
+          var r = window.confirm("确定要删除【"+name+"】吗?");
+          if(r){
+            window.location.href="/blog/delete/article/"+aid;
+          }
+        }
+
+        /*活跃用户滚动*/
+        $(function () {
+          var settime;
+          $(".scroll-list").hover(function () {
+            clearInterval(settime);
+          }, function () {
+            settime = setInterval(function () {
+              var $first = $(".scroll-list ul:first");     //选取div下的第一个ul 而不是li；
+              var height = $first.find("li:first").height();      //获取第一个li的高度，为ul向上移动做准备；
+              $first.animate({ "marginTop": -height + "px" }, 2000, function () {
+                $first.css({ marginTop: 0 }).find("li:first").appendTo($first); //设置上边距为零，为了下一次移动做准备
+              });
+            }, 2000);
+          }).trigger("mouseleave");       //trigger()方法的作用是触发被选元素的制定事件类型
+        });
+</script>
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
