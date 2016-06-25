@@ -257,4 +257,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
     }
   }
 
+  def qcLoginBack = Action {
+    Ok(views.html.qcback())
+  }
 }

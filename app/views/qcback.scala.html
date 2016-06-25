@@ -43,7 +43,7 @@
                                 $.post('@routes.UserController.loginByQConn',{name:s.data.nickname,openid:openId,otype:1,token:accessToken},function(data,status){
                                     if(status=="success"){
                                         try {
-                                            if (window.opener.location.href.indexOf("xjpz.me/blog/to/login") >= 0)
+                                            if (window.opener.location.href.indexOf("xjpz.me/blog/login") >= 0)
                                                 window.opener.location.href = "/";
                                             else
                                                 window.opener.location.reload(true);//强制刷新
@@ -54,7 +54,7 @@
                                         window.close();
                                     }else{
                                         alert("获取用户信息成功！登录失败！");
-                                        location.href = "/blog/to/login";
+                                        location.href = "/blog/login";
                                     }
                                 })
                             })

@@ -26,6 +26,7 @@ GET         /blog/article/:aid                 controllers.HomeController.articl
 
 GET         /blog/login                        controllers.HomeController.toLogin
 GET         /blog/reset/password               controllers.HomeController.resetPassWord
+GET         /blog/test/qcback                  controllers.HomeController.qcLoginBack
 
 # footer
 GET         /blog/about                        controllers.HomeController.about
