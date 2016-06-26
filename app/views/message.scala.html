@@ -59,22 +59,25 @@
 
 <script type="text/javascript">
 
-        function toLogin(){
-            window.location.href="/blog/to/login?url="+window.location.href
-        }
-
     //异步刷新评论以及子评论点赞数
     function reply_smile_numfun(rid,idName){
         var num = document.getElementById(idName).innerText;
-		document.getElementById(idName).innerHTML = parseInt(num)+1;
-		$.ajax({
-            type: "GET",
-            url: "/blog/reply/message/smile/"+rid,
-            data: {},
-            success: function(data){
-
+        $.ajax({
+            headers : {
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            url : '/blog/reply2message/smile/'+ rid,
+            type : 'PATCH',
+            data : JSON.stringify({}),
+            success : function(response, textStatus, jqXhr) {
+                if(response.ret == 1){
+                    document.getElementById(idName).innerHTML = parseInt(num)+1;
+                }else{
+                    console.log("Oops");
+                }
             }
-         });
+        });
 	}
 
         //评论

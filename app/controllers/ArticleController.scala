@@ -117,7 +117,25 @@ class ArticleController @Inject()(articles:Articles) extends Controller with JsF
         for(
           updSimle <- articles.updateSmileCount(aid,x.smile.getOrElse(0) +1)
         ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
-      case _ => Future(Ok(Json.obj("ret" -> 2, "con" -> JsNull, "des" -> ResultStatus.status_2)))
+      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+    }
+  }
+
+  def revoke(aid:Long) = Action.async { implicit request =>
+    val uid = request.session.get("uid").getOrElse("0").toLong
+
+    {
+      for(article <- articles.retrieve(aid)) yield article
+    }.flatMap{
+      case Some(x) =>
+        if(Option(uid) == x.uid){
+          for(
+            del <- articles.revoke(aid)
+          ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(del), "des" -> ResultStatus.status_1))
+        }else{
+          Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
+        }
+      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }
   }
 

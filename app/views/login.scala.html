@@ -232,7 +232,7 @@
                 } else {
 
                   var url = window.location.search;
-                  var returnUrl = url.substring(url.lastIndexOf('=')+1, url.length);
+                  var returnUrl = url.substring(url.indexOf('=')+1, url.length);
                   if(returnUrl==""){
                     location.href = "/";
                   }else{

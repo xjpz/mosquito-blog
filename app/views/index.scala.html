@@ -74,12 +74,20 @@
     function smile_numfun(aid){
         var num = document.getElementById("smile_num"+aid).innerText;
 
-        $.post('/blog/smile/'+ aid,{},function(data,status){
-            if(data.ret == 1){
-                document.getElementById("smile_num"+aid).innerHTML = parseInt(num)+1;
-//                    alert("Success")
-            }else{
-                alert("Oops")
+        $.ajax({
+            headers : {
+                'Accept' : 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            url : '/blog/smile/'+ aid,
+            type : 'PATCH',
+            data : JSON.stringify({}),
+            success : function(response, textStatus, jqXhr) {
+                if(response.ret == 1){
+                    document.getElementById("smile_num"+aid).innerHTML = parseInt(num)+1;
+                }else{
+                    console.log("Oops");
+                }
             }
         });
     }

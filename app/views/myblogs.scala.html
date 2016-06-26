@@ -79,23 +79,41 @@
 <script type="text/javascript" language="javascript">
         //异步刷新点赞数
         function smile_numfun(aid){
-          //为了保证体验（速度），不判断是否执行成功，直接+1
           var num = document.getElementById("smile_num"+aid).innerText;
-          document.getElementById("smile_num"+aid).innerHTML = parseInt(num)+1;
           $.ajax({
-            type: "GET",
-            url: "/blog/smile/"+aid,
-            data: {},
-            success: function(data){
-              //执行成功。。。
+            headers : {
+              'Accept' : 'application/json',
+              'Content-Type' : 'application/json'
+            },
+            url : '/blog/smile/'+ aid,
+            type : 'PATCH',
+            data : JSON.stringify({}),
+            success : function(response, textStatus, jqXhr) {
+              if(response.ret == 1){
+                document.getElementById("smile_num"+aid).innerHTML = parseInt(num)+1;
+              }else{
+                console.log("Oops");
+              }
             }
           });
         }
+
         //删除
         function isdelete(aid,name){
           var r = window.confirm("确定要删除【"+name+"】吗?");
           if(r){
-            window.location.href="/blog/delete/article/"+aid;
+            $.ajax({
+              url : '/blog/article/'+ aid,
+              type : 'DELETE',
+              data : {},
+              success : function(response, textStatus, jqXhr) {
+                if(response.ret == 1){
+                  location.replace(location.href);
+                }else{
+                  console.log("Oops");
+                }
+              }
+            });
           }
         }
 

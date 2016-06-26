@@ -51,8 +51,10 @@ POST        /blog/check/resume                 controllers.HomeController.checkR
 POST        /blog/check/admin                  controllers.HomeController.checkAdminForm
 POST        /blog/upload                       controllers.HomeController.upload
 POST        /blog/qclogin                      controllers.UserController.loginByQConn
-POST        /blog/smile/:aid                   controllers.ArticleController.updateSmileCount(aid:Long)
-
+PATCH       /blog/smile/:aid                   controllers.ArticleController.updateSmileCount(aid:Long)
+DELETE      /blog/article/:aid                 controllers.ArticleController.revoke(aid:Long)
+PATCH       /blog/reply2article/smile/:rid     controllers.Reply2ArticleController.updateSmileCount(rid:Long)
+PATCH       /blog/reply2message/smile/:rid     controllers.Reply2MsgController.updateSmileCount(rid:Long)
 ##############
 # API routes #
 ##############
@@ -81,5 +83,6 @@ POST        /blog/smile/:aid                   controllers.ArticleController.upd
 
 #Mood
 
-GET       /mood/:id                            controllers.MoodController.retrieve(id:Long)
+#GET       /mood/:id                            controllers.MoodController.retrieve(id:Long)
 
+GET       /test                                 controllers.HomeController.test

@@ -72,4 +72,16 @@ class Reply2MsgController @Inject() extends Controller with JsFormat{
       Future(Ok(Json.obj("ret" -> 5, "con" -> JsNull, "des" -> ResultStatus.status_5)))
     }
   }
+
+  def updateSmileCount(rid:Long) = Action.async {
+    {
+      for(reply <- Reply2Message.retrieve(rid)) yield reply
+    }.flatMap{
+      case Some(x) =>
+        for(
+          updSimle <- Reply2Message.updateSmileCount(rid,x.smile.getOrElse(0) +1)
+        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
+      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+    }
+  }
 }

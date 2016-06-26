@@ -84,4 +84,9 @@ trait Replys {
     dbConfig.db.run((table returning table.map(_.rid)) += reply)
   }
 
+  def updateSmileCount(rid:Long,smile:Int):Future[Int] = {
+    dbConfig.db.run(
+      table.filter(_.rid === rid).filter(_.tombstone === 0).
+        map( row => (row.smile,row.updtime)).update(Some(smile),Option(System.currentTimeMillis()/1000)))
+  }
 }
