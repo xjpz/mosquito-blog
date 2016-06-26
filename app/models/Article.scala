@@ -142,11 +142,11 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   }
 
   def queryByCatalog(catalog:String) : Future[Seq[Article]] = {
-    db.run(table.filter(_.catalog like "%" + catalog + "%").sortBy(_.aid.desc).result)
+    db.run(table.filter(_.catalog like "%" + catalog + "%").filter(_.tombstone === 0).sortBy(_.aid.desc).result)
   }
 
   def queryByUid(uid:Long): Future[Seq[Article]] = {
-    db.run(table.filter(_.uid === uid).sortBy(_.aid.desc).result)
+    db.run(table.filter(_.uid === uid).filter(_.tombstone === 0).sortBy(_.aid.desc).result)
   }
 
   def init(article: Article):Future[Option[Long]] = {
@@ -172,5 +172,11 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     db.run(
       table.filter(_.aid === aid).filter(_.tombstone === 0).
         map( row => (row.smile,row.updtime)).update(Some(smile),Option(System.currentTimeMillis()/1000)))
+  }
+
+  def revoke(aid:Long):Future[Int] = {
+    db.run(
+      table.filter(_.aid === aid).filter(_.tombstone === 0).
+        map(row => (row.tombstone,row.updtime)).update(Some(1),Option(System.currentTimeMillis()/1000)))
   }
 }

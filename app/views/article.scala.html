@@ -1,40 +1,39 @@
 @import models.reply.ReplyListTree
-@(uid: Long,uname:String)(user: User,article: Article,replyListTree: Seq[ReplyListTree])
-@import play.api.Play
+@(uid: Long, uname: String)(user: User, article: Article, replyListTree: Seq[ReplyListTree])
 
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>@article.title - 心尖偏左</title>
-        <meta name="keywords" content="@article.title - 心尖偏左" />
-        <meta name="description" content="心尖偏左Blog - @article.title - @if(article.content.getOrElse("").length >= 160) {@article.content.get.substring(0,160)...} else {
-            @article.content.getOrElse("")
-        }" />
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <html lang="en">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <title>@article.title - 心尖偏左</title>
+            <meta name="keywords" content="@article.title - 心尖偏左" />
+            <meta name="description" content="心尖偏左Blog - @article.title - @if(article.content.getOrElse("").length >= 160) {@article.content.get.substring(0,160)...} else {
+                @article.content.getOrElse("")
+            }" />
+            <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
-            <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-        <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
-        @*音乐播放器*@
-        <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article.css")" >
-        <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
-            <!-- 新 Bootstrap 核心 CSS 文件 -->
-        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
-            <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+                <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+            <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
+            @*音乐播放器*@
+            <script src="@routes.Assets.versioned("javascripts/jquery.simplemusic.js")"></script>
+            <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/base.css")" />
+            <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/article.css")" >
+            <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
+                <!-- 新 Bootstrap 核心 CSS 文件 -->
+            <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
+                <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+            <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-        <style id="system" type="text/css">
-        img {
-            width: 100%;
-            height: auto;
-            max-width: 100%;
-        }
-        </style>
-        <script>
+            <style id="system" type="text/css">
+            img {
+                width: 100%;
+                height: auto;
+                max-width: 100%;
+            }
+            </style>
+            <script>
                 var _hmt = _hmt || [];
-                (function() {
+                (function () {
                     var hm = document.createElement("script");
                     hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
                     var s = document.getElementsByTagName("script")[0];
@@ -42,20 +41,20 @@
                 })();
         </script>
 
-    </head>
+        </head>
 
-    <body>
+        <body>
 
-        @blog.blog_topbar(uid, uname)
+            @blog.blog_topbar(uid, uname)
 
-        <!-- blog -->
+            <!-- blog -->
         <div class="bloga" id="bloga">
                 <!-- bloghead -->
             @blog.blog_head()
 
             <div class="blogb" id="blogb">
                     <!-- blogbody -->
-                @blog.blog_articlebody(uid,uname,user,article,replyListTree)
+                @blog.blog_articlebody(uid, uname, user, article, replyListTree)
 
                     <!-- index_right-->
                 @blog.blog_right()
@@ -63,13 +62,13 @@
 
         </div>
 
-        @footer.index_footer(1)
+            @footer.index_footer(1)
 
-    </body>
+        </body>
 
-</html>
+    </html>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         function toLogin() {
             window.location.href = "/blog/login?url=" + window.location.href
@@ -78,12 +77,20 @@
         function smile_numfun(aid) {
             var num = document.getElementById("smile_num").innerText;
 
-            $.post('/blog/smile/'+ aid,{},function(data,status){
-                if(data.ret == 1){
-                    document.getElementById("smile_num").innerHTML = parseInt(num) + 1;
-//                    alert("Success")
-                }else{
-                    alert("Oops")
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: '/blog/smile/' + aid,
+                type: 'PATCH',
+                data: JSON.stringify({}),
+                success: function (response, textStatus, jqXhr) {
+                    if (response.ret == 1) {
+                        document.getElementById("smile_num").innerHTML = parseInt(num) + 1;
+                    } else {
+                        console.log("Oops");
+                    }
                 }
             });
         }
@@ -91,16 +98,22 @@
         //异步刷新评论以及子评论点赞数
         function reply_smile_numfun(rid, idName) {
             var num = document.getElementById(idName).innerText;
-            document.getElementById(idName).innerHTML = parseInt(num) + 1;
             $.ajax({
-                type: "GET",
-                url: "/blog/reply/article/smile/" + rid,
-                data: {},
-                success: function (data) {
-
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: '/blog/reply2article/smile/' + rid,
+                type: 'PATCH',
+                data: JSON.stringify({}),
+                success: function (response, textStatus, jqXhr) {
+                    if (response.ret == 1) {
+                        document.getElementById(idName).innerHTML = parseInt(num) + 1;
+                    } else {
+                        console.log("Oops");
+                    }
                 }
             });
-
         }
 
         //评论
@@ -131,18 +144,18 @@
 </script>
 
 
-<script>window._bd_share_config = {
-    "common": {
-        "bdSnsKey": {},
-        "bdText": "",
-        "bdMini": "1",
-        "bdMiniList": ["mshare", "qzone", "tsina", "weixin", "tieba", "sqq", "mail", "copy", "print"],
-        "bdPic": "",
-        "bdStyle": "0",
-        "bdSize": "16"
-    },
-    "slide": {"type": "slide", "bdImg": "1", "bdPos": "right", "bdTop": "128"},
-    "image": {"viewList": ["qzone", "tsina", "tqq", "renren", "weixin"], "viewText": "分享到：", "viewSize": "16"},
-    "selectShare": {"bdContainerClass": null, "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]}
-};
-with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+    <script>window._bd_share_config = {
+        "common": {
+            "bdSnsKey": {},
+            "bdText": "",
+            "bdMini": "1",
+            "bdMiniList": ["mshare", "qzone", "tsina", "weixin", "tieba", "sqq", "mail", "copy", "print"],
+            "bdPic": "",
+            "bdStyle": "0",
+            "bdSize": "16"
+        },
+        "slide": {"type": "slide", "bdImg": "1", "bdPos": "right", "bdTop": "128"},
+        "image": {"viewList": ["qzone", "tsina", "tqq", "renren", "weixin"], "viewText": "分享到：", "viewSize": "16"},
+        "selectShare": {"bdContainerClass": null, "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]}
+    };
+    with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>

@@ -177,7 +177,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
 
     uid match {
       case 0 => Ok(views.html.login(uid,name))
-      case _ => Redirect(routes.HomeController.toLogin())
+      case _ => Ok(views.html.article_new(uid,name))
     }
   }
 
@@ -257,4 +257,11 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
     }
   }
 
+  def qcLoginBack = Action {
+    Ok(views.html.qcback())
+  }
+
+  def test = Action {
+    Ok(views.html.text())
+  }
 }

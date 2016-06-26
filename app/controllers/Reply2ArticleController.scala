@@ -90,4 +90,16 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat{
     }
   }
 
+  def updateSmileCount(rid:Long) = Action.async {
+    {
+      for(reply <- Reply2Article.retrieve(rid)) yield reply
+    }.flatMap{
+      case Some(x) =>
+        for(
+          updSimle <- Reply2Article.updateSmileCount(rid,x.smile.getOrElse(0) +1)
+        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
+      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+    }
+  }
+
 }
