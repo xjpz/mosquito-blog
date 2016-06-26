@@ -27,8 +27,8 @@
   <div id="article_comment" class="article_comment">
     @for(i <- replyListTree.indices) {
       <div id="comment_body" class="comment_body">
-        <div> @(i + 1)#&nbsp;&nbsp;<a href="/blog/to/user/article/@replyListTree(i).reply.uid.getOrElse(0)">@replyListTree(i).reply.name</a> &nbsp;：</div>
-          &nbsp;&nbsp;&nbsp;&nbsp; @replyListTree(i).reply.content
+        <div> @(i + 1)#&nbsp;&nbsp;<a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;" } >@replyListTree(i).reply.name</a> &nbsp;：</div>
+          &nbsp;&nbsp;&nbsp;&nbsp; @Html(replyListTree(i).reply.content.getOrElse(""))
         <br>
         <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyListTree(i).reply.inittime.get * 1000L)) &nbsp;&nbsp;
         <a href="#comment" onclick="ClieckReply(@replyListTree(i).reply.rid.getOrElse(0),'@replyListTree(i).reply.name');">回复</a> &nbsp;|&nbsp;
@@ -40,10 +40,10 @@
             <div id="comment_footer" class="comment_footer">
 
               <div>
-                <a href="/blog/to/user/article/@replyChild.uid.getOrElse(0)">@replyChild.name</a>
-                  &nbsp;回复&nbsp; <a href="#">@replyListTree(i).reply.name</a>：
+                <a href="/blog/user/article/@replyChild.uid.getOrElse(0)" @if(replyChild.uid == Option(0L)){ onclick="return false;" } >@replyChild.name</a>
+                  &nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：
               </div>
-                &nbsp;&nbsp;&nbsp;&nbsp; @replyChild.content
+                &nbsp;&nbsp;&nbsp;&nbsp; @Html(replyChild.content.getOrElse(""))
               <div>
                 @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyChild.inittime.get * 1000L)) &nbsp;&nbsp;
               <a href="#comment" onclick="ClieckReply(@replyChild.rid.getOrElse(0),'@replyChild.name')">回复</a> &nbsp;|&nbsp;
