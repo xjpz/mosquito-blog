@@ -85,15 +85,18 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
 
     for {
       Some(article) <- articles.retrieve(aid)
-      updRead <- articles.updateReadCount(aid,article.read.getOrElse(0) +1)
       Some(user) <- users.retrieve(article.uid.get)
       replyList <- Reply2Article.queryByAid(aid)
     } yield {
+      request.session.get(s"aid:$aid") match {
+        case None => articles.updateReadCount(aid,article.read.getOrElse(0) +1)
+        case _ =>
+      }
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
         ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
       )
-      Ok(views.html.article(uid, name)(user, article, replyListTree))
+      Ok(views.html.article(uid, name)(user, article, replyListTree)).withSession(request.session + (s"aid:$aid" -> "true"))
     }
   }
 
