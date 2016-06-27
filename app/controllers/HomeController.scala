@@ -37,12 +37,6 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
 
   implicit lazy val shaEncoder = MessageDigest.getInstance("SHA-1")
 
-  val pathForm = Form(
-    mapping(
-      "path" -> default(text,"blog/")
-    )(Tuple1.apply)(Tuple1.unapply)
-  )
-
   val resumeForm = Form(
     mapping(
       "password" -> text()
@@ -56,9 +50,6 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       "code" -> text()
     )(Tuple3.apply)(Tuple3.unapply)
   )
-
-  lazy val AbsolutePath = """^(/|[a-zA-Z]:\\).*""".r
-  lazy val FILESAVEPATH = configuration.getString("file.resource").getOrElse("/data/blog/resource/") //File Save Path
 
   def index(page: Int, size: Int) = Action.async { implicit request =>
     val uid = request.session.get("uid").getOrElse("0").toLong
@@ -240,21 +231,6 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
 
   def resetPassWord = Action {
     Ok(views.html.password_update())
-  }
-
-  def upload = Action(parse.multipartFormData) { implicit request =>
-    val selectPath = pathForm.bindFromRequest().get
-    request.body.file("fileDataFileName").map { file =>
-
-      val filename = file.filename
-      val fileType = filename.substring(filename.lastIndexOf("."))
-      val fileNameFinal = s"${selectPath._1}/" + Codecs.sha1(file.ref.file.toString)+fileType
-      val filaPathFinal = FILESAVEPATH + fileNameFinal
-      file.ref.moveTo(new File(filaPathFinal))
-      Ok(Json.obj("success"->"true","file_path" -> s"http://${request.host}/resource/$fileNameFinal"))
-    }.getOrElse {
-      Ok(Json.obj("success"->"false","message" ->"fail","file_path" -> JsNull))
-    }
   }
 
   def qcLoginBack = Action {

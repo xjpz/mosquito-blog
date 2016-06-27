@@ -16,7 +16,7 @@
 
     </head>
     <body>
-    @helper.form(action = controllers.routes.HomeController.upload(), 'enctype -> "multipart/form-data") {
+    @helper.form(action = controllers.routes.ResourceController.upload(), 'enctype -> "multipart/form-data") {
 
         <input type="file" name="fileDataFileName" multiple="multiple"> <br><br>
 
@@ -25,11 +25,11 @@
         <p>
             <label for="url">路径:</label>
             <select name="path" id="path">
-                <option >blog/</option>
-                <option >docs/</option>
-                <option >images/</option>
-                <option >other/</option>
-                <option >test/</option>
+                <option >blog</option>
+                <option >docs</option>
+                <option >images</option>
+                <option >other</option>
+                <option >test</option>
             </select>
         </p>
 
