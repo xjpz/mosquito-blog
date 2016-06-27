@@ -3,58 +3,58 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET         /                                  controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15)
+GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15)
 # An example controller showing how to use dependency injection
-GET         /count                             controllers.CountController.count
+GET           /count                                controllers.CountController.count
 # An example controller showing how to write asynchronous code
-GET         /message                           controllers.AsyncController.message
+GET           /message                              controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
+GET           /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
 
 
-GET         /blog/logout                       controllers.HomeController.logOut
-GET         /blog/message                      controllers.HomeController.toMessage
-GET         /blog/article/new                  controllers.HomeController.toNewArticle
-GET         /blog/article/update/:aid          controllers.HomeController.toUpdate(aid:Long)
-GET         /blog/user/article                 controllers.HomeController.userCenter
-GET         /blog/catalog                      controllers.HomeController.toCatalog(word:String ?= "",page :Int ?= 1, size :Int ?= 10)
-GET         /blog/user/article/:uid            controllers.HomeController.myblogs(uid:Long,page :Int ?= 1, size :Int ?= 10)
+GET           /blog/logout                          controllers.HomeController.logOut
+GET           /blog/message                         controllers.HomeController.toMessage
+GET           /blog/article/new                     controllers.HomeController.toNewArticle
+GET           /blog/article/update/:aid             controllers.HomeController.toUpdate(aid:Long)
+GET           /blog/user/article                    controllers.HomeController.userCenter
+GET           /blog/catalog                         controllers.HomeController.toCatalog(word:String ?= "",page :Int ?= 1, size :Int ?= 10)
+GET           /blog/user/article/:uid               controllers.HomeController.myblogs(uid:Long,page :Int ?= 1, size :Int ?= 10)
 
-GET         /blog/article/:aid                 controllers.HomeController.article(aid:Long)
+GET           /blog/article/:aid                    controllers.HomeController.article(aid:Long)
 
 
-GET         /blog/login                        controllers.HomeController.toLogin
-GET         /blog/reset/password               controllers.HomeController.resetPassWord
-GET         /blog/test/qcback                  controllers.HomeController.qcLoginBack
+GET           /blog/login                           controllers.HomeController.toLogin
+GET           /blog/reset/password                  controllers.HomeController.resetPassWord
+GET           /blog/test/qcback                     controllers.HomeController.qcLoginBack
 
 # footer
-GET         /blog/about                        controllers.HomeController.about
-GET         /blog/contactus                    controllers.HomeController.contactus
-GET         /blog/resume                       controllers.HomeController.toResume
-GET         /blog/admin                        controllers.HomeController.toAdmin
+GET           /blog/about                           controllers.HomeController.about
+GET           /blog/contactus                       controllers.HomeController.contactus
+GET           /blog/resume                          controllers.HomeController.toResume
+GET           /blog/admin                           controllers.HomeController.toAdmin
 
 #blog util
 
-GET         /blog/upload                       controllers.HomeController.toUpload
-GET         /blog/resource/*file               controllers.ResourceController.at(path="/",file)
-GET         /blog/captcha                      controllers.CaptchaController.getCaptcha(w:Int ?= 90 , h :Int ?= 36)
+GET           /blog/upload                          controllers.HomeController.toUpload
+GET           /blog/resource/*file                  controllers.ResourceController.at(path="/",file)
+GET           /blog/captcha                         controllers.CaptchaController.getCaptcha(w:Int ?= 90 , h :Int ?= 36)
 
 # Post From
-POST        /blog/login                        controllers.UserController.login
-POST        /blog/register                     controllers.UserController.reg
-POST        /blog/article                      controllers.ArticleController.init
-POST        /blog/article/update               controllers.ArticleController.update
-POST        /blog/reply2article                controllers.Reply2ArticleController.initReply2Article
-POST        /blog/reply2message                controllers.Reply2MsgController.initReply2Message
-POST        /blog/check/resume                 controllers.HomeController.checkResumeForm
-POST        /blog/check/admin                  controllers.HomeController.checkAdminForm
-POST        /blog/upload                       controllers.HomeController.upload
-POST        /blog/qclogin                      controllers.UserController.loginByQConn
-PATCH       /blog/smile/:aid                   controllers.ArticleController.updateSmileCount(aid:Long)
-DELETE      /blog/article/:aid                 controllers.ArticleController.revoke(aid:Long)
-PATCH       /blog/reply2article/smile/:rid     controllers.Reply2ArticleController.updateSmileCount(rid:Long)
-PATCH       /blog/reply2message/smile/:rid     controllers.Reply2MsgController.updateSmileCount(rid:Long)
+POST          /blog/login                           controllers.UserController.login
+POST          /blog/register                        controllers.UserController.reg
+POST          /blog/article                         controllers.ArticleController.init
+POST          /blog/article/update                  controllers.ArticleController.update
+POST          /blog/reply2article                   controllers.Reply2ArticleController.initReply2Article
+POST          /blog/reply2message                   controllers.Reply2MsgController.initReply2Message
+POST          /blog/check/resume                    controllers.HomeController.checkResumeForm
+POST          /blog/check/admin                     controllers.HomeController.checkAdminForm
+POST          /blog/upload                          controllers.ResourceController.upload
+POST          /blog/qclogin                         controllers.UserController.loginByQConn
+PATCH         /blog/smile/:aid                      controllers.ArticleController.updateSmileCount(aid:Long)
+DELETE        /blog/article/:aid                    controllers.ArticleController.revoke(aid:Long)
+PATCH         /blog/reply2article/smile/:rid        controllers.Reply2ArticleController.updateSmileCount(rid:Long)
+PATCH         /blog/reply2message/smile/:rid        controllers.Reply2MsgController.updateSmileCount(rid:Long)
 ##############
 # API routes #
 ##############
@@ -85,4 +85,4 @@ PATCH       /blog/reply2message/smile/:rid     controllers.Reply2MsgController.u
 
 #GET       /mood/:id                            controllers.MoodController.retrieve(id:Long)
 
-GET       /test                                 controllers.HomeController.test
+GET           /test                                 controllers.HomeController.test
