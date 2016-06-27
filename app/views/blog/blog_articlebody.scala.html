@@ -41,7 +41,8 @@
 
               <div>
                 <a href="/blog/user/article/@replyChild.uid.getOrElse(0)" @if(replyChild.uid == Option(0L)){ onclick="return false;" } >@replyChild.name</a>
-                  &nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：
+                  @*&nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：*@
+                &nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.uid.get" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.name</a>：
               </div>
                 &nbsp;&nbsp;&nbsp;&nbsp; @Html(replyChild.content.getOrElse(""))
               <div>

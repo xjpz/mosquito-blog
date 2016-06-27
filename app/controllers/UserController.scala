@@ -123,7 +123,7 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
       }.flatMap {
         case (Some(_),_) => Future(Ok(Json.obj("ret" -> 11, "con" -> JsNull, "des" -> ResultStatus.status_11)))
         case (None,Some(_)) => Future(Ok(Json.obj("ret" -> 12, "con" -> JsNull, "des" -> ResultStatus.status_12)))
-        case (x,y) =>
+        case (_,_) =>
           for {
             uid <- users.init(user)
           } yield {

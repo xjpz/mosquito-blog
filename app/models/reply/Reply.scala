@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 import slick.driver.MySQLDriver.api._
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
 import scala.language.postfixOps
 
@@ -29,7 +30,7 @@ case class Reply(
 case class ReplyListWrapper(articles: List[Reply], count:Int)
 
 case class ReplyListTree(
-                         reply:Reply, tree:List[Reply])
+                         queryReply:Seq[Reply],reply:Reply, tree:List[Reply])
 
 class ReplysTable(tag: Tag, table: String) extends Table[Reply](tag, table) {
   def rid = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
@@ -89,4 +90,19 @@ trait Replys {
       table.filter(_.rid === rid).filter(_.tombstone === 0).
         map( row => (row.smile,row.updtime)).update(Some(smile),Option(System.currentTimeMillis()/1000)))
   }
+
+  @annotation.tailrec
+  final def parseReplyTree(ridSuperSeq:Seq[Long],queryReplySeq:Seq[Reply],childReplyRetList:ListBuffer[Reply]):ListBuffer[Reply] = {
+    val childReplyFilterList = queryReplySeq.filter(i => ridSuperSeq.contains(i.quote.get))
+
+    if(childReplyFilterList.nonEmpty){
+      childReplyRetList ++= childReplyFilterList
+      val ridSeq:Seq[Long] = childReplyFilterList.map(_.rid.get)
+
+      parseReplyTree(ridSeq,queryReplySeq,childReplyRetList)
+    }else{
+      childReplyRetList
+    }
+  }
+
 }

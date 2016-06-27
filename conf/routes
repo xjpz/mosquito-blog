@@ -60,29 +60,29 @@ PATCH         /blog/reply2message/smile/:rid        controllers.Reply2MsgControl
 ##############
 
 # User
-#GET         /user                              controllers.UserController.query(page:Int ?= 0,size:Int ?= 10)
-#GET         /user/name                         controllers.UserController.queryByName(name:String)
-#GET         /user/:uid                         controllers.UserController.retrieve(uid:Long)
-#GET         /user/exists/:name                 controllers.UserController.userIsExists(name:String)
+#GET         /user                                  controllers.UserController.query(page:Int ?= 0,size:Int ?= 10)
+#GET         /user/name                             controllers.UserController.queryByName(name:String)
+#GET         /user/:uid                             controllers.UserController.retrieve(uid:Long)
+#GET         /user/exists/:name                     controllers.UserController.userIsExists(name:String)
 #
 ## Article
-#GET         /article/:aid                      controllers.ArticleController.retrieve(aid:Long)
-#GET         /article                           controllers.ArticleController.query(page:Int ?= 0,size:Int ?= 10)
-#GET         /article/by/catalog                controllers.ArticleController.queryByCatalog(catalog:String ?= "" ,page:Int ?= 0,size:Int ?= 10)
+#GET         /article/:aid                          controllers.ArticleController.retrieve(aid:Long)
+#GET         /article                               controllers.ArticleController.query(page:Int ?= 0,size:Int ?= 10)
+#GET         /article/by/catalog                    controllers.ArticleController.queryByCatalog(catalog:String ?= "" ,page:Int ?= 0,size:Int ?= 10)
 #
 ##Reply
 #
-#GET         /reply2message/:rid                controllers.Reply2MsgController.retrieve(rid:Long)
+#GET         /reply2message/:rid                    controllers.Reply2MsgController.retrieve(rid:Long)
 #
-#GET         /reply2article/:rid                controllers.Reply2ArticleController.retrieve(rid:Long)
-#GET         /reply2article/article/:aid        controllers.Reply2ArticleController.queryByAid(aid:Long,page:Int ?= 0,size:Int ?= 10)
+#GET         /reply2article/:rid                    controllers.Reply2ArticleController.retrieve(rid:Long)
+#GET         /reply2article/article/:aid            controllers.Reply2ArticleController.queryByAid(aid:Long,page:Int ?= 0,size:Int ?= 10)
 #
 ##Link
-#GET         /link/:lid                         controllers.LinkController.retrieve(lid:Long)
-#GET         /link                              controllers.LinkController.query(page:Int ?= 0,size:Int ?= 10)
+#GET         /link/:lid                             controllers.LinkController.retrieve(lid:Long)
+#GET         /link                                  controllers.LinkController.query(page:Int ?= 0,size:Int ?= 10)
 
 #Mood
 
-#GET       /mood/:id                            controllers.MoodController.retrieve(id:Long)
+#GET       /mood/:id                                controllers.MoodController.retrieve(id:Long)
 
-GET           /test                                 controllers.HomeController.test
+#GET           /test                                 controllers.HomeController.test

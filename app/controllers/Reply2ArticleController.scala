@@ -11,6 +11,7 @@ import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.{Action, Controller}
 import utils.ResultStatus
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -44,7 +45,7 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat{
         replyList <- Reply2Article.queryByAid(aid)
       } yield {
         val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-        val replyListTree = replySuper.map(p => ReplyListTree(p,replyList.filter(_.quote == p.rid).sortBy(_.rid).toList))
+        val replyListTree = replySuper.map(p => ReplyListTree(replyList,p,Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
         replyListTree
       }
     }.map{ x =>

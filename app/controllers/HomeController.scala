@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject._
 
-import models.reply.{Reply2Article, Reply2Message, ReplyListTree}
+import models.reply.{Reply, Reply2Article, Reply2Message, ReplyListTree}
 import models.{Articles, Moods, Users}
 import org.apache.commons.codec.binary.Base64
 import play.api.Configuration
@@ -17,6 +17,7 @@ import play.api.libs.Codecs
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -89,7 +90,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       replyList <- Reply2Article.queryByAid(aid)
     } yield {
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-      val replyListTree = replySuper.map(p => ReplyListTree(p, replyList.filter(_.quote == p.rid).sortBy(_.rid).toList))
+      val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
       Ok(views.html.article(uid, name)(user, article, replyListTree))
     }
   }
@@ -107,7 +108,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       replyList <- Reply2Message.queryByAid(0L)
     } yield {
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-      val replyListTree = replySuper.map(p => ReplyListTree(p, replyList.filter(_.quote == p.rid).sortBy(_.rid).toList))
+      val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Message.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
       Ok(views.html.message(uid, name)(replyListTree))
     }
   }
@@ -127,7 +128,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
           replyList <- Reply2Article.queryByAid(x.head._1.aid.get)
         } yield {
           val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-          val replyListTree = replySuper.map(p => ReplyListTree(p, replyList.filter(_.quote == p.rid).sortBy(_.rid).toList))
+          val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
           Ok(
             views.html.article(uid, name)(x.head._2, x.head._1, replyListTree)
           )
