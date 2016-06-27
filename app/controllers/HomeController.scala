@@ -90,7 +90,9 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       replyList <- Reply2Article.queryByAid(aid)
     } yield {
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-      val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
+      val replyListTree = replySuper.map(p =>
+        ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+      )
       Ok(views.html.article(uid, name)(user, article, replyListTree))
     }
   }
@@ -108,7 +110,9 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       replyList <- Reply2Message.queryByAid(0L)
     } yield {
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-      val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Message.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
+      val replyListTree = replySuper.map(p =>
+        ReplyListTree(replyList,p, Reply2Message.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+      )
       Ok(views.html.message(uid, name)(replyListTree))
     }
   }
@@ -128,7 +132,9 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
           replyList <- Reply2Article.queryByAid(x.head._1.aid.get)
         } yield {
           val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-          val replyListTree = replySuper.map(p => ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
+          val replyListTree = replySuper.map(p =>
+            ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+          )
           Ok(
             views.html.article(uid, name)(x.head._2, x.head._1, replyListTree)
           )

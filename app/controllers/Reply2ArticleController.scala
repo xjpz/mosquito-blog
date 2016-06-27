@@ -45,7 +45,9 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat{
         replyList <- Reply2Article.queryByAid(aid)
       } yield {
         val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-        val replyListTree = replySuper.map(p => ReplyListTree(replyList,p,Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList))
+        val replyListTree = replySuper.map(p =>
+          ReplyListTree(replyList,p,Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+        )
         replyListTree
       }
     }.map{ x =>
