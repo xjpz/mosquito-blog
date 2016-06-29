@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import models.{ArticleListWrapper, JsFormat, LinkListWrapper, Links}
+import models.{JsFormat, LinkListWrapper, Links}
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.{Action, Controller}
 import utils.ResultStatus

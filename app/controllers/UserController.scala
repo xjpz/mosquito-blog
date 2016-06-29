@@ -99,8 +99,10 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
     userOpt.map {
       case Some(u) =>
         u.password == Option(passwordBase64ForSHA) match {
-          case true => Ok(Json.obj("ret" -> 1, "con" -> JsNull, "des" -> ResultStatus.status_1))
-            .withSession("uid" -> u.uid.get.toString,"loginame" -> u.name.get)
+          case true =>
+            request.session + ("loginame" -> u.name.get)
+            Ok(Json.obj("ret" -> 1, "con" -> JsNull, "des" -> ResultStatus.status_1))
+            .withSession(request.session + ("uid" -> u.uid.get.toString))
           case _ => Ok(Json.obj("ret" -> 8, "con" -> JsNull, "des" -> ResultStatus.status_8))
         }
       case _ => Ok(Json.obj("ret" -> 9, "con" -> JsNull, "des" -> ResultStatus.status_9))
@@ -128,8 +130,9 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
             uid <- users.init(user)
           } yield {
             user.uid = uid
+            request.session + ("loginame" -> user.name.get)
             Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(user), "des" -> ResultStatus.status_1))
-              .withSession("uid" -> user.uid.get.toString,"loginame" -> user.name.get)
+              .withSession(request.session + ("uid" -> user.uid.get.toString))
           }
       }.recover{
         case e: Exception => Ok(Json.obj("ret" -> 2, "con" -> JsNull, "des" -> ResultStatus.status_2))
@@ -150,7 +153,8 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
       } yield (userByOpenid,userByName)
     }.flatMap{ p =>
       if(p._1.isDefined){
-        Future(Ok("/").withSession("uid" -> p._1.get.uid.get.toString,"loginame" -> p._1.get.name.get))
+        request.session + ("loginame" -> p._1.get.name.get)
+        Future(Ok("/").withSession(request.session + ("uid" -> p._1.get.uid.get.toString) ))
       }else{
         val name = if(p._2.isDefined) loginQConnForm._1 + Random.shuffle(0 to 9).mkString("").take(4) else loginQConnForm._1
         val password = Base64.encodeBase64String(shaEncoder.digest(Random.shuffle(0 to 8).toString.getBytes()))
@@ -158,7 +162,8 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
         for{
           uid <- users.init(user)
         } yield {
-          Ok("/").withSession("uid" -> uid.get.toString,"loginame" -> name)
+          request.session + ("loginame" -> name)
+          Ok("/").withSession(request.session +("uid" -> uid.get.toString))
         }
       }
     }.recover{

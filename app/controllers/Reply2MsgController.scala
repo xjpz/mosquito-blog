@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import models.JsFormat
-import models.reply.{Reply, Reply2Article, Reply2Message}
+import models.reply.{Reply, Reply2Message}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs

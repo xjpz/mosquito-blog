@@ -1,6 +1,5 @@
 package controllers
 
-import java.io.File
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -13,8 +12,6 @@ import play.api.Configuration
 import play.api.cache.CacheApi
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.libs.Codecs
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc._
 
 import scala.collection.mutable.ListBuffer
