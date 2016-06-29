@@ -100,9 +100,8 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
       case Some(u) =>
         u.password == Option(passwordBase64ForSHA) match {
           case true =>
-            request.session + ("loginame" -> u.name.get)
             Ok(Json.obj("ret" -> 1, "con" -> JsNull, "des" -> ResultStatus.status_1))
-            .withSession(request.session + ("uid" -> u.uid.get.toString))
+                .withSession("uid" -> u.uid.get.toString,"loginame" -> u.name.get)
           case _ => Ok(Json.obj("ret" -> 8, "con" -> JsNull, "des" -> ResultStatus.status_8))
         }
       case _ => Ok(Json.obj("ret" -> 9, "con" -> JsNull, "des" -> ResultStatus.status_9))
@@ -130,9 +129,8 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
             uid <- users.init(user)
           } yield {
             user.uid = uid
-            request.session + ("loginame" -> user.name.get)
             Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(user), "des" -> ResultStatus.status_1))
-              .withSession(request.session + ("uid" -> user.uid.get.toString))
+              .withSession("uid" -> user.uid.get.toString,"loginame" -> user.name.get)
           }
       }.recover{
         case e: Exception => Ok(Json.obj("ret" -> 2, "con" -> JsNull, "des" -> ResultStatus.status_2))
@@ -153,8 +151,7 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
       } yield (userByOpenid,userByName)
     }.flatMap{ p =>
       if(p._1.isDefined){
-        request.session + ("loginame" -> p._1.get.name.get)
-        Future(Ok("/").withSession(request.session + ("uid" -> p._1.get.uid.get.toString) ))
+        Future(Ok("/").withSession("uid" -> p._1.get.uid.get.toString,"loginame" -> p._1.get.name.get))
       }else{
         val name = if(p._2.isDefined) loginQConnForm._1 + Random.shuffle(0 to 9).mkString("").take(4) else loginQConnForm._1
         val password = Base64.encodeBase64String(shaEncoder.digest(Random.shuffle(0 to 8).toString.getBytes()))
@@ -162,8 +159,7 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
         for{
           uid <- users.init(user)
         } yield {
-          request.session + ("loginame" -> name)
-          Ok("/").withSession(request.session +("uid" -> uid.get.toString))
+          Ok("/").withSession("uid" -> uid.get.toString,"loginame" -> name)
         }
       }
     }.recover{
