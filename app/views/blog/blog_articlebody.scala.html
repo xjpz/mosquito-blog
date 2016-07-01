@@ -8,7 +8,7 @@
     @Html(article.content.getOrElse("None"))
     <br>
     <div id="blogbody_author" class="blogbody_author">
-                            posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="/blog/to/user/article/@article.uid.get">
+                            posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="/blog/user/article/@article.uid.get">
     @user.name</a></div>
     <div id="blogbody_read" class="blogbody_read">
       <a href="/blog/article/@article.aid.get">评论(@article.reply)</a>&nbsp;|&nbsp;
