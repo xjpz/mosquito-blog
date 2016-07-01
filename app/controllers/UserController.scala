@@ -99,8 +99,9 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
     userOpt.map {
       case Some(u) =>
         u.password == Option(passwordBase64ForSHA) match {
-          case true => Ok(Json.obj("ret" -> 1, "con" -> JsNull, "des" -> ResultStatus.status_1))
-            .withSession("uid" -> u.uid.get.toString,"loginame" -> u.name.get)
+          case true =>
+            Ok(Json.obj("ret" -> 1, "con" -> JsNull, "des" -> ResultStatus.status_1))
+                .withSession("uid" -> u.uid.get.toString,"loginame" -> u.name.get)
           case _ => Ok(Json.obj("ret" -> 8, "con" -> JsNull, "des" -> ResultStatus.status_8))
         }
       case _ => Ok(Json.obj("ret" -> 9, "con" -> JsNull, "des" -> ResultStatus.status_9))
@@ -123,7 +124,7 @@ class UserController @Inject()(users: Users) extends Controller with JsFormat{
       }.flatMap {
         case (Some(_),_) => Future(Ok(Json.obj("ret" -> 11, "con" -> JsNull, "des" -> ResultStatus.status_11)))
         case (None,Some(_)) => Future(Ok(Json.obj("ret" -> 12, "con" -> JsNull, "des" -> ResultStatus.status_12)))
-        case (x,y) =>
+        case (_,_) =>
           for {
             uid <- users.init(user)
           } yield {

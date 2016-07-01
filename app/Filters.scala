@@ -3,6 +3,7 @@ import javax.inject._
 import filters.LoggingFilter
 import play.api.http.HttpFilters
 import play.api.mvc._
+import play.filters.cors.CORSFilter
 import play.filters.gzip.GzipFilter
 
 /**
@@ -20,6 +21,6 @@ import play.filters.gzip.GzipFilter
  */
 
 @Singleton
-class Filters @Inject() (gzip: GzipFilter, log: LoggingFilter) extends HttpFilters {
-  override def filters: Seq[EssentialFilter] = Seq(gzip,log)
+class Filters @Inject() (gzip: GzipFilter, log: LoggingFilter,corsFilter: CORSFilter) extends HttpFilters {
+  override def filters: Seq[EssentialFilter] = Seq(gzip,log,corsFilter)
 }

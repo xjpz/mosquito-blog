@@ -1,11 +1,12 @@
 package controllers
 
-import akka.actor.ActorSystem
 import javax.inject._
-import play.api._
+
+import akka.actor.ActorSystem
 import play.api.mvc._
-import scala.concurrent.{ExecutionContext, Future, Promise}
+
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future, Promise}
 
 /**
  * This controller creates an `Action` that demonstrates how to write

@@ -7,7 +7,6 @@ package filters
 import javax.inject.{Inject, Singleton}
 
 import akka.stream.Materializer
-import play.api.Logger
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
