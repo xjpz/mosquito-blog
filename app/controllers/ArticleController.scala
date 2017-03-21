@@ -17,7 +17,7 @@ import scala.concurrent.Future
   */
 
 @Singleton
-class ArticleController @Inject()(articles:Articles) extends Controller with JsFormat {
+class ArticleController @Inject()(articles: Articles) extends Controller with JsFormat {
 
   val articleForm = Form(
     mapping(
@@ -89,18 +89,18 @@ class ArticleController @Inject()(articles:Articles) extends Controller with JsF
 
     if (uid != 0) {
       val updArticle = Article(Option(articleFormTuple._1), Option(articleFormTuple._2), articleFormTuple._3, None,
-        None, Option(articleFormTuple._4),None,None,None,None,None,None,None,aid)
+        None, Option(articleFormTuple._4), None, None, None, None, None, None, None, aid)
 
       {
-        for{
+        for {
           Some(queryArticle) <- articles.retrieve(aid.get)
         } yield queryArticle
-      }.flatMap{ x =>
-        if(x.aid == updArticle.aid){
-          for{
+      }.flatMap { x =>
+        if (x.aid == updArticle.aid) {
+          for {
             updRow <- articles.update(updArticle)
           } yield Redirect("/")
-        }else{
+        } else {
           Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
         }
       }
@@ -109,30 +109,30 @@ class ArticleController @Inject()(articles:Articles) extends Controller with JsF
     }
   }
 
-  def updateSmileCount(aid:Long) = Action.async {
+  def updateSmileCount(aid: Long) = Action.async {
     {
-      for(article <- articles.retrieve(aid)) yield article
-    }.flatMap{
+      for (article <- articles.retrieve(aid)) yield article
+    }.flatMap {
       case Some(x) =>
-        for(
-          updSimle <- articles.updateSmileCount(aid,x.smile.getOrElse(0) +1)
+        for (
+          updSimle <- articles.updateSmileCount(aid, x.smile.getOrElse(0) + 1)
         ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }
   }
 
-  def revoke(aid:Long) = Action.async { implicit request =>
+  def revoke(aid: Long) = Action.async { implicit request =>
     val uid = request.session.get("uid").getOrElse("0").toLong
 
     {
-      for(article <- articles.retrieve(aid)) yield article
-    }.flatMap{
+      for (article <- articles.retrieve(aid)) yield article
+    }.flatMap {
       case Some(x) =>
-        if(Option(uid) == x.uid){
-          for(
+        if (Option(uid) == x.uid) {
+          for (
             del <- articles.revoke(aid)
           ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(del), "des" -> ResultStatus.status_1))
-        }else{
+        } else {
           Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
         }
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))

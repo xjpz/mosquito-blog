@@ -16,7 +16,7 @@ class MoodController @Inject()(moods: Moods) extends Controller with JsFormat {
 
   def retrieve(id: Long) = Action.async {
     for {
-          Some(mood) <- moods.retrieve(id)
+      Some(mood) <- moods.retrieve(id)
     } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(mood), "des" -> ResultStatus.status_1))
   }
 

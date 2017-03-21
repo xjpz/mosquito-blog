@@ -18,8 +18,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 @Singleton
 class CaptchaController @Inject() extends Controller {
 
-  def getCaptcha(w:Int, h:Int) = Action { implicit request => {
-    val captcha = CaptchaInfo.create(w,h)
+  def getCaptcha(w: Int, h: Int) = Action { implicit request => {
+    val captcha = CaptchaInfo.create(w, h)
 
     Ok.chunked(Enumerator.fromStream(captcha.value)).as("image/png")
       .withSession(request.session + ("captcha" -> Codecs.sha1(captcha.text)))

@@ -1,16 +1,16 @@
 @import play.api.Play.current
 
 <div class="bloghead" id="bloghead">
-  <br>
-  <div class="blog_name" id="blog_name">
-    <a href="/">心尖偏左</a>
-    <span>@defining(services.ViewAccessPoint.Implicits.myDao.moodHead){ moodOpt =>
-      @if(moodOpt.isDefined){
-        @moodOpt.get.content
-      }else{
-        Scala满足了我对编程语言的所有幻想
-      }
-    }
-    </span>
-  </div>
+    <br>
+    <div class="blog_name" id="blog_name">
+        <a href="/">心尖偏左</a>
+        <span>@defining(services.ViewAccessPoint.Implicits.myDao.moodHead) { moodOpt =>
+            @if(moodOpt.isDefined) {
+                @moodOpt.get.content
+            } else {
+                Scala满足了我对编程语言的所有幻想
+            }
+        }
+        </span>
+    </div>
 </div>

@@ -5,9 +5,6 @@
 # An example controller showing a sample home page
 GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15)
 
-# An example controller showing how to write asynchronous code
-GET           /message                              controllers.AsyncController.message
-
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
 
@@ -54,6 +51,7 @@ PATCH         /blog/smile/:aid                      controllers.ArticleControlle
 DELETE        /blog/article/:aid                    controllers.ArticleController.revoke(aid:Long)
 PATCH         /blog/reply2article/smile/:rid        controllers.Reply2ArticleController.updateSmileCount(rid:Long)
 PATCH         /blog/reply2message/smile/:rid        controllers.Reply2MsgController.updateSmileCount(rid:Long)
+
 ##############
 # API routes #
 ##############

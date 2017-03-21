@@ -24,7 +24,12 @@ import scala.concurrent.Future
   */
 
 @Singleton
-class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(users: Users, articles: Articles,moods: Moods)(implicit val config: Configuration) extends Controller {
+class HomeController @Inject()(cache: CacheApi,
+                               configuration: Configuration,
+                               users: Users,
+                               articles: Articles,
+                               moods: Moods)
+                              (implicit val config: Configuration) extends Controller {
 
   /**
     * Create an Action to render an HTML page with a welcome message.
@@ -86,12 +91,12 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
       replyList <- Reply2Article.queryByAid(aid)
     } yield {
       request.session.get(s"aid:$aid") match {
-        case None => articles.updateReadCount(aid,article.read.getOrElse(0) +1)
+        case None => articles.updateReadCount(aid, article.read.getOrElse(0) + 1)
         case _ =>
       }
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
-        ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+        ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
       )
       Ok(views.html.article(uid, name)(user, article, replyListTree)).withSession(request.session + (s"aid:$aid" -> "true"))
     }
@@ -111,7 +116,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
     } yield {
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
-        ReplyListTree(replyList,p, Reply2Message.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+        ReplyListTree(replyList, p, Reply2Message.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
       )
       Ok(views.html.message(uid, name)(replyListTree))
     }
@@ -133,7 +138,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
         } yield {
           val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
           val replyListTree = replySuper.map(p =>
-            ReplyListTree(replyList,p, Reply2Article.parseReplyTree(Seq(p.rid.get),replyList,new ListBuffer[Reply]).toList.sortBy(_.rid))
+            ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
           )
           Ok(
             views.html.article(uid, name)(x.head._2, x.head._1, replyListTree)
@@ -147,23 +152,23 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
           )
         }
       }
-    }.recover{
+    }.recover {
       case e: Exception => Ok(views.html.error50x(e.getMessage))
     }
   }
 
-  def myblogs(uid:Long,page: Int, size: Int) = Action.async { implicit request =>
+  def myblogs(uid: Long, page: Int, size: Int) = Action.async { implicit request =>
     val loginUid = request.session.get("uid").getOrElse("0").toLong
     val name = request.session.get("loginame").getOrElse("")
     val pageFinal = if (page < 1) 0 else page - 1
 
-      for{
-        Some(user) <- users.retrieve(uid)
-        uArticleList <- articles.queryByUid(uid)
-      } yield {
-        uArticleList.foreach(p => p.wrapArticleList())
-        Ok(views.html.myblogs(loginUid,name)(user,uArticleList,pageFinal))
-      }
+    for {
+      Some(user) <- users.retrieve(uid)
+      uArticleList <- articles.queryByUid(uid)
+    } yield {
+      uArticleList.foreach(p => p.wrapArticleList())
+      Ok(views.html.myblogs(loginUid, name)(user, uArticleList, pageFinal))
+    }
 
   }
 
@@ -174,18 +179,18 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
     val name = request.session.get("loginame").getOrElse("")
 
     uid match {
-      case 0 => Ok(views.html.login(uid,name))
-      case _ => Ok(views.html.article_new(uid,name))
+      case 0 => Ok(views.html.login(uid, name))
+      case _ => Ok(views.html.article_new(uid, name))
     }
   }
 
-  def toUpdate(aid:Long) = Action.async { implicit request =>
+  def toUpdate(aid: Long) = Action.async { implicit request =>
     val uid = request.session.get("uid").getOrElse("0").toLong
     val name = request.session.get("loginame").getOrElse("")
-    for{
+    for {
       Some(article) <- articles.retrieve(aid)
-    } yield{
-      Ok(views.html.article_update(uid,name)(article))
+    } yield {
+      Ok(views.html.article_update(uid, name)(article))
     }
 
   }
@@ -220,7 +225,7 @@ class HomeController @Inject()(cache: CacheApi)(configuration:Configuration)(use
     val passwd = Base64.encodeBase64String(shaEncoder.digest(reqForm._2.getBytes()))
     reqForm._3 == new SimpleDateFormat("MMddHH").format(new Date()) match {
       case true =>
-        for{
+        for {
           Some(user) <- users.queryByName(reqForm._1)
         } yield {
           Option(passwd) == user.password match {

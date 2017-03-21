@@ -58,7 +58,7 @@ a:link,a:visited{
     float: right;
     margin-left: 10px;
     position: relative;
-    margin-right:25.5%;
+    margin-right:15.5%;
 }
 
 .link a:hover {
@@ -107,12 +107,12 @@ a:link,a:visited{
 
 .blogb{
     clear: both;
-    width: 49%;
+    width: 69%;
     z-index: 10;
     position:relative;
     background-color:#FFFFFF;
     float:left;
-    margin-left:25.5%;
+    margin-left:15.5%;
     margin-top:-60px;
 
     font-family: "Helvetica Neue","Helvetica",sans-serif;
@@ -149,7 +149,7 @@ a:link,a:visited{
 }
 
 .blog_name{
-    margin-left:26%;
+    margin-left:16%;
     text-shadow: 0 5px 5px #555;
     font-size: 20px;
 }

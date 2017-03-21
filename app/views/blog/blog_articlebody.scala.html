@@ -1,155 +1,181 @@
 @import models.reply.ReplyListTree
-@(uid: Long,name:String,user: User,article: Article, replyListTree: Seq[ReplyListTree])
+@(uid: Long, name: String, user: User, article: Article, replyListTree: Seq[ReplyListTree])
 @import java.text.SimpleDateFormat
 <div class="blogbody" id="blogbody">
-    <!-- 博客-->
-  <div id="blogs" class="blogs">
-    <h4>@article.title </h4>
-    @Html(article.content.getOrElse("None"))
-    <br>
-    <div id="blogbody_author" class="blogbody_author">
-                            posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="/blog/user/article/@article.uid.get">
-    @user.name</a></div>
-    <div id="blogbody_read" class="blogbody_read">
-      <a href="/blog/article/@article.aid.get">评论(@article.reply)</a>&nbsp;|&nbsp;
-      <a href="javascript:" onclick="smile_numfun(@article.aid.getOrElse(0))">赞(<span id="smile_num">@article.smile.get</span>)</a>&nbsp;|&nbsp;
-      <a href="/blog/article/@article.aid.get">阅读(@article.read)</a>
-
-
-    </div>
-    <br>
-    <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
-  </div>
-
-  <br>
-    <!-- 评论 -->
-
-  <div id="article_comment" class="article_comment">
-    @for(i <- replyListTree.indices) {
-      <div id="comment_body" class="comment_body">
-        <div> @(i + 1)#&nbsp;&nbsp;<a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;" } >@replyListTree(i).reply.name</a> &nbsp;：</div>
-          &nbsp;&nbsp;&nbsp;&nbsp; @Html(replyListTree(i).reply.content.getOrElse(""))
+        <!-- 博客-->
+    <div id="blogs" class="blogs">
+        <h4>@article.title </h4>
+        @Html(article.content.getOrElse("None"))
         <br>
-        <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyListTree(i).reply.inittime.get * 1000L)) &nbsp;&nbsp;
-        <a href="#comment" onclick="ClieckReply(@replyListTree(i).reply.rid.getOrElse(0),'@replyListTree(i).reply.name');">回复</a> &nbsp;|&nbsp;
-        <a href="javascript:" onclick="reply_smile_numfun(@replyListTree(i).reply.rid.getOrElse(0),'reply_smile_num@replyListTree(i).reply.rid.getOrElse(0)')">赞(<span id="reply_smile_num@replyListTree(i).reply.rid.getOrElse(0)">@replyListTree(i).reply.smile.getOrElse(0)</span>)</a> <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div></div>
+        <div id="blogbody_author" class="blogbody_author">
+            posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="/blog/user/article/@article.uid.get">
+        @user.name</a></div>
+        <div id="blogbody_read" class="blogbody_read">
+            <a href="/blog/article/@article.aid.get">评论(@article.reply)</a>&nbsp;|&nbsp;
+            <a href="javascript:" onclick="smile_numfun(@article.aid.getOrElse(0))">
+                赞(<span id="smile_num">@article.smile.get</span>)</a>&nbsp;|&nbsp;
+            <a href="/blog/article/@article.aid.get">阅读(@article.read)</a>
 
 
-          @for(replyChild <- replyListTree(i).tree) {
+        </div>
+        <br>
+        <div style="border-bottom: 1px dashed #000000 ;
+            margin-top: 10px ;"></div>
+    </div>
 
-            <div id="comment_footer" class="comment_footer">
+    <br>
+        <!-- 评论 -->
 
-              <div>
-                <a href="/blog/user/article/@replyChild.uid.getOrElse(0)" @if(replyChild.uid == Option(0L)){ onclick="return false;" } >@replyChild.name</a>
-                  @*&nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：*@
-                &nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.uid.get" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.name</a>：
-              </div>
-                &nbsp;&nbsp;&nbsp;&nbsp; @Html(replyChild.content.getOrElse(""))
-              <div>
-                @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyChild.inittime.get * 1000L)) &nbsp;&nbsp;
-              <a href="#comment" onclick="ClieckReply(@replyChild.rid.getOrElse(0),'@replyChild.name')">回复</a> &nbsp;|&nbsp;
-              <a href="javascript:" onclick="reply_smile_numfun(@replyChild.rid.getOrElse(0),'reply_smile_num_child@replyChild.rid.getOrElse(0)')" >赞(<span id="reply_smile_num_child@replyChild.rid.getOrElse(0)">@replyChild.smile.getOrElse(0)</span>)</a>
-              </div>
-              <div style="border-bottom : 1px dashed #000000 ; margin-top : 10px ;"></div>
-            </div>
-          }
+    <div id="article_comment" class="article_comment">
+    @for(i <- replyListTree.indices) {
+        <div id="comment_body" class="comment_body">
+            <div> @(i + 1)
+                #&nbsp;&nbsp;<a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)) {
+                onclick="return false;" } >@replyListTree(i).reply.name</a>
+                &nbsp;：</div>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+            @Html(replyListTree(i).reply.content.getOrElse(""))
+            <br>
+            <div>@(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyListTree(i).reply.inittime.get * 1000L)) &nbsp;&nbsp;
+            <a href="#comment" onclick="ClieckReply(@replyListTree(i).reply.rid.getOrElse(0), '@replyListTree(i).reply.name');">回复</a>
+                &nbsp;|&nbsp;
+            <a href="javascript:" onclick="reply_smile_numfun(@replyListTree(i).reply.rid.getOrElse(0), 'reply_smile_num@replyListTree(i).reply.rid.getOrElse(0)')">赞(<span id="reply_smile_num@replyListTree(i).reply.rid.getOrElse(0)">@replyListTree(i).reply.smile.getOrElse(0)</span>
+                )</a>
+            <div style="border-bottom: 1px dashed #000000 ;
+                margin-top: 10px ;"></div></div>
 
-      </div>
+
+            @for(replyChild <- replyListTree(i).tree) {
+
+                <div id="comment_footer" class="comment_footer">
+
+                    <div>
+                        <a href="/blog/user/article/@replyChild.uid.getOrElse(0)" @if(replyChild.uid == Option(0L)) {
+                            onclick="return false;" } >@replyChild.name</a>
+                        @*&nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：*@
+                            &nbsp;回复&nbsp;
+                        <a href="/blog/user/article/@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.uid.get" @if(replyListTree(i).reply.uid == Option(0L)) {
+                            onclick="return false;"} >@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.name</a>
+                        ：
+                    </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                    @Html(replyChild.content.getOrElse(""))
+                    <div>
+                        @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(replyChild.inittime.get * 1000L)) &nbsp;&nbsp;
+                    <a href="#comment" onclick="ClieckReply(@replyChild.rid.getOrElse(0), '@replyChild.name')">回复</a>
+                        &nbsp;|&nbsp;
+                    <a href="javascript:" onclick="reply_smile_numfun(@replyChild.rid.getOrElse(0), 'reply_smile_num_child@replyChild.rid.getOrElse(0)')" >赞(<span id="reply_smile_num_child@replyChild.rid.getOrElse(0)">@replyChild.smile.getOrElse(0)</span>
+                        )</a>
+                    </div>
+                    <div style="border-bottom: 1px dashed #000000 ;
+                        margin-top: 10px ;"></div>
+                </div>
+            }
+
+        </div>
     }
-  </div>
+    </div>
 
-    <!-- 发表评论 -->
-  <div id="commentform">
-    @*<h3 id="respond">Add your comment now</h3>*@
+        <!-- 发表评论 -->
+    <div id="commentform">
+        @*<h3 id="respond">Add your comment now</h3>*@
 
-  <div class='login_info' @if(uid == 0L) {
-    style="display:none;"} ><b>发表评论</b></div>
+        <div class='login_info' @if(uid == 0L) {
+            style="display: none;"} ><b>发表评论</b></div>
 
-  <div class='login_info' @if(uid != 0L) {
-    style="display:none;"} > 还没有登陆？可以登录后再评论哦。
-    <b>
-      <a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
-      <a href="javascript:" onclick="toLogin()">&raquo;去注册</a> &nbsp;
+        <div class='login_info' @if(uid != 0L) {
+            style="display: none;"} > 还没有登陆？可以登录后再评论哦。
+            <b>
+                <a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
+                <a href="javascript:" onclick="toLogin()">&raquo;去注册</a> &nbsp;
 
-      <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
-        <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
+                <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984', 'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
+                    <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
 
-    </b>
-  </div>
+            </b>
+        </div>
 
+        <form action="@routes.Reply2ArticleController.initReply2Article()" method="post" id="commentform">
 
-  <form action="@routes.Reply2ArticleController.initReply2Article()" method="post" id="commentform">
+            <p><label for="author">用户:</label>
+                <input type="text" name="name" id="author" @if(uid != 0L) {
+                    value="@name" readonly="readonly"
+                } else {
+                    value=""
+                } size="25" tabindex="1" class="comment_input" required/> * </p>
 
-    <p><label for="author">用户:</label>
-      <input type="text" name="name" id="author" @if(uid != 0L) {
-        value="@name" readonly="readonly"
-      } else {
-        value=""
-      } size="25" tabindex="1" class="comment_input" required/> * </p>
+            <div @if(uid != 0) {
+                style="display: none;" }>
+                <p><label for="email">邮箱:</label>
+                    <input @if(uid != 0) {
+                        type="hidden"
+                    } else {
+                        type="email"
+                    } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/> *
+                </p>
 
-    <div @if(uid != 0) {
-      style="display: none;" }>
-      <p><label for="email">邮箱:</label>
-        <input @if(uid != 0) {
-          type="hidden"
-        } else {
-          type="email"
-        } name="email" id="email" value="" size="25" tabindex="2" class="comment_input" required/> *
-      </p>
+                <p><label for="url">网址:</label>
+                    <input @if(uid != 0) {
+                        type="hidden"
+                    } else {
+                        type="text"
+                    } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" />
+                </p>
+                <p><label for="url">验证码:</label>
+                    <input @if(uid != 0) {
+                        type="hidden"
+                    } else {
+                        type="text"
+                    } name="captcha" id="captcha" value="" size="3" tabindex="3" class="comment_input" required onfocus="showMenu();
+                    changeFlag(true);" onblur="changeFlag(false);
+                    hideMenu();" onclick="showMenu();" />&nbsp;&nbsp;<a href="javascript:_rvi();document.getElementById('captcha').focus();">
+                        换一个</a> *
+                </p>
+                <div id="f_vcode_menu" style="position: absolute;
+                    z-index: 301;
+                    left: 560px;
+                    top: 2122px;
+                    display: none;"><img id="img_vcode" align="absmiddle" alt="..." src="/blog/captcha" style="border: 1px solid #ccc;"> <br>
+                </div>
+                <script>
+                        groupFlag = false;
+                        function changeFlag(flag) {
+                            groupFlag = flag;
+                        }
+                        function showMenu() {
+                            var left = $("#captcha").position().left;
+                            var top = $("#captcha").position().top - 40;
 
-      <p><label for="url">网址:</label>
-        <input @if(uid != 0) {
-          type="hidden"
-        } else {
-          type="text"
-        } name="url" id="url" value="" size="25" tabindex="3" class="comment_input" />
-      </p>
-      <p><label for="url">验证码:</label>
-        <input @if(uid != 0) {
-          type="hidden"
-        } else {
-          type="text"
-        } name="captcha" id="captcha" value="" size="3" tabindex="3" class="comment_input" required onfocus="showMenu();changeFlag(true);" onblur="changeFlag(false);hideMenu();" onclick="showMenu();" />&nbsp;&nbsp;<a href="javascript:_rvi();document.getElementById('captcha').focus();">换一个</a> *
-      </p>
-      <div id="f_vcode_menu" style="position: absolute; z-index: 301; left: 560px; top: 2122px; display: none;"><img id="img_vcode" align="absmiddle" alt="..." src="/blog/captcha" style="border:1px solid #ccc;"> <br>
-      </div>
-      <script>
-                                        groupFlag = false;
-                                        function changeFlag(flag){
-                                          groupFlag = flag;
-                                        }
-                                        function showMenu(){
-                                          var left = $("#captcha").position().left;
-                                          var top = $("#captcha").position().top - 40;
+                            $("#f_vcode_menu").css({"left": left, "top": top});
+                            if ($("#f_vcode_menu img").size() == 0) {
+                                $("#f_vcode_menu").prepend('<img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"/> <br/>');
+                            }
+                            $("#f_vcode_menu").show();
+                        }
+                        function hideMenu() {
+                            if (!groupFlag)
+                                $("#f_vcode_menu").hide();
+                        }
 
-                                          $("#f_vcode_menu").css({"left":left,"top":top});
-                                          if($("#f_vcode_menu img").size() == 0){
-                                            $("#f_vcode_menu").prepend('<img id="img_vcode" align="absmiddle" alt="..." src="/captcha/new" style="border:1px solid #ccc;"/> <br/>');
-                                          }
-                                          $("#f_vcode_menu").show();
-                                        }
-                                        function hideMenu(){
-                                          if(!groupFlag)
-                                            $("#f_vcode_menu").hide();
-                                        }
+                        function _rvi() {
+                            document.getElementById('img_vcode').src = '/blog/captcha?t=' + Math.random(1000);
+                        }
 
-                                        function _rvi(){document.getElementById('img_vcode').src = '/blog/captcha?t='+Math.random(1000);}
+                </script>
 
-                                </script>
+            </div>
+            <p><textarea name="content" id="comment" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea></p>
+
+            <p>&nbsp;<input name="submit" type="submit" id="submit" tabindex="5" value="发表评论" class="button" /></p>
+            <input type="hidden" name="comment_post_ID" value="542" />
+
+            <p style="display: none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
+            <p><input type="hidden" id="ak_js" name="aid" value="@article.aid.get" /></p>
+            <p><input type="hidden" id="ak_js" name="quote" value="0" /></p>
+            <p><input type="hidden" id="ak_js" name="uid" value="@uid" /></p>
+
+        </form>
 
     </div>
-    <p><textarea name="content" id="comment" cols="25" rows="5" tabindex="4" class="message_input" required ></textarea></p>
-
-    <p>&nbsp;<input name="submit" type="submit" id="submit" tabindex="5" value="发表评论" class="button" /></p>
-    <input type="hidden" name="comment_post_ID" value="542" />
-
-    <p style="display : none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
-    <p><input type="hidden" id="ak_js" name="aid" value="@article.aid.get" /></p>
-    <p><input type="hidden" id="ak_js" name="quote" value="0" /></p>
-    <p><input type="hidden" id="ak_js" name="uid" value="@uid" /></p>
-
-  </form>
-
-  </div>
 
 </div>

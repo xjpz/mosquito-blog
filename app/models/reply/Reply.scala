@@ -21,16 +21,15 @@ case class Reply(
                   var email: Option[String] = None,
                   var content: Option[String] = None,
                   var quote: Option[Long] = Option(0),
-                  var smile:Option[Int] = Option(0),
+                  var smile: Option[Int] = Option(0),
                   var inittime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                   var updtime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                   var tombstone: Option[Int] = Option(0),
                   var rid: Option[Long] = None)
 
-case class ReplyListWrapper(articles: List[Reply], count:Int)
+case class ReplyListWrapper(articles: List[Reply], count: Int)
 
-case class ReplyListTree(
-                         queryReply:Seq[Reply],reply:Reply, tree:List[Reply])
+case class ReplyListTree(queryReply: Seq[Reply], reply: Reply, tree: List[Reply])
 
 class ReplysTable(tag: Tag, table: String) extends Table[Reply](tag, table) {
   def rid = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
@@ -57,7 +56,7 @@ class ReplysTable(tag: Tag, table: String) extends Table[Reply](tag, table) {
 
   def updtime = column[Option[Long]]("update_time")
 
-  def * = (aid, uid, name, url, email, content, quote,smile, inittime, updtime, tombstone, rid) <>(Reply.tupled, Reply.unapply)
+  def * = (aid, uid, name, url, email, content, quote, smile, inittime, updtime, tombstone, rid) <> (Reply.tupled, Reply.unapply)
 }
 
 trait Replys {
@@ -69,7 +68,7 @@ trait Replys {
 
   def _queryById(id: Long): DBIO[Option[Reply]] = table.filter(_.rid === id).filter(_.tombstone === 0).result.headOption
 
-  def _queryByAid(aid:Long):DBIO[Seq[Reply]] = {
+  def _queryByAid(aid: Long): DBIO[Seq[Reply]] = {
     table.filter(_.aid === aid).filter(_.tombstone === 0).result
   }
 
@@ -77,30 +76,30 @@ trait Replys {
     dbConfig.db.run(_queryById(aid))
   }
 
-  def queryByAid(aid:Long):Future[Seq[Reply]] = {
+  def queryByAid(aid: Long): Future[Seq[Reply]] = {
     dbConfig.db.run(_queryByAid(aid))
   }
 
-  def init(reply: Reply):Future[Option[Long]] = {
+  def init(reply: Reply): Future[Option[Long]] = {
     dbConfig.db.run((table returning table.map(_.rid)) += reply)
   }
 
-  def updateSmileCount(rid:Long,smile:Int):Future[Int] = {
+  def updateSmileCount(rid: Long, smile: Int): Future[Int] = {
     dbConfig.db.run(
       table.filter(_.rid === rid).filter(_.tombstone === 0).
-        map( row => (row.smile,row.updtime)).update(Some(smile),Option(System.currentTimeMillis()/1000)))
+        map(row => (row.smile, row.updtime)).update(Some(smile), Option(System.currentTimeMillis() / 1000)))
   }
 
   @annotation.tailrec
-  final def parseReplyTree(ridSuperSeq:Seq[Long],queryReplySeq:Seq[Reply],childReplyRetList:ListBuffer[Reply]):ListBuffer[Reply] = {
+  final def parseReplyTree(ridSuperSeq: Seq[Long], queryReplySeq: Seq[Reply], childReplyRetList: ListBuffer[Reply]): ListBuffer[Reply] = {
     val childReplyFilterList = queryReplySeq.filter(i => ridSuperSeq.contains(i.quote.get))
 
-    if(childReplyFilterList.nonEmpty){
+    if (childReplyFilterList.nonEmpty) {
       childReplyRetList ++= childReplyFilterList
-      val ridSeq:Seq[Long] = childReplyFilterList.map(_.rid.get)
+      val ridSeq: Seq[Long] = childReplyFilterList.map(_.rid.get)
 
-      parseReplyTree(ridSeq,queryReplySeq,childReplyRetList)
-    }else{
+      parseReplyTree(ridSeq, queryReplySeq, childReplyRetList)
+    } else {
       childReplyRetList
     }
   }

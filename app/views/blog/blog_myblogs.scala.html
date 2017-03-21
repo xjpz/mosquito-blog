@@ -8,19 +8,27 @@
         @for(articleItem <- articleList) {
             <div id="blogs" class="blogs">
                 <div class="article_head" id="article_head">
-                    <div class="article_title" id="article_title"><b><a href="/blog/article/@articleItem.aid.get">@(new SimpleDateFormat("yyyy-MM-dd").format(articleItem.inittime.get * 1000L)) &nbsp;&nbsp;&nbsp;&nbsp; @articleItem.title</a></b></div>
+                    <div class="article_title" id="article_title"><b><a href="/blog/article/@articleItem.aid.get">@(new SimpleDateFormat("yyyy-MM-dd").format(articleItem.inittime.get * 1000L)) &nbsp;&nbsp;&nbsp;&nbsp;
+                        @articleItem.title</a>
+                    </b>
+                    </div>
                     <div class="article_editor" id="article_editor">@if(uid == user.uid.get) {
                         <a href="javascript:" onclick="isdelete(@articleItem.aid.getOrElse(0), '@articleItem.title.getOrElse("")')">
-                            删除</a> &nbsp;|&nbsp; <a href="/blog/article/update/@articleItem.aid.get">编辑</a>
+                            删除</a>
+                            &nbsp;|&nbsp;
+                        <a href="/blog/article/update/@articleItem.aid.get">编辑</a>
                     }</div>
                 </div>
                 <br>
-                @(articleItem.content.getOrElse("")) <br> <br>
+                @(articleItem.content.getOrElse("")) <br>
+                <br>
                 <div id="blogbody_author" class="blogbody_author">posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(articleItem.inittime.get * 1000L)) &nbsp;&nbsp; @user.name</div>
                 <div id="blogbody_read" class="blogbody_read">
-                    <a href="/blog/article/@articleItem.aid.get">评论(@articleItem.reply)</a> &nbsp;|&nbsp;
+                    <a href="/blog/article/@articleItem.aid.get">评论(@articleItem.reply)</a>
+                        &nbsp;|&nbsp;
                     <a href="javascript:" onclick="smile_numfun(@articleItem.aid.getOrElse(0))">赞(<span id="smile_num@articleItem.aid.getOrElse(1)">@articleItem.smile</span>
-                        )</a> &nbsp;|&nbsp;
+                        )</a>
+                        &nbsp;|&nbsp;
                     <a href="/blog/article/@articleItem.aid.get">阅读(@articleItem.read)</a>
                 </div>
             </div>

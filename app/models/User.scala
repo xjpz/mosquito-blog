@@ -62,7 +62,7 @@ case class User(
 
 case class UserListWrapper(users: List[User], count: Int)
 
-class Users @Inject()(articles:Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+class Users @Inject()(articles: Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
   import driver.api._
 
@@ -98,7 +98,7 @@ class Users @Inject()(articles:Articles)(protected val dbConfigProvider: Databas
 
     def updtime = column[Option[Long]]("update_time")
 
-    def * = (name, password, email, phone, descrp, utype, status, qopenid, qtoken, sopenid, stoken, inittime, updtime, tombstone, uid) <>(User.tupled, User.unapply)
+    def * = (name, password, email, phone, descrp, utype, status, qopenid, qtoken, sopenid, stoken, inittime, updtime, tombstone, uid) <> (User.tupled, User.unapply)
   }
 
   private val table = TableQuery[UsersTable]
@@ -111,7 +111,7 @@ class Users @Inject()(articles:Articles)(protected val dbConfigProvider: Databas
 
   def _queryByPhone(phone: String): DBIO[Option[User]] = table.filter(_.phone === phone).result.headOption
 
-  def _query:DBIO[Seq[User]] = table.filter(_.tombstone === 0).result
+  def _query: DBIO[Seq[User]] = table.filter(_.tombstone === 0).result
 
   def retrieve(uid: Long): Future[Option[User]] = {
     db.run(queryById(uid))
@@ -135,7 +135,7 @@ class Users @Inject()(articles:Articles)(protected val dbConfigProvider: Databas
     db.run(_queryByPhone(phone))
   }
 
-  def queryByOpenid(openid:String) :Future[Option[User]] = {
+  def queryByOpenid(openid: String): Future[Option[User]] = {
     db.run(table.filter(_.qopenid === openid).filter(_.tombstone === 0).result.headOption)
   }
 
@@ -159,18 +159,18 @@ class Users @Inject()(articles:Articles)(protected val dbConfigProvider: Databas
       emailExists <- _queryByEmail(uname)
       phoneExists <- _queryByPhone(uname)
     } yield {
-      if (unameExists.isDefined || emailExists.isDefined || phoneExists.isDefined) true else false
+      unameExists.isDefined || emailExists.isDefined || phoneExists.isDefined
     }
     db.run(ret.transactionally)
   }
 
-  def queryArticleListJoinUser:Future[Seq[(Article,User)]] = {
+  def queryArticleListJoinUser: Future[Seq[(Article, User)]] = {
     val query = (articles.table.filter(_.tombstone === 0) join
       table.filter(_.tombstone === 0) on (_.uid === _.uid)).sorted(_._1.aid.desc).result
     db.run(query)
   }
 
-  def queryArticleByCatalogJoinUser(catalog:String) :Future[Seq[(Article,User)]] = {
+  def queryArticleByCatalogJoinUser(catalog: String): Future[Seq[(Article, User)]] = {
     val query = (articles.table.filter(_.catalog like "%" + catalog + "%").sortBy(_.aid.desc) join
       table.filter(_.tombstone === 0) on (_.uid === _.uid)).result
     db.run(query)

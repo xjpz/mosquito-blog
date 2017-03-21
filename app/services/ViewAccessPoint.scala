@@ -12,4 +12,5 @@ object ViewAccessPoint {
   object Implicits {
     implicit def myDao(implicit application: Application): MyDao = myDaoCache(application)
   }
+
 }
