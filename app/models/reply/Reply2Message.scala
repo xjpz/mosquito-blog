@@ -5,7 +5,7 @@ import slick.driver.MySQLDriver.api._
 import scala.language.postfixOps
 
 /**
-  * Created by wenzh on 2016/5/29.
+  * Created by xjpz on 2016/5/29.
   */
 
 object Reply2Message extends Replys {

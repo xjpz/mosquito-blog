@@ -2,13 +2,12 @@ package controllers
 
 import javax.inject.Inject
 
-import models.JsFormat
 import models.reply.{Reply, Reply2Message}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs
 import play.api.libs.json.{JsNull, Json}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.ResultStatus
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,7 +16,7 @@ import scala.concurrent.Future
 /**
   * Created by xjpz on 2016/5/29.
   */
-class Reply2MsgController @Inject() extends Controller with JsFormat{
+class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   val reply2MessageForm = Form(
     mapping(
@@ -37,12 +36,12 @@ class Reply2MsgController @Inject() extends Controller with JsFormat{
     } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
   }
 
-  def initReply2Message = Action.async{ implicit request =>
+  def initReply2Message = Action.async { implicit request =>
     val uid = request.session.get("uid").getOrElse("0").toLong
     val captchaText = request.session.get("captcha")
     request.session.-("captcha")
 
-    val reqReplyFprm =  reply2MessageForm.bindFromRequest().get
+    val reqReplyFprm = reply2MessageForm.bindFromRequest().get
     val guestAuth = captchaText == Option(Codecs.sha1(reqReplyFprm._7.getOrElse("").toUpperCase))
 
     val aid = reqReplyFprm._1
@@ -50,8 +49,8 @@ class Reply2MsgController @Inject() extends Controller with JsFormat{
     val name = reqReplyFprm._3
     val quote = reqReplyFprm._4
 
-    if(uid != 0L || guestAuth){
-      val contentFormat = if(quote != 0) content.substring(content.indexOf(":")+1) else content
+    if (uid != 0L || guestAuth) {
+      val contentFormat = if (quote != 0) content.substring(content.indexOf(":") + 1) else content
       val reply = Reply(
         Option(aid),
         Option(uid),
@@ -61,26 +60,23 @@ class Reply2MsgController @Inject() extends Controller with JsFormat{
         Option(contentFormat),
         Option(quote)
       )
-      for{
-        rid <- Reply2Message.init(reply)
-      } yield {
+      Reply2Message.init(reply).map { rid =>
         reply.rid = rid
-        //        Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
         Redirect("/blog/message#article_comment")
       }
-    }else{
+    } else {
       Future(Ok(Json.obj("ret" -> 5, "con" -> JsNull, "des" -> ResultStatus.status_5)))
     }
   }
 
-  def updateSmileCount(rid:Long) = Action.async {
+  def updateSmileCount(rid: Long) = Action.async {
     {
-      for(reply <- Reply2Message.retrieve(rid)) yield reply
-    }.flatMap{
+      for (reply <- Reply2Message.retrieve(rid)) yield reply
+    }.flatMap {
       case Some(x) =>
-        for(
-          updSimle <- Reply2Message.updateSmileCount(rid,x.smile.getOrElse(0) +1)
-        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
+        for (
+          updSmile <- Reply2Message.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
+        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }
   }

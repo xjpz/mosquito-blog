@@ -2,12 +2,11 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
+import akka.stream.scaladsl.{Source, StreamConverters}
+import akka.util.ByteString
 import models.CaptchaInfo
 import play.api.libs.Codecs
-import play.api.libs.iteratee.Enumerator
-import play.api.mvc.{Action, Controller}
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import play.api.mvc.{AbstractController, ControllerComponents}
 
 /**
   * @author xring
@@ -16,14 +15,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 
 @Singleton
-class CaptchaController @Inject() extends Controller {
+class CaptchaController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
-  def getCaptcha(w: Int, h: Int) = Action { implicit request => {
+  def getCaptcha(w: Int, h: Int) = Action { implicit request =>
     val captcha = CaptchaInfo.create(w, h)
 
-    Ok.chunked(Enumerator.fromStream(captcha.value)).as("image/png")
-      .withSession(request.session + ("captcha" -> Codecs.sha1(captcha.text)))
-  }
+    val data = captcha.value
+    val dataContent: Source[ByteString, _] = StreamConverters.fromInputStream(() => data)
+    Ok.chunked(dataContent).withSession(request.session + ("captcha" -> Codecs.sha1(captcha.text)))
   }
 
 }

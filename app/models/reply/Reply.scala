@@ -2,8 +2,9 @@ package models.reply
 
 import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.json.Json
 import slick.driver.JdbcProfile
-import slick.driver.MySQLDriver.api._
+import slick.jdbc.MySQLProfile.api._
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -31,6 +32,18 @@ case class ReplyListWrapper(articles: List[Reply], count: Int)
 
 case class ReplyListTree(queryReply: Seq[Reply], reply: Reply, tree: List[Reply])
 
+object Reply {
+  implicit val ReplyJSONFormat = Json.format[Reply]
+}
+
+object ReplyListWrapper {
+  implicit val ReplyListWrapperJSONFormat = Json.format[ReplyListWrapper]
+}
+
+object ReplyListTree {
+  implicit val ReplyListTreeJSONFormat = Json.format[ReplyListTree]
+}
+
 class ReplysTable(tag: Tag, table: String) extends Table[Reply](tag, table) {
   def rid = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
 
@@ -56,7 +69,7 @@ class ReplysTable(tag: Tag, table: String) extends Table[Reply](tag, table) {
 
   def updtime = column[Option[Long]]("update_time")
 
-  def * = (aid, uid, name, url, email, content, quote, smile, inittime, updtime, tombstone, rid) <> (Reply.tupled, Reply.unapply)
+  def * = (aid, uid, name, url, email, content, quote, smile, inittime, updtime, tombstone, rid) <> ((Reply.apply _).tupled, Reply.unapply)
 }
 
 trait Replys {

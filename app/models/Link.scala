@@ -1,14 +1,15 @@
 package models
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
+import play.api.libs.json.Json
+import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
 
 /**
-  * Created by wenzh on 2016/5/29.
+  * Created by xjpz on 2016/5/29.
   */
 
 case class Link(
@@ -22,9 +23,18 @@ case class Link(
 
 case class LinkListWrapper(links: List[Link], count: Int)
 
+object Link {
+  implicit val LinkJSONFormat = Json.format[Link]
+}
+
+object LinkListWrapper {
+  implicit val LinkListWrapperJSONFormat = Json.format[LinkListWrapper]
+}
+
+@Singleton
 class Links @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
-  import driver.api._
+  import profile.api._
 
   class LinksTable(tag: Tag)
     extends Table[Link](tag, "link") {
@@ -43,7 +53,7 @@ class Links @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) ex
 
     def updtime = column[Option[Long]]("update_time")
 
-    def * = (name, author, content, inittime, updtime, tombstone, lid) <> (Link.tupled, Link.unapply)
+    def * = (name, author, content, inittime, updtime, tombstone, lid) <> ((Link.apply _).tupled, Link.unapply)
   }
 
   val table = TableQuery[LinksTable]

@@ -28,7 +28,6 @@ GET           /blog/test/qcback                     controllers.HomeController.q
 GET           /blog/about                           controllers.HomeController.about
 GET           /blog/contactus                       controllers.HomeController.contactus
 GET           /blog/resume                          controllers.HomeController.toResume
-GET           /blog/admin                           controllers.HomeController.toAdmin
 
 #blog util
 
@@ -44,42 +43,24 @@ POST          /blog/article/update                  controllers.ArticleControlle
 POST          /blog/reply2article                   controllers.Reply2ArticleController.initReply2Article
 POST          /blog/reply2message                   controllers.Reply2MsgController.initReply2Message
 POST          /blog/check/resume                    controllers.HomeController.checkResumeForm
-POST          /blog/check/admin                     controllers.HomeController.checkAdminForm
 POST          /blog/upload                          controllers.ResourceController.upload
 POST          /blog/qclogin                         controllers.UserController.loginByQConn
 PATCH         /blog/smile/:aid                      controllers.ArticleController.updateSmileCount(aid:Long)
 DELETE        /blog/article/:aid                    controllers.ArticleController.revoke(aid:Long)
 PATCH         /blog/reply2article/smile/:rid        controllers.Reply2ArticleController.updateSmileCount(rid:Long)
 PATCH         /blog/reply2message/smile/:rid        controllers.Reply2MsgController.updateSmileCount(rid:Long)
+POST          /admin/login                          controllers.HomeController.adminLoginForm
 
-##############
-# API routes #
-##############
+# admin
 
-# User
-#GET         /user                                  controllers.UserController.query(page:Int ?= 0,size:Int ?= 10)
-#GET         /user/name                             controllers.UserController.queryByName(name:String)
-#GET         /user/:uid                             controllers.UserController.retrieve(uid:Long)
-#GET         /user/exists/:name                     controllers.UserController.userIsExists(name:String)
-#
-## Article
-#GET         /article/:aid                          controllers.ArticleController.retrieve(aid:Long)
-#GET         /article                               controllers.ArticleController.query(page:Int ?= 0,size:Int ?= 10)
-#GET         /article/by/catalog                    controllers.ArticleController.queryByCatalog(catalog:String ?= "" ,page:Int ?= 0,size:Int ?= 10)
-#
-##Reply
-#
-#GET         /reply2message/:rid                    controllers.Reply2MsgController.retrieve(rid:Long)
-#
-#GET         /reply2article/:rid                    controllers.Reply2ArticleController.retrieve(rid:Long)
-#GET         /reply2article/article/:aid            controllers.Reply2ArticleController.queryByAid(aid:Long,page:Int ?= 0,size:Int ?= 10)
-#
-##Link
-#GET         /link/:lid                             controllers.LinkController.retrieve(lid:Long)
-#GET         /link                                  controllers.LinkController.query(page:Int ?= 0,size:Int ?= 10)
-
-#Mood
-
-#GET       /mood/:id                                controllers.MoodController.retrieve(id:Long)
-
-#GET           /test                                 controllers.HomeController.test
+GET           /admin                                controllers.HomeController.adminIndex
+GET           /admin/login                          controllers.HomeController.adminLogin
+GET           /admin/info                           controllers.HomeController.adminInfo
+GET           /admin/user                           controllers.HomeController.adminUser
+GET           /admin/password                       controllers.HomeController.adminPassword
+GET           /admin/article/list                   controllers.HomeController.adminArticleList(page:Int ?=0,size:Int ?= 10)
+GET           /admin/article/reply                  controllers.HomeController.adminArticleReply
+GET           /admin/article/add                    controllers.HomeController.adminArticleAdd
+GET           /admin/message                        controllers.HomeController.adminMessage
+GET           /admin/catrgpry                       controllers.HomeController.adminCategory
+GET           /admin/catrgpry/edit                  controllers.HomeController.adminCategoryEdit

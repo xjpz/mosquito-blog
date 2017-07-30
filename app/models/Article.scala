@@ -3,7 +3,8 @@ package models
 import javax.inject.Inject
 
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
+import play.api.libs.json.Json
+import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,7 +23,7 @@ case class Article(
                     var read: Option[Int] = Option(0),
                     var smile: Option[Int] = Option(0),
                     var reply: Option[Int] = Option(0),
-                    var descrp: Option[String] = None,
+                    var remark: Option[String] = None,
                     var inittime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                     var updtime: Option[Long] = Option(System.currentTimeMillis() / 1000L),
                     var tombstone: Option[Int] = Option(0),
@@ -39,7 +40,7 @@ case class Article(
       read = article.read.orElse(this.read),
       smile = article.smile.orElse(this.smile),
       reply = article.read.orElse(this.reply),
-      descrp = article.descrp.orElse(this.descrp),
+      remark = article.remark.orElse(this.remark),
       inittime = this.inittime,
       updtime = Option(System.currentTimeMillis() / 1000L),
       tombstone = article.tombstone.orElse(this.tombstone),
@@ -53,8 +54,7 @@ case class Article(
 
     if (catalogOpt.isDefined) {
       var catalog = catalogOpt.get
-      catalog = catalog.replace("，", ",")
-      catalog = catalog.replace(".", ",")
+      catalog = catalog.replaceAll("，", ",").replaceAll(".", ",")
       article.catalog = Option(catalog)
     }
   }
@@ -70,11 +70,19 @@ case class Article(
   }
 }
 
+object Article {
+  implicit val ArticleJSONFormat = Json.format[Article]
+}
+
+object ArticleListWrapper {
+  implicit val ArticleListWrapperFormat = Json.format[ArticleListWrapper]
+}
+
 case class ArticleListWrapper(articles: List[Article], count: Int)
 
 class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
-  import driver.api._
+  import profile.api._
 
   class ArticlesTable(tag: Tag) extends Table[Article](tag, "article") {
 
@@ -106,7 +114,7 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
     def updtime = column[Option[Long]]("update_time")
 
-    def * = (title, content, catalog, uid, status, atype, read, smile, reply, descrp, inittime, updtime, tombstone, aid) <> (Article.tupled, Article.unapply)
+    def * = (title, content, catalog, uid, status, atype, read, smile, reply, descrp, inittime, updtime, tombstone, aid) <> ((Article.apply _).tupled, Article.unapply)
   }
 
   val table = TableQuery[ArticlesTable]
@@ -129,8 +137,12 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).result)
   }
 
+  def query(page: Int, size: Int): Future[Seq[Article]] = {
+    db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.aid.desc).drop(page * size).take(size).result)
+  }
+
   def queryCatalog: Future[Seq[String]] = {
-    db.run(_queryCatalog)
+    db.run(_queryCatalog).map(_.flatMap(_.split(",")))
   }
 
   def queryByReadCount(page: Int = 0, size: Int = 5): Future[Seq[Article]] = {

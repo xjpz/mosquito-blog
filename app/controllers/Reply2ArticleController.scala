@@ -2,13 +2,12 @@ package controllers
 
 import javax.inject.Inject
 
-import models.JsFormat
 import models.reply.{Reply, Reply2Article, ReplyListTree}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs
 import play.api.libs.json.{JsNull, Json}
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{AbstractController, ControllerComponents}
 import utils.ResultStatus
 
 import scala.collection.mutable.ListBuffer
@@ -19,7 +18,7 @@ import scala.concurrent.Future
   * Created by xjpz on 2016/5/29.
   */
 
-class Reply2ArticleController @Inject() extends Controller with JsFormat {
+class Reply2ArticleController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   val reply2ArticleForm = Form(
     mapping(
@@ -40,21 +39,16 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat {
   }
 
   def queryByAid(aid: Long, page: Int, size: Int) = Action.async {
-    {
-      for {
-        replyList <- Reply2Article.queryByAid(aid)
-      } yield {
-        val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
-        val replyListTree = replySuper.map(p =>
-          ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
-        )
-        replyListTree
-      }
-    }.map { x =>
-      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(x), "des" -> ResultStatus.status_1))
-    }.recover {
-      case e: Exception => Ok(Json.obj("ret" -> 2, "con" -> JsNull, "des" -> ResultStatus.status_2))
+
+    Reply2Article.queryByAid(aid).map { replyList =>
+      val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
+      val replyListTree = replySuper.map(p =>
+        ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
+      )
+
+      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(replyListTree), "des" -> ResultStatus.status_1))
     }
+
   }
 
   def initReply2Article = Action.async { implicit request =>
@@ -81,11 +75,8 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat {
         Option(contentFormat),
         Option(quote)
       )
-      for {
-        rid <- Reply2Article.init(reply)
-      } yield {
+      Reply2Article.init(reply).map { rid =>
         reply.rid = rid
-        //        Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
         Redirect("/blog/article/" + aid + "#article_comment")
       }
     } else {
@@ -99,8 +90,8 @@ class Reply2ArticleController @Inject() extends Controller with JsFormat {
     }.flatMap {
       case Some(x) =>
         for (
-          updSimle <- Reply2Article.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
-        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSimle), "des" -> ResultStatus.status_1))
+          updSmile <- Reply2Article.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
+        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }
   }

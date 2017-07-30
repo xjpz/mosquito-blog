@@ -5,7 +5,8 @@ import javax.inject.Inject
 
 import org.apache.commons.codec.binary.Base64
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
+import play.api.libs.json.Json
+import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -62,9 +63,17 @@ case class User(
 
 case class UserListWrapper(users: List[User], count: Int)
 
+object User {
+  implicit val UserJSONFormat = Json.format[User]
+}
+
+object UserListWrapper {
+  implicit val UserListWrapperFormat = Json.format[UserListWrapper]
+}
+
 class Users @Inject()(articles: Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
-  import driver.api._
+  import profile.api._
 
   private class UsersTable(tag: Tag) extends Table[User](tag, "user") {
 
@@ -98,7 +107,8 @@ class Users @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
 
     def updtime = column[Option[Long]]("update_time")
 
-    def * = (name, password, email, phone, descrp, utype, status, qopenid, qtoken, sopenid, stoken, inittime, updtime, tombstone, uid) <> (User.tupled, User.unapply)
+    def * = (name, password, email, phone, descrp, utype, status, qopenid, qtoken,
+      sopenid, stoken, inittime, updtime, tombstone, uid) <> ((User.apply _).tupled, User.unapply)
   }
 
   private val table = TableQuery[UsersTable]

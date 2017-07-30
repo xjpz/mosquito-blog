@@ -3,7 +3,8 @@ package models
 import javax.inject.Inject
 
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
+import play.api.libs.json.Json
+import slick.jdbc.JdbcProfile
 
 import scala.concurrent.Future
 
@@ -20,10 +21,14 @@ case class Mood(
                  var tombstone: Option[Int] = Option(0),
                  var id: Option[Long] = None)
 
+object Mood {
+  implicit val MoodJSONFormat = Json.format[Mood]
+
+}
 
 class Moods @Inject()(articles: Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
-  import driver.api._
+  import profile.api._
 
   class MoodsTable(tag: Tag) extends Table[Mood](tag, "news2mood") {
     def id = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
@@ -40,7 +45,7 @@ class Moods @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
 
     def tombstone = column[Option[Int]]("tombstone")
 
-    def * = (content, uid, name, inittime, updtime, tombstone, id) <> (Mood.tupled, Mood.unapply)
+    def * = (content, uid, name, inittime, updtime, tombstone, id) <> ((Mood.apply _).tupled, Mood.unapply)
   }
 
   val table = TableQuery[MoodsTable]
