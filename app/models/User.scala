@@ -1,16 +1,15 @@
 package models
 
 import java.security.MessageDigest
-import javax.inject.Inject
 
+import javax.inject.{Inject, Singleton}
 import org.apache.commons.codec.binary.Base64
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.language.postfixOps
-import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by xjpz on 2016/5/26.
@@ -71,8 +70,8 @@ object UserListWrapper {
   implicit val UserListWrapperFormat = Json.format[UserListWrapper]
 }
 
-class Users @Inject()(articles: Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
-
+@Singleton
+class Users @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit executionContext: ExecutionContext) extends ArticlesComponent with HasDatabaseConfigProvider[JdbcProfile] {
   import profile.api._
 
   private class UsersTable(tag: Tag) extends Table[User](tag, "user") {
@@ -113,36 +112,28 @@ class Users @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
 
   private val table = TableQuery[UsersTable]
 
-  def queryById(id: Long): DBIO[Option[User]] = table.filter(_.uid === id).result.headOption
-
-  def _queryByName(uname: String): DBIO[Option[User]] = table.filter(_.name === uname).result.headOption
-
-  def _queryByEmail(email: String): DBIO[Option[User]] = table.filter(_.email === email).result.headOption
-
-  def _queryByPhone(phone: String): DBIO[Option[User]] = table.filter(_.phone === phone).result.headOption
-
-  def _query: DBIO[Seq[User]] = table.filter(_.tombstone === 0).result
+  val articlesTable = TableQuery[ArticlesTable]
 
   def retrieve(uid: Long): Future[Option[User]] = {
-    db.run(queryById(uid))
+    db.run(table.filter(_.uid === uid).result.headOption)
   }
 
   def init(user: User): Future[Option[Long]] = {
     db.run((table returning table.map(_.uid)) += user)
   }
 
-  def query: Future[Seq[User]] = db.run(_query)
+  def query: Future[Seq[User]] = db.run(table.filter(_.tombstone === 0).result)
 
   def queryByName(name: String): Future[Option[User]] = {
-    db.run(_queryByName(name))
+    db.run(table.filter(_.name === name).result.headOption)
   }
 
   def queryByEmail(email: String): Future[Option[User]] = {
-    db.run(_queryByEmail(email))
+    db.run(table.filter(_.name === email).result.headOption)
   }
 
   def queryByPhone(phone: String): Future[Option[User]] = {
-    db.run(_queryByPhone(phone))
+    db.run(table.filter(_.name === phone).result.headOption)
   }
 
   def queryByOpenid(openid: String): Future[Option[User]] = {
@@ -165,9 +156,9 @@ class Users @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
 
   def userIsExists(uname: String): Future[Boolean] = {
     val ret = for {
-      unameExists <- _queryByName(uname)
-      emailExists <- _queryByEmail(uname)
-      phoneExists <- _queryByPhone(uname)
+      unameExists <- table.filter(_.name === uname).result.headOption
+      emailExists <- table.filter(_.email === uname).result.headOption
+      phoneExists <- table.filter(_.phone === uname).result.headOption
     } yield {
       unameExists.isDefined || emailExists.isDefined || phoneExists.isDefined
     }
@@ -175,13 +166,13 @@ class Users @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
   }
 
   def queryArticleListJoinUser: Future[Seq[(Article, User)]] = {
-    val query = (articles.table.filter(_.tombstone === 0) join
+    val query = (articlesTable.filter(_.tombstone === 0) join
       table.filter(_.tombstone === 0) on (_.uid === _.uid)).sorted(_._1.aid.desc).result
     db.run(query)
   }
 
   def queryArticleByCatalogJoinUser(catalog: String): Future[Seq[(Article, User)]] = {
-    val query = (articles.table.filter(_.catalog like "%" + catalog + "%").sortBy(_.aid.desc) join
+    val query = (articlesTable.filter(_.catalog like "%" + catalog + "%").sortBy(_.aid.desc) join
       table.filter(_.tombstone === 0) on (_.uid === _.uid)).result
     db.run(query)
   }

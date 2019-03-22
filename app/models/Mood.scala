@@ -1,12 +1,11 @@
 package models
 
-import javax.inject.Inject
-
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import javax.inject.{Inject, Singleton}
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.json.Json
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by xjpz on 2016/6/8.
@@ -26,11 +25,15 @@ object Mood {
 
 }
 
-class Moods @Inject()(articles: Articles)(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+@Singleton
+class Moods @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
 
+  private val dbConfig = dbConfigProvider.get[JdbcProfile]
+
+  import dbConfig._
   import profile.api._
 
-  class MoodsTable(tag: Tag) extends Table[Mood](tag, "news2mood") {
+  private class MoodsTable(tag: Tag) extends Table[Mood](tag, "news2mood") {
     def id = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
 
     def content = column[Option[String]]("content")
@@ -48,12 +51,10 @@ class Moods @Inject()(articles: Articles)(protected val dbConfigProvider: Databa
     def * = (content, uid, name, inittime, updtime, tombstone, id) <> ((Mood.apply _).tupled, Mood.unapply)
   }
 
-  val table = TableQuery[MoodsTable]
-
-  def queryById(id: Long): DBIO[Option[Mood]] = table.filter(_.id === id).result.headOption
+  private val table = TableQuery[MoodsTable]
 
   def retrieve(id: Long): Future[Option[Mood]] = {
-    db.run(queryById(id))
+    db.run(table.filter(_.id === id).result.headOption)
   }
 
   def queryHead: Future[Option[Mood]] = {

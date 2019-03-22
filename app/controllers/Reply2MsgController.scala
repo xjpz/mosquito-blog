@@ -1,8 +1,7 @@
 package controllers
 
 import javax.inject.Inject
-
-import models.reply.{Reply, Reply2Message}
+import models.reply.{Reply2Message, Reply2Messages}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs
@@ -16,7 +15,7 @@ import scala.concurrent.Future
 /**
   * Created by xjpz on 2016/5/29.
   */
-class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class Reply2MsgController @Inject()(reply2Messages: Reply2Messages)(cc: ControllerComponents) extends AbstractController(cc) {
 
   val reply2MessageForm = Form(
     mapping(
@@ -32,7 +31,7 @@ class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractCo
 
   def retrieve(rid: Long) = Action.async {
     for {
-      Some(reply) <- Reply2Message.retrieve(rid)
+      Some(reply) <- reply2Messages.retrieve(rid)
     } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
   }
 
@@ -51,7 +50,7 @@ class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractCo
 
     if (uid != 0L || guestAuth) {
       val contentFormat = if (quote != 0) content.substring(content.indexOf(":") + 1) else content
-      val reply = Reply(
+      val reply = Reply2Message(
         Option(aid),
         Option(uid),
         Option(name),
@@ -60,7 +59,7 @@ class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractCo
         Option(contentFormat),
         Option(quote)
       )
-      Reply2Message.init(reply).map { rid =>
+      reply2Messages.init(reply).map { rid =>
         reply.rid = rid
         Redirect("/blog/message#article_comment")
       }
@@ -71,11 +70,11 @@ class Reply2MsgController @Inject()(cc: ControllerComponents) extends AbstractCo
 
   def updateSmileCount(rid: Long) = Action.async {
     {
-      for (reply <- Reply2Message.retrieve(rid)) yield reply
+      for (reply <- reply2Messages.retrieve(rid)) yield reply
     }.flatMap {
       case Some(x) =>
         for (
-          updSmile <- Reply2Message.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
+          updSmile <- reply2Messages.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
         ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }

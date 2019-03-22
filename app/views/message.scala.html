@@ -1,5 +1,5 @@
-@import models.reply.ReplyListTree
-@(uid: Long,uname:String)(replyListTree: Seq[ReplyListTree])
+@import models.reply.Reply2MessageListTree
+@(uid: Long,uname:String)(replyListTree: Seq[Reply2MessageListTree])
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -43,7 +43,7 @@
 
             <div class="blogb" id="blogb">
                     <!-- blogbody -->
-                @blog.blog_message(uid,uname,replyListTree: Seq[ReplyListTree])
+                @blog.blog_message(uid,uname,replyListTree: Seq[Reply2MessageListTree])
 
                     <!-- index_right-->
                 @blog.blog_right()

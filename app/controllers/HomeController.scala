@@ -3,9 +3,9 @@ package controllers
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
-import javax.inject._
 
-import models.reply.{Reply, Reply2Article, Reply2Message, ReplyListTree}
+import javax.inject._
+import models.reply._
 import models.{Articles, Moods, Users}
 import org.apache.commons.codec.binary.Base64
 import play.api.Configuration
@@ -27,7 +27,9 @@ class HomeController @Inject()(cc: ControllerComponents,
                                configuration: Configuration,
                                users: Users,
                                articles: Articles,
-                               moods: Moods)
+                               moods: Moods,
+                               reply2Articles: Reply2Articles,
+                               reply2Messages: Reply2Messages)
                               (implicit val config: Configuration) extends AbstractController(cc) {
 
   /**
@@ -86,7 +88,7 @@ class HomeController @Inject()(cc: ControllerComponents,
     for {
       Some(article) <- articles.retrieve(aid)
       Some(user) <- users.retrieve(article.uid.get)
-      replyList <- Reply2Article.queryByAid(aid)
+      replyList <- reply2Articles.queryByAid(aid)
     } yield {
       request.session.get(s"aid:$aid") match {
         case None => articles.updateReadCount(aid, article.read.getOrElse(0) + 1)
@@ -94,7 +96,7 @@ class HomeController @Inject()(cc: ControllerComponents,
       }
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
-        ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
+        Reply2ArticleListTree(replyList, p, reply2Articles.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply2Article]).toList.sortBy(_.rid))
       )
       Ok(views.html.article(uid, name)(user, article, replyListTree)).withSession(request.session + (s"aid:$aid" -> "true"))
     }
@@ -109,10 +111,10 @@ class HomeController @Inject()(cc: ControllerComponents,
     val uid = request.session.get("uid").getOrElse("0").toLong
     val name = request.session.get("name").getOrElse("")
 
-    Reply2Message.queryByAid(0L).map { replyList =>
+    reply2Messages.queryByAid(0L).map { replyList =>
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
-        ReplyListTree(replyList, p, Reply2Message.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
+        Reply2MessageListTree(replyList, p, reply2Messages.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply2Message]).toList.sortBy(_.rid))
       )
       Ok(views.html.message(uid, name)(replyListTree))
     }
@@ -126,10 +128,10 @@ class HomeController @Inject()(cc: ControllerComponents,
     users.queryArticleByCatalogJoinUser(catalog).flatMap { x =>
       if (x.length == 1) {
 
-        Reply2Article.queryByAid(x.head._1.aid.get).map { replyList =>
+        reply2Articles.queryByAid(x.head._1.aid.get).map { replyList =>
           val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
           val replyListTree = replySuper.map(p =>
-            ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
+            Reply2ArticleListTree(replyList, p, reply2Articles.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply2Article]).toList.sortBy(_.rid))
           )
           Ok(
             views.html.article(uid, name)(x.head._2, x.head._1, replyListTree)

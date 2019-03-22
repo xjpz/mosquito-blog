@@ -1,13 +1,11 @@
 package models
 
-import javax.inject.Inject
-
+import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 /**
   * Created by xjpz on 2016/5/28.
@@ -80,7 +78,7 @@ object ArticleListWrapper {
 
 case class ArticleListWrapper(articles: List[Article], count: Int)
 
-class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
+trait ArticlesComponent { self: HasDatabaseConfigProvider[JdbcProfile] =>
 
   import profile.api._
 
@@ -117,20 +115,17 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
     def * = (title, content, catalog, uid, status, atype, read, smile, reply, descrp, inittime, updtime, tombstone, aid) <> ((Article.apply _).tupled, Article.unapply)
   }
 
-  val table = TableQuery[ArticlesTable]
+}
 
-  def _queryCatalog: DBIO[Seq[String]] = table.filter(_.catalog.isDefined).filter(_.tombstone === 0).map(_.catalog.get).result
+@Singleton
+class Articles @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(implicit executionContext: ExecutionContext) extends ArticlesComponent with HasDatabaseConfigProvider[JdbcProfile] {
 
-  def _queryByReadCount(page: Int, size: Int): DBIO[Seq[Article]] = table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.read.desc).drop(page * size).take(size).result
+  import profile.api._
 
-  def _queryByReplyCount(page: Int, size: Int): DBIO[Seq[Article]] = table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.reply.desc).drop(page * size).take(size).result
-
-  def _queryBySmileCount(page: Int, size: Int): DBIO[Seq[Article]] = table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.smile.desc).drop(page * size).take(size).result
-
-  def queryById(id: Long): DBIO[Option[Article]] = table.filter(_.aid === id).result.headOption
+  private val table = TableQuery[ArticlesTable]
 
   def retrieve(aid: Long): Future[Option[Article]] = {
-    db.run(queryById(aid))
+    db.run(table.filter(_.aid === aid).result.headOption)
   }
 
   def query: Future[Seq[Article]] = {
@@ -142,19 +137,19 @@ class Articles @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   }
 
   def queryCatalog: Future[Seq[String]] = {
-    db.run(_queryCatalog).map(_.flatMap(_.split(",")))
+    db.run(table.filter(_.catalog.isDefined).filter(_.tombstone === 0).map(_.catalog.get).result)
   }
 
   def queryByReadCount(page: Int = 0, size: Int = 5): Future[Seq[Article]] = {
-    db.run(_queryByReadCount(page, size))
+    db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.read.desc).drop(page * size).take(size).result)
   }
 
   def queryByReplyCount(page: Int = 0, size: Int = 5): Future[Seq[Article]] = {
-    db.run(_queryByReplyCount(page, size))
+    db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.reply.desc).drop(page * size).take(size).result)
   }
 
   def queryBySmileCount(page: Int = 0, size: Int = 5): Future[Seq[Article]] = {
-    db.run(_queryBySmileCount(page, size))
+    db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.smile.desc).drop(page * size).take(size).result)
   }
 
   def queryByCatalog(catalog: String): Future[Seq[Article]] = {

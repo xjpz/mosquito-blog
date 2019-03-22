@@ -1,8 +1,7 @@
 package controllers
 
 import javax.inject.Inject
-
-import models.reply.{Reply, Reply2Article, ReplyListTree}
+import models.reply.{Reply2Article, Reply2ArticleListTree, Reply2Articles}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs
@@ -18,7 +17,7 @@ import scala.concurrent.Future
   * Created by xjpz on 2016/5/29.
   */
 
-class Reply2ArticleController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class Reply2ArticleController @Inject()(reply2Articles: Reply2Articles)(cc: ControllerComponents) extends AbstractController(cc) {
 
   val reply2ArticleForm = Form(
     mapping(
@@ -34,16 +33,16 @@ class Reply2ArticleController @Inject()(cc: ControllerComponents) extends Abstra
 
   def retrieve(rid: Long) = Action.async {
     for {
-      Some(reply) <- Reply2Article.retrieve(rid)
+      Some(reply) <- reply2Articles.retrieve(rid)
     } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
   }
 
   def queryByAid(aid: Long, page: Int, size: Int) = Action.async {
 
-    Reply2Article.queryByAid(aid).map { replyList =>
+    reply2Articles.queryByAid(aid).map { replyList =>
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
       val replyListTree = replySuper.map(p =>
-        ReplyListTree(replyList, p, Reply2Article.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply]).toList.sortBy(_.rid))
+        Reply2ArticleListTree(replyList, p, reply2Articles.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply2Article]).toList.sortBy(_.rid))
       )
 
       Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(replyListTree), "des" -> ResultStatus.status_1))
@@ -66,7 +65,7 @@ class Reply2ArticleController @Inject()(cc: ControllerComponents) extends Abstra
 
     if (uid != 0L || guestAuth) {
       val contentFormat = if (quote != 0) content.substring(content.indexOf(":") + 1) else content
-      val reply = Reply(
+      val reply = Reply2Article(
         Option(aid),
         Option(uid),
         Option(name),
@@ -75,7 +74,7 @@ class Reply2ArticleController @Inject()(cc: ControllerComponents) extends Abstra
         Option(contentFormat),
         Option(quote)
       )
-      Reply2Article.init(reply).map { rid =>
+      reply2Articles.init(reply).map { rid =>
         reply.rid = rid
         Redirect("/blog/article/" + aid + "#article_comment")
       }
@@ -86,11 +85,11 @@ class Reply2ArticleController @Inject()(cc: ControllerComponents) extends Abstra
 
   def updateSmileCount(rid: Long) = Action.async {
     {
-      for (reply <- Reply2Article.retrieve(rid)) yield reply
+      for (reply <- reply2Articles.retrieve(rid)) yield reply
     }.flatMap {
       case Some(x) =>
         for (
-          updSmile <- Reply2Article.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
+          updSmile <- reply2Articles.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
         ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
       case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
     }
