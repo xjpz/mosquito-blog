@@ -1,5 +1,7 @@
 package controllers
 
+import helpers.WordFilter
+
 import javax.inject.Inject
 import models.reply.{Reply2Message, Reply2Messages}
 import play.api.data.Form
@@ -44,7 +46,7 @@ class Reply2MsgController @Inject()(reply2Messages: Reply2Messages)(cc: Controll
     val guestAuth = captchaText == Option(Codecs.sha1(reqReplyFprm._7.getOrElse("").toUpperCase))
 
     val aid = reqReplyFprm._1
-    val content = reqReplyFprm._2
+    val content = WordFilter.doFilter(reqReplyFprm._2)
     val name = reqReplyFprm._3
     val quote = reqReplyFprm._4
 

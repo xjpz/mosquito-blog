@@ -1,0 +1,140 @@
+@import app.AppGlobal
+@(page: String,title: String)(content: Html)
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>@title - @AppGlobal.siteName</title>
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+        <meta name="keywords" content="@AppGlobal.siteKeyword" />
+        <meta name="description" content="@AppGlobal.siteDescription" />
+        <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
+        <style id="system" type="text/css">h1,h2,h3,h4,h5,h6,p,blockquote {    margin: 0;    padding: 0;}body {    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;    font-size: 13px;    line-height: 18px;    margin: 10px 13px 10px 13px;}a {    color: #0069d6;}a:hover {    color: #0050a3;    text-decoration: none;}a img {    border: none;}p {    margin-bottom: 9px;}h1,h2,h3,h4,h5,h6 {    color: #404040;    line-height: 36px;}h1 {    margin-bottom: 18px;    font-size: 30px;}h2 {    font-size: 24px;}h3 {    font-size: 18px;}h4 {    font-size: 16px;}h5 {    font-size: 14px;}h6 {    font-size: 13px;}hr {    margin: 0 0 19px;    border: 0;    border-bottom: 1px solid #ccc;}blockquote {    padding: 13px 13px 21px 15px;    margin-bottom: 18px;    font-family:georgia,serif;    font-style: italic;}blockquote:before {    content:"C";    font-size:40px;    margin-left:-10px;    font-family:georgia,serif;    color:#eee;}blockquote p {    font-size: 14px;    font-weight: 300;    line-height: 18px;    margin-bottom: 0;    font-style: italic;}code, pre {    font-family: Monaco, Andale Mono, Courier New, monospace;}code {    background-color: #fee9cc;    color: rgba(0, 0, 0, 0.75);    padding: 1px 3px;    font-size: 12px;    -webkit-border-radius: 3px;    -moz-border-radius: 3px;    border-radius: 3px;}pre {    display: block;    padding: 14px;    margin: 0 0 18px;    line-height: 16px;    font-size: 11px;    border: 1px solid #d9d9d9;    white-space: pre-wrap;    word-wrap: break-word;}pre code {    background-color: #fff;    color:#737373;    font-size: 11px;    padding: 0;}@@media screen and (min-width: 768px) {    body {        width: 748px;        margin:10px auto;    }}</style>
+        <style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @@-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}               @@-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @@-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @@keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style>
+        <style id="system" type="text/css">
+                div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                a:link,a:visited{
+                    text-decoration:none;  /*超链接无下划线*/
+                }
+                .main {
+                    margin-top:20em;
+                    margin: 0px auto;
+                    border-bottom: 1px solid #ccc;
+                }
+                .content_left{
+                    float:left;
+                    margin-left:2em;
+                    padding:0.8em;
+                    line-height: 2em;
+                }
+                .content_right{
+                    float:right;
+                    width: 550px;
+                    padding-bottom: 200px;
+                    padding-left:2em;
+                    padding-top:2em;
+                    float: right;
+                    border-left: 1px dotted #ccc;
+                }
+
+                .current:link, .current:visited, .current:active {
+                    color: #cc0000 !important;
+                    text-decoration: none;
+                    padding: 0px 12px;
+                }
+                a:link, #nav_block a:visited, #nav_block a:active {
+                    color: #676767;
+                    text-decoration: none;
+                    padding: 0px 12px;
+                }
+
+                .clear {
+                    clear: both;
+                }
+
+                .ft-copyright {
+                    clear : both ;
+                    width : auto ;
+                    font-family : 'Courgette', cursive ;
+                    text-align : center ;
+                    font-size : 13px ;
+                    top : 26em ;
+                    position : relative ;
+
+                }
+                .ft-copyright a{
+                    color: black;
+                }
+        </style>
+
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/dynamicStyle.css")" >
+        <script src="@routes.Assets.versioned("/javascripts/jquery.js")"></script>
+        <script src="@routes.Assets.versioned("/javascripts/dynamicStyle.js")"></script>
+
+    </head>
+
+    <body marginheight="0" @if(page.equals("about")){onload="start()"}>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h2>@title</h2>
+        <br>
+        <div id="main" class="main">
+            <div id="content_left" class="content_left">
+                <p>
+                    <a href="/" >网站首页</a>
+                </p>
+                <p>
+                    <a href="@routes.HomeController.about()" @if(page.equals("about")){class="current"} >关于本站</a>
+                </p>
+                <p>
+                    <a href="@routes.HomeController.contactus()" @if(page.equals("contactus")){class="current"} >联系我们</a>
+                </p>
+                <p>
+                    <a href="@routes.HomeController.toResume()" @if(page.equals("resume")){class="current"} >个人简历</a>
+                </p>
+                <p>
+                    <a href="@routes.HomeController.adminLogin()">后台管理</a>
+                </p>
+            </div>
+            @content
+        </div>
+        <div class="clear"><hr></div>
+        <footer>
+            <div class="ft-copyright">
+                <p class="copyright">
+                    @AppGlobal.siteCopyright <br>
+                    <span>
+                        <a href="https://beian.miit.gov.cn/" style="padding:0 2px">@AppGlobal.beianCode</a>
+                        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=@AppGlobal.siteWangBeiCode" style="padding:0 2px">@AppGlobal.siteWangBeiCode</a>
+                    </span> <br>
+                    <a href="/">首页</a>|<a href="@routes.HomeController.about()">关于本站</a>|<a href="@routes.HomeController.toResume()">个人简历</a>|<a href="@routes.HomeController.adminLogin()">后台管理</a>|
+                    <a href="https://tongji.baidu.com/web/20972565/overview/sole?siteId=9091194" target="_blank">站长统计</a>
+                    <script>
+                            var _hmt = _hmt || [];
+                            (function() {
+                                var hm = document.createElement("script");
+                                hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
+                                var s = document.getElementsByTagName("script")[0];
+                                s.parentNode.insertBefore(hm, s);
+                            })();
+                    </script>
+
+                </p>
+            </div>
+
+        </footer>
+
+    </body>
+
+</html>

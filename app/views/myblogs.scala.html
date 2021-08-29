@@ -1,11 +1,12 @@
+@import app.AppGlobal
 @(uid: Long,uname:String)(user: User,articleList:Seq[Article], page: Int)
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>@user.name 文章列表 - 心尖偏左</title>
+    <title>@user.name 文章列表 - @AppGlobal.siteName</title>
     <meta name="keywords" content="心尖偏左Blog,@user.name" />
-    <meta name="description" content="@user.name - 心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+    <meta name="description" content="@user.name - @AppGlobal.siteDescription" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
       <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
@@ -18,7 +19,7 @@
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
       <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
 
     <style type="text/css">
     .article_editor{
@@ -36,7 +37,7 @@
       var _hmt = _hmt || [];
       (function() {
         var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+        hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(hm, s);
       })();
@@ -133,5 +134,3 @@
           }).trigger("mouseleave");       //trigger()方法的作用是触发被选元素的制定事件类型
         });
 </script>
-
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>

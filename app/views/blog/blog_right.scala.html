@@ -3,26 +3,43 @@
 @import java.text.SimpleDateFormat
 <div class="blogright" id="blogright">
 
+@*    <div class="catListTag">*@
+@*        <h3 class="catListTitle">活跃用户</h3>*@
+@*        <div class="module-list scroll-list">*@
+@*            <ul>*@
+
+@*            @for(userIter <- services.ViewAccessPoint.Implicits.myDao.queryUserList) {*@
+@*                <li ><a id="CatList_LinkList_0_Link_0" href="/blog/user/article/@userIter.uid.get" target="_blank" >@userIter.name</a>*@
+@*                    <small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get * 1000L))</small>*@
+@*                    <div style="border-bottom: 1px dashed #000000 ;*@
+@*                        margin-top: 10px ;"></div></li>*@
+@*            }*@
+
+@*            </ul>*@
+@*        </div>*@
+@*    </div>*@
+
     <div class="catListTag">
-        <h3 class="catListTitle">活跃用户</h3>
+        <h3 class="catListTitle">动弹一下</h3>
         <div class="module-list scroll-list">
             <ul>
 
-            @for(userIter <- services.ViewAccessPoint.Implicits.myDao.queryUserList) {
-                <li ><a id="CatList_LinkList_0_Link_0" href="/blog/user/article/@userIter.uid.get" target="_blank" >@userIter.name</a>
-                    <small>@(new SimpleDateFormat("yyyy-MM-dd").format(userIter.inittime.get * 1000L))</small>
+                @for(tweetItem <- services.ViewAccessPoint.Implicits.myDao.queryTweetList) {
+                <li ><a id="CatList_LinkList_0_Link_0" >@tweetItem.content</a>
+                    <small>by @tweetItem.name</small>
                     <div style="border-bottom: 1px dashed #000000 ;
-                        margin-top: 10px ;"></div></li>
+                    margin-top: 10px ;"></div></li>
             }
 
             </ul>
         </div>
     </div>
+
     <div class="cloud">
         <h3>标签云</h3>
         <ul>
         @for(catalogIter <- services.ViewAccessPoint.Implicits.myDao.queryCatalogList) {
-            <li><a href="/blog/catalog?word=@catalogIter" target="_blank">@catalogIter</a></li>
+            <li><a href="/blog/catalog?word=@{catalogIter._1.toString}&aid=@{catalogIter._2} " target="_blank">@catalogIter._1.toString</a></li>
         }
 
         </ul>

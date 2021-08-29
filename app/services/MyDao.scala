@@ -1,8 +1,7 @@
 package services
 
 import javax.inject.Inject
-
-import models.{Articles, Links, Moods, Users}
+import models.{Articles, Links, Moods, Tweets, Users}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -11,15 +10,16 @@ import scala.concurrent.duration.Duration
   * Created by wenzh on 2016/6/24.
   */
 
-class MyDao @Inject()(moods: Moods, users: Users, articles: Articles, links: Links) {
+class MyDao @Inject()(moods: Moods, users: Users, articles: Articles, links: Links,tweets: Tweets) {
 
   def moodHead = Await.result(moods.queryHead, Duration.Inf)
 
-  def queryUserList = Await.result(users.query, Duration.Inf)
+//  def queryUserList = Await.result(users.query, Duration.Inf)
+  def queryTweetList = Await.result(tweets.query,Duration.Inf)
 
   def queryLinList = Await.result(links.query, Duration.Inf)
 
-  def queryCatalogList = Await.result(articles.queryCatalog, Duration.Inf)
+  def queryCatalogList:Seq[(String,Long)] = Await.result(articles.queryCatalog, Duration.Inf)
 
   def queryArticleBySmileRank = Await.result(articles.queryBySmileCount(0, 5), Duration.Inf)
 

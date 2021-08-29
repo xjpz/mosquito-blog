@@ -171,8 +171,8 @@ class Users @Inject() (protected val dbConfigProvider: DatabaseConfigProvider)(i
     db.run(query)
   }
 
-  def queryArticleByCatalogJoinUser(catalog: String): Future[Seq[(Article, User)]] = {
-    val query = (articlesTable.filter(_.catalog like "%" + catalog + "%").sortBy(_.aid.desc) join
+  def queryArticleByCatalogJoinUser(aid: Long): Future[Seq[(Article, User)]] = {
+    val query = (articlesTable.filter(_.aid === aid).sortBy(_.aid.desc) join
       table.filter(_.tombstone === 0) on (_.uid === _.uid)).result
     db.run(query)
   }

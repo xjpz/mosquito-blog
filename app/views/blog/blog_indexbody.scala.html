@@ -1,8 +1,7 @@
-@(articleList: Seq[(Article, User)], page: Int)
+@(articleList: Seq[(Article, User)], page: Int,size:Int,total:Int)
 @import java.text.SimpleDateFormat
 <div class="blogbody" id="blogbody">
         <!-- 博客-->
-
 
     @for((article, user) <- articleList) {
         <div id="blogs" class="blogs">
@@ -13,7 +12,7 @@
             <br>
             <div id="blogbody_author" class="blogbody_author">posted @@ @(new SimpleDateFormat("MM月dd日 HH:mm").format(article.inittime.get * 1000L)) &nbsp;&nbsp; <a href="/blog/user/article/@article.uid.get">@user.name</a></div>
             <div id="blogbody_read" class="blogbody_read">
-                <a href="/blog/article/@article.aid.get" target="_blank">评论(@article.reply)</a>
+                <a href="/blog/article/@article.aid.get#article_comment" target="_blank">评论(@article.reply)</a>
                     &nbsp;|&nbsp;
                 <a href="javascript:" onclick="smile_numfun(@article.aid.getOrElse(0))">赞(<span id="smile_num@article.aid.getOrElse(1)">@article.smile</span>
                     )</a>
@@ -22,22 +21,22 @@
         </div>
 
         <br>
-        <div style="border-bottom: 1px dashed #000000 ;
-            margin-top: 10px ;"></div>
+        <div style="border-bottom: 1px dashed #000000;margin-top: 10px ;">
+        </div>
     }
 
 
     <div id="pagination">
         <ul id="pagination-flickr">
-            <li class="previous-off"><a @if((page + 1) == 1) {
+            <li class="previous-off"><a @if(page == 1 || (page + 1) == 1 ) {
                 class="pagelink"
             } else {
-                href="?page=@(page)"}>&laquo;上一页</a></li>
-            <li class="active">1/1</li>
-            <li class="next"><a @if((page + 1) == 1) {
+                href="/?page=@(page-1)&size=@size"}>&laquo;上一页</a></li>
+            <li class="active">@page/@total</li>
+            <li class="next"><a @if(page == total) {
                 class="pagelink"
             } else {
-                href="?page=@(page + 2)"}>下一页 &raquo;</a></li>
+                href="/?page=@(page + 1)&size=@size"}>下一页 &raquo;</a></li>
         </ul>
     </div>
 

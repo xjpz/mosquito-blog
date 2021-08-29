@@ -1,7 +1,7 @@
 <div class="blogbody" id="blogbody">
-    <h1>发表文章<sup>V2015.beta</sup></h1>
+    <h2 style="text-align: center;color:#38485A;">发表文章</h2>
     @import helper._
-    @form(routes.ArticleController.init()) {
+    @form(action=routes.ArticleController.create(),Symbol("id") ->"pushForm") {
         <div id="new_article_form" class="new_article_form">
             <p><label for="title">&nbsp;&nbsp;标题:</label>
                 <input type="text" name="title" id="author" value="" size="25" tabindex="1" class="comment_input" required/></p>
@@ -33,7 +33,7 @@
 
             <textarea id="editor" name="content" placeholder="请输入：" autofocus required ></textarea>
 
-            <p><input name="submit" type="submit" id="submit" tabindex="5" value="发表" class="button" /></p>
+            <p><input name="submit" type="button" id="submit" tabindex="5" onclick="check_content()" value="发表" class="button" /></p>
             <input type="hidden" name="comment_post_ID" value="542" />
 
             <p style="display: none ;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="999f94e7bf" /></p>
@@ -42,3 +42,4 @@
     }
 
 </div>
+

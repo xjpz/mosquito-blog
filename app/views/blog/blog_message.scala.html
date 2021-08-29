@@ -1,9 +1,10 @@
 @import models.reply.Reply2MessageListTree
+@import app.AppGlobal
 @(uid: Long, name: String, replyListTree: Seq[Reply2MessageListTree])
     @import java.text.SimpleDateFormat
     <div class="blogbody" id="blogbody">
 
-        <h1>留言板(@replyListTree.length)<sup>V2015</sup></h1>
+        <h2 style="text-align: center;">留言板(@replyListTree.length)</h2>
 
         <div id="article_comment" class="article_comment">
         @for(i <- replyListTree.indices) {
@@ -68,7 +69,7 @@
                         &nbsp;
                     <a href="javascript:" onclick="toLogin()">&raquo;去注册</a>
                         &nbsp;
-                    <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984', 'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
+                    <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('@AppGlobal.qqAuthUrl', 'oauth2Login_10984', 'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
                         <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a>
                     </span>
                 </b>
@@ -140,7 +141,7 @@
                                         }
 
                                         function _rvi() {
-                                            document.getElementById('img_vcode').src = '/captcha/new?t=' + Math.random(1000);
+                                            document.getElementById('img_vcode').src = '/blog/captcha?t=' + Math.random(1000);
                                         }
 
                                 </script>

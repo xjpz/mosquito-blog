@@ -33,7 +33,7 @@ class Moods @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: Ex
   import dbConfig._
   import profile.api._
 
-  private class MoodsTable(tag: Tag) extends Table[Mood](tag, "news2mood") {
+  private class MoodsTable(tag: Tag) extends Table[Mood](tag, "mood") {
     def id = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
 
     def content = column[Option[String]]("content")

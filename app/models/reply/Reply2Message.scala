@@ -51,7 +51,7 @@ class Reply2Messages @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
   import profile.api._
 
 
-  private class Reply2MessagesTable(tag: Tag) extends Table[Reply2Message](tag, "reply2message") {
+  private class Reply2MessagesTable(tag: Tag) extends Table[Reply2Message](tag, "reply_message") {
     def rid = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
 
     def aid = column[Option[Long]]("aid")

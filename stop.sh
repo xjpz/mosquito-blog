@@ -1,7 +1,7 @@
 #!/bin/bash
 
 appName=mosquito-blog
-appVersion=1.0
+appVersion=1.0.0
 appPort=9000
 appPath=`pwd`
 

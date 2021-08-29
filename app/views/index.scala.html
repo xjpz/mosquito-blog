@@ -1,17 +1,19 @@
-@(uid: Long,uname:String)(articleList:Seq[(Article,User)], page: Int)
+@import app.AppGlobal
+@(uid: Long,uname:String)(articleList:Seq[(Article,User)], page: Int,size:Int,total:Int)
 @import views.html.blog
 <!DOCTYPE html>
     <html lang="en">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title>首页 - 心尖偏左</title>
-            <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
-            <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+            <title>首页 - @AppGlobal.siteName</title>
+            <meta name="keywords" content="@AppGlobal.siteKeyword" />
+            <meta name="description" content="@AppGlobal.siteDescription" />
             <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
                 <!-- Baidu token-->
             <meta baidu-gxt-verify-token="543156f215dec24c3063ada0c293bb7a">
+            <meta name="baidu-site-verification" content="code-A85YhCYTiN" />
 
-                <!-- Qconnect token-->
+            <!-- Qconnect token-->
             <meta property="qc:admins" content="72063461402655" />
                 <!-- Bing token-->
             <meta name="msvalidate.01" content="7F16F233D9FAFA8077BBB32446E6A2D2" />
@@ -30,12 +32,12 @@
             <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
                 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-            <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+            <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
             <script>
                 var _hmt = _hmt || [];
                 (function() {
                     var hm = document.createElement("script");
-                    hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                    hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
                     var s = document.getElementsByTagName("script")[0];
                     s.parentNode.insertBefore(hm, s);
                 })();
@@ -54,7 +56,7 @@
 
                 <div class="blogb" id="blogb">
                         <!-- blogbody -->
-                    @blog.blog_indexbody(articleList,page)
+                    @blog.blog_indexbody(articleList,page,size,total)
 
                         <!-- index_right-->
                     @blog.blog_right()
@@ -62,7 +64,7 @@
 
             </div>
 
-            @footer.index_footer(2)
+            @footer.index_footer(1)
 
         </body>
 
@@ -101,12 +103,10 @@
             settime = setInterval(function () {
                 var $first = $(".scroll-list ul:first");     //选取div下的第一个ul 而不是li；
                 var height = $first.find("li:first").height();      //获取第一个li的高度，为ul向上移动做准备；
-                $first.animate({ "marginTop": -height + "px" }, 2000, function () {
+                $first.animate({ "marginTop": -height + "px" }, 1500, function () {
                     $first.css({ marginTop: 0 }).find("li:first").appendTo($first); //设置上边距为零，为了下一次移动做准备
                 });
             }, 2000);
         }).trigger("mouseleave");       //trigger()方法的作用是触发被选元素的制定事件类型
     });
  </script>
-
-    <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
