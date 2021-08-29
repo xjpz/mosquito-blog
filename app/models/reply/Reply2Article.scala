@@ -51,7 +51,7 @@ class Reply2Articles @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
   import profile.api._
 
 
-  private class Reply2ArticlesTable(tag: Tag) extends Table[Reply2Article](tag, "reply2article") {
+  private class Reply2ArticlesTable(tag: Tag) extends Table[Reply2Article](tag, "reply_article") {
     def rid = column[Option[Long]]("id", O.PrimaryKey, O.AutoInc)
 
     def aid = column[Option[Long]]("aid")

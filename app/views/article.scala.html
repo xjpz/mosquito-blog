@@ -1,12 +1,15 @@
 @import models.reply.Reply2ArticleListTree
+
+@import app.AppGlobal
+
 @(uid: Long, uname: String)(user: User, article: Article, replyListTree: Seq[Reply2ArticleListTree])
 
 <!DOCTYPE html>
     <html lang="en">
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title>@article.title - 心尖偏左</title>
-            <meta name="keywords" content="@article.title - 心尖偏左" />
+            <title>@article.title - @AppGlobal.siteName</title>
+            <meta name="keywords" content="@article.title" />
             <meta name="description" content="心尖偏左Blog - @article.title - @if(article.content.getOrElse("").length >= 160) {@article.content.get.substring(0,160)...} else {
                 @article.content.getOrElse("")
             }" />
@@ -22,7 +25,7 @@
                 <!-- 新 Bootstrap 核心 CSS 文件 -->
             <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
                 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-            <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+            <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
 
             <style id="system" type="text/css">
             img {
@@ -35,7 +38,7 @@
                 var _hmt = _hmt || [];
                 (function () {
                     var hm = document.createElement("script");
-                    hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                    hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
                     var s = document.getElementsByTagName("script")[0];
                     s.parentNode.insertBefore(hm, s);
                 })();
@@ -129,7 +132,8 @@
         /*活跃用户滚动*/
         $(function () {
             var settime;
-            $(".scroll-list").hover(function () {
+            $(
+                ".scroll-list").hover(function () {
                 clearInterval(settime);
             }, function () {
                 settime = setInterval(function () {
@@ -142,20 +146,3 @@
             }).trigger("mouseleave");       //trigger()方法的作用是触发被选元素的制定事件类型
         });
 </script>
-
-
-    <script>window._bd_share_config = {
-        "common": {
-            "bdSnsKey": {},
-            "bdText": "",
-            "bdMini": "1",
-            "bdMiniList": ["mshare", "qzone", "tsina", "weixin", "tieba", "sqq", "mail", "copy", "print"],
-            "bdPic": "",
-            "bdStyle": "0",
-            "bdSize": "16"
-        },
-        "slide": {"type": "slide", "bdImg": "1", "bdPos": "right", "bdTop": "128"},
-        "image": {"viewList": ["qzone", "tsina", "tqq", "renren", "weixin"], "viewText": "分享到：", "viewSize": "16"},
-        "selectShare": {"bdContainerClass": null, "bdSelectMiniList": ["qzone", "tsina", "tqq", "renren", "weixin"]}
-    };
-    with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>

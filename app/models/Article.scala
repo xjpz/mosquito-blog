@@ -136,8 +136,11 @@ class Articles @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
     db.run(table.filter(_.tombstone === 0).sortBy(_.aid.desc).sortBy(_.aid.desc).drop(page * size).take(size).result)
   }
 
-  def queryCatalog: Future[Seq[String]] = {
-    db.run(table.filter(_.catalog.isDefined).filter(_.tombstone === 0).map(_.catalog.get).result)
+  def queryCatalog: Future[Seq[(String,Long)]] = {
+    val query = table.filter(_.catalog.isDefined).filter(_.tombstone === 0).map(i=> (i.catalog.get,i.aid.get)).result
+    db.run(query).map{ ret =>
+      ret.map(i => i._1.split(",").map(x => (x,i._2))).flatten
+    }
   }
 
   def queryByReadCount(page: Int = 0, size: Int = 5): Future[Seq[Article]] = {
@@ -190,4 +193,23 @@ class Articles @Inject() (protected val dbConfigProvider: DatabaseConfigProvider
       table.filter(_.aid === aid).filter(_.tombstone === 0).
         map(row => (row.tombstone, row.updtime)).update(Some(1), Option(System.currentTimeMillis() / 1000)))
   }
+
+  def count():Future[Int] = {
+    db.run(table.filter(_.tombstone === 0).size.result)
+  }
+
+  def count(size:Int):Future[Int] = {
+    db.run(table.filter(_.tombstone === 0).size.result).map{t =>
+      p(size,t)
+    }
+  }
+
+  def count(size:Int,uid:Long):Future[Int] = {
+    db.run(table.filter(_.uid === uid).filter(_.tombstone === 0).size.result).map{t =>
+      p(size,t)
+    }
+  }
+
+  val p = (s:Int,t:Int) => if((t%s)>0){t/s+1}else{t/s}
+
 }

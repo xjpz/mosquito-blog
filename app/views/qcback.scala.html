@@ -7,7 +7,7 @@
 
         <script src="@routes.Assets.versioned("javascripts/jquery.min.js")"></script>
         <link rel="shortcut icon" href="@routes.Assets.versioned("images/favicon.png")" />
-        <script type="text/javascript" src="http://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101253933" data-redirecturi="http://xjpz.me/blog/test/qcback" charset="utf-8"></script>
+        <script type="text/javascript" src="https://qzonestyle.gtimg.cn/qzone/openapi/qc_loader.js" data-appid="101964847" data-redirecturi="https://xjpz.cc/blog/test/qcback" charset="utf-8"></script>
 
         <style type="text/css">
         html, body{font-size:14px; line-height:180%;}
@@ -16,7 +16,7 @@
             var _hmt = _hmt || [];
             (function() {
                 var hm = document.createElement("script");
-                hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+                hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
                 var s = document.getElementsByTagName("script")[0];
                 s.parentNode.insertBefore(hm, s);
             })();
@@ -43,7 +43,7 @@
                                 $.post('@routes.UserController.loginByQConn',{name:s.data.nickname,openid:openId,otype:1,token:accessToken},function(data,status){
                                     if(status=="success"){
                                         try {
-                                            if (window.opener.location.href.indexOf("xjpz.me/blog/login") >= 0)
+                                            if (window.opener.location.href.indexOf("/blog/login") >= 0)
                                                 window.opener.location.href = "/";
                                             else
                                                 window.opener.location.reload(true);//强制刷新

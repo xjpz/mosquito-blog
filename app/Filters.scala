@@ -21,6 +21,6 @@ import play.filters.gzip.GzipFilter
  */
 
 @Singleton
-class Filters @Inject() (gzip: GzipFilter, log: LoggingFilter,corsFilter: CORSFilter) extends HttpFilters {
-  override def filters: Seq[EssentialFilter] = Seq(gzip,log,corsFilter)
+class Filters @Inject() (gzip: GzipFilter, log: LoggingFilter) extends HttpFilters {
+  override def filters: Seq[EssentialFilter] = Seq(gzip,log)
 }

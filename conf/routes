@@ -14,7 +14,7 @@ GET           /blog/message                         controllers.HomeController.t
 GET           /blog/article/new                     controllers.HomeController.toNewArticle
 GET           /blog/article/update/:aid             controllers.HomeController.toUpdate(aid:Long)
 GET           /blog/user/article                    controllers.HomeController.userCenter
-GET           /blog/catalog                         controllers.HomeController.toCatalog(word:String ?= "",page :Int ?= 1, size :Int ?= 10)
+GET           /blog/catalog                         controllers.HomeController.toCatalog(word:String ?= "",aid:Long ?= 0L,page :Int ?= 1, size :Int ?= 10)
 GET           /blog/user/article/:uid               controllers.HomeController.myblogs(uid:Long,page :Int ?= 1, size :Int ?= 10)
 
 GET           /blog/article/:aid                    controllers.HomeController.article(aid:Long)
@@ -38,18 +38,18 @@ GET           /blog/captcha                         controllers.CaptchaControlle
 # Post From
 POST          /blog/login                           controllers.UserController.login
 POST          /blog/register                        controllers.UserController.reg
-POST          /blog/article                         controllers.ArticleController.init
+POST          /blog/article                         controllers.ArticleController.create
 POST          /blog/article/update                  controllers.ArticleController.update
 POST          /blog/reply2article                   controllers.Reply2ArticleController.initReply2Article
 POST          /blog/reply2message                   controllers.Reply2MsgController.initReply2Message
 POST          /blog/check/resume                    controllers.HomeController.checkResumeForm
 POST          /blog/upload                          controllers.ResourceController.upload
 POST          /blog/qclogin                         controllers.UserController.loginByQConn
-PATCH         /blog/smile/:aid                      controllers.ArticleController.updateSmileCount(aid:Long)
 DELETE        /blog/article/:aid                    controllers.ArticleController.revoke(aid:Long)
+PATCH         /blog/smile/:aid                      controllers.ArticleController.updateSmileCount(aid:Long)
 PATCH         /blog/reply2article/smile/:rid        controllers.Reply2ArticleController.updateSmileCount(rid:Long)
 PATCH         /blog/reply2message/smile/:rid        controllers.Reply2MsgController.updateSmileCount(rid:Long)
-POST          /admin/login                          controllers.HomeController.adminLoginForm
+PATCH         /blog/content/check                   controllers.ArticleController.checkContent
 
 # admin
 
@@ -58,9 +58,16 @@ GET           /admin/login                          controllers.HomeController.a
 GET           /admin/info                           controllers.HomeController.adminInfo
 GET           /admin/user                           controllers.HomeController.adminUser
 GET           /admin/password                       controllers.HomeController.adminPassword
-GET           /admin/article/list                   controllers.HomeController.adminArticleList(page:Int ?=0,size:Int ?= 10)
+GET           /admin/article/list                   controllers.HomeController.adminArticleList(page:Int ?=1,size:Int ?= 10)
 GET           /admin/article/reply                  controllers.HomeController.adminArticleReply
 GET           /admin/article/add                    controllers.HomeController.adminArticleAdd
 GET           /admin/message                        controllers.HomeController.adminMessage
 GET           /admin/catrgpry                       controllers.HomeController.adminCategory
 GET           /admin/catrgpry/edit                  controllers.HomeController.adminCategoryEdit
+
+# admin form
+
+POST          /admin/login                          controllers.HomeController.adminLoginForm
+
+# other
+GET           /toMylove                             controllers.HomeController.toMyLove

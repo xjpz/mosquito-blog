@@ -6,3 +6,7 @@ target
 /.project
 /.settings
 /RUNNING_PID
+
+rsync.sh
+stopwd.txt
+wd.txt

@@ -3,7 +3,6 @@ package controllers
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import javax.inject._
 import models.reply._
 import models.{Articles, Moods, Users}
@@ -12,6 +11,7 @@ import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import utils.RequestHelper
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -56,22 +56,24 @@ class HomeController @Inject()(cc: ControllerComponents,
   )
 
   def index(page: Int, size: Int) = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
 
     val pageFinal = if (page < 1) 0 else page - 1
 
-    users.queryArticleListJoinUser.map { articleList =>
-      articleList.map(p => (p._1.wrapArticleList(), p._2))
-      Ok(
-        views.html.index(uid, name)(articleList.slice(pageFinal * size, pageFinal * size + size), pageFinal)
-      )
-
+    for{
+      articleList <- users.queryArticleListJoinUser
+      total <- articles.count(size)
+    }yield{
+      articleList.map{
+        p => (p._1.wrapArticleList(), p._2)
+      }
+      Ok(views.html.index(uid, name)(articleList.slice(pageFinal * size, pageFinal * size + size), page,size,total))
     }
   }
 
   def toLogin = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
+    val uid = RequestHelper.getUid
     uid match {
       case 0 => Future(Ok(views.html.login(0, "")))
       case _ =>
@@ -82,8 +84,8 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def article(aid: Long) = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
 
     for {
       Some(article) <- articles.retrieve(aid)
@@ -104,12 +106,12 @@ class HomeController @Inject()(cc: ControllerComponents,
 
   def logOut = Action { implicit request =>
     val returnUrl = request.getQueryString("url")
-    Redirect(returnUrl.getOrElse("/")).withSession(request.session - "uid")
+    Redirect(returnUrl.getOrElse("/")).withSession(request.session -- List("uid","name"))
   }
 
   def toMessage = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
 
     reply2Messages.queryByAid(0L).map { replyList =>
       val replySuper = replyList.filter(_.quote.contains(0L)).sortBy(_.rid)
@@ -120,12 +122,12 @@ class HomeController @Inject()(cc: ControllerComponents,
     }
   }
 
-  def toCatalog(catalog: String, page: Int, size: Int) = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+  def toCatalog(catalog: String, aid :Long, page: Int, size: Int) = Action.async { implicit request =>
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
     val pageFinal = if (page < 1) 0 else page - 1
 
-    users.queryArticleByCatalogJoinUser(catalog).flatMap { x =>
+    users.queryArticleByCatalogJoinUser(aid).flatMap { x =>
       if (x.length == 1) {
 
         reply2Articles.queryByAid(x.head._1.aid.get).map { replyList =>
@@ -139,18 +141,16 @@ class HomeController @Inject()(cc: ControllerComponents,
         }
       } else {
         x.map(p => (p._1.wrapArticleList(), p._2))
-        Future {
-          Ok(
-            views.html.index(uid, name)(x.slice(pageFinal * size, pageFinal * size + size), pageFinal)
-          )
+        articles.count(size).map{ p =>
+          Ok(views.html.index(uid, name)(x.slice(pageFinal * size, pageFinal * size + size), page,size,p))
         }
       }
     }
   }
 
   def myblogs(uid: Long, page: Int, size: Int) = Action.async { implicit request =>
-    val loginUid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val loginUid = RequestHelper.getUid
+    val name = RequestHelper.getName
     val pageFinal = if (page < 1) 0 else page - 1
 
     for {
@@ -166,8 +166,8 @@ class HomeController @Inject()(cc: ControllerComponents,
   def userCenter = TODO
 
   def toNewArticle = Action { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
 
     uid match {
       case 0 => Ok(views.html.login(uid, name))
@@ -176,8 +176,8 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def toUpdate(aid: Long) = Action.async { implicit request =>
-    val uid = request.session.get("uid").getOrElse("0").toLong
-    val name = request.session.get("name").getOrElse("")
+    val uid = RequestHelper.getUid
+    val name = RequestHelper.getName
     for {
       Some(article) <- articles.retrieve(aid)
     } yield {
@@ -195,7 +195,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def contactus = Action {
-    Ok(views.html.footer.contactus.render(config))
+    Ok(views.html.footer.contactus.render())
   }
 
   def checkResumeForm = Action { implicit request =>
@@ -219,13 +219,9 @@ class HomeController @Inject()(cc: ControllerComponents,
     Ok(views.html.qcback())
   }
 
-  def test = Action {
-    Ok(views.html.text())
-  }
-
 
   def adminIndex = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -240,7 +236,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminInfo = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin)
     } else {
@@ -250,7 +246,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminArticleAdd = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -259,7 +255,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminArticleList(page: Int, size: Int) = Action.async { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Future.successful(Redirect(routes.HomeController.adminLogin()))
     } else {
@@ -268,7 +264,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminArticleReply = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -277,7 +273,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminMessage = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -286,7 +282,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminUser = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -295,7 +291,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminPassword = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -304,7 +300,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminCategory = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     } else {
@@ -313,7 +309,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def adminCategoryEdit = Action { implicit request =>
-    val uid = request.session.get("admin").getOrElse("0").toLong
+    val uid = RequestHelper.getAdminUid
     if (uid == 0) {
       Redirect(routes.HomeController.adminLogin())
     }
@@ -339,5 +335,9 @@ class HomeController @Inject()(cc: ControllerComponents,
     //    }
   }
 
+
+  def toMyLove = Action { implicit request =>
+    Ok(views.html.mylove.render())
+  }
 
 }

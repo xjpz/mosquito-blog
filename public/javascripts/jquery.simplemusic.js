@@ -6,7 +6,7 @@
 	var _palyInterval;
 	var n=0;
 	$.fn.simplemusic=function(settings){
-		$(this).css({"z-index":"999","width":"44px","height":"44px","position":"fixed","bottom":"10px","right":"10px","cursor":"pointer","background":"url(http://xjpz.me/assets/images/o_music_note_big.png)"}).bind("click",function(){
+		$(this).css({"z-index":"999","width":"44px","height":"44px","position":"fixed","bottom":"10px","right":"10px","cursor":"pointer","background":"url(/assets/images/o_music_note_big.png)"}).bind("click",function(){
 			if(_playstatus){
 				pause(this);
 			}else{

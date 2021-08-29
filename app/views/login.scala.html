@@ -1,11 +1,12 @@
+@import app.AppGlobal
 @(uid:Long,uname:String)
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>登录注册 - 心尖偏左</title>
-    <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
-    <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+    <meta name="keywords" content="@AppGlobal.siteKeyword" />
+    <meta name="description" content="@AppGlobal.siteDescription" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
       <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
@@ -20,12 +21,12 @@
     <link rel="stylesheet" href="/assets/stylesheets/bootstrap.min.css" />
 
       <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
     <script>
       var _hmt = _hmt || [];
       (function() {
         var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+        hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(hm, s);
       })();
@@ -43,7 +44,7 @@
       <div class="blogb" id="blogb">
 
         <div class="blogbody" id="blogbody">
-          <h1>登录注册<sup>V2015</sup></h1>
+          <h2 style="text-align: center;">登录注册</h2>
 
           <div class="login" style="margin-top : 50px ;">
 
@@ -62,7 +63,7 @@
                 <div class="login-box">
 
                   <div class="login_form">
-                    <form action="/blog/login?csrfToken=eb3045fb66253c51007cba739b8a440fceabacf0-1464419878394-fcd4ae359733a12e98d39e4c" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
+                    <form action="@routes.UserController.login()?csrfToken=eb3045fb66253c51007cba739b8a440fceabacf0-1464419878394-fcd4ae359733a12e98d39e4c" name="loginform" accept-charset="utf-8" id="login_form" class="loginForm" method="post">
                       <input type="hidden" name="did" value="0"/>
                       <input type="hidden" name="to" value="log"/>
                       <div class="uinArea" id="uinArea">
@@ -84,9 +85,8 @@
                         <br>
                         <div id="other_login" class="other_login" >
                                                     其他账户登录 :<span id="qqLoginBtn">
-                          <a href="javascript:;" style="text-decoration:none;" onclick="return window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101253933&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fxjpz.me%2Fblog%2Ftest%2Fqcback', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
+                          <a href="javascript:;" style="text-decoration:none;" onclick="return window.open('@AppGlobal.qqAuthUrl', 'oauth2Login_10984' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
                             <img src="/assets/images/Connect_logo_7.png" alt="QQ登录" border="0"></a></span>
-
                         </div>
                       </div>
                     </form>
@@ -102,7 +102,7 @@
             <div class="qlogin" id="qlogin" style="display : none ; ">
 
               <div class="web_login">
-                <form name="form2" id="regUser" accept-charset="utf-8" action="/blog/register?csrfToken=0a08a13ca08533890b905a92ae2437a4166f3a80-1464419878395-fcd4ae359733a12e98d39e4c" method="post">
+                <form name="form2" id="regUser" accept-charset="utf-8" action="@routes.UserController.reg()?csrfToken=0a08a13ca08533890b905a92ae2437a4166f3a80-1464419878395-fcd4ae359733a12e98d39e4c" method="post">
                   <input type="hidden" name="to" value="reg"/>
                   <input type="hidden" name="did" value="0"/>
                   <ul class="reg_form" id="reg-ul">
@@ -179,7 +179,7 @@
     }
 
     function qc_login(){
-      window.open ("https://graph.qq.com/oauth/show?which=ConfirmPage&display=pc&client_id=101253933&response_type=token&scope=all&redirect_uri=http://xjpz.me/blog/test/qcback&scope=get_user_info",'newWindow', 'height=400, width=600, top=100, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
+      window.open ("@AppGlobal.qqAuthUrl",'newWindow', 'height=400, width=600, top=100, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
     }
 
     <!-- 验证码-->
@@ -214,7 +214,7 @@
       }
 
       $.post(
-              "/blog/login",
+              "@routes.UserController.login()",
               $("#login_form").serialize(),
               function(data) {
                 if(data.ret==9) {
@@ -328,7 +328,7 @@
       }
 
       $.post(
-              "/blog/register",
+              "@routes.UserController.reg()",
               $("#regUser").serialize(),
               function(data) {
                 if(data.ret==6) {
@@ -361,10 +361,6 @@
     }
     //刷新验证码
     function change() {
-      $("#captchaImage").attr("src", "/blog/captcha?id=" + new Date().getTime());
+      $("#captchaImage").attr("src", "@routes.CaptchaController.getCaptcha()?id=" + new Date().getTime());
     }
-            </script>
-
-
-
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+  </script>

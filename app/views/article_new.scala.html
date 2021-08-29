@@ -1,11 +1,12 @@
+@import app.AppGlobal
 @(uid: Long,uname:String)
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>发表文章 - 心尖偏左</title>
-    <meta name="keywords" content="心尖偏左,xjpz,心尖偏左博客,xjpzblog,心尖偏左Blog,心尖依然偏左,scala+play,Scala满足了我对编程语言的所有幻想." />
-    <meta name="description" content="心尖偏左Blog是一个用Scala+Play搭建的以分享知识、技术交流为目的的博客系统。博主心尖偏左是一个Scala语言的忠实粉丝，热爱Scala。" />
+    <title>发表文章 - @AppGlobal.siteName</title>
+    <meta name="keywords" content="@AppGlobal.siteKeyword" />
+    <meta name="description" content="@AppGlobal.siteDescription" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
 
       <!--音乐播放器 -->
@@ -32,7 +33,7 @@
     <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")" />
 
       <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="@routes.Assets.versioned("javascripts/bootstrap.min.js")"></script>
     <script type="text/javascript">
 
             $(function(){
@@ -59,11 +60,51 @@
             var _hmt = _hmt || [];
             (function() {
               var hm = document.createElement("script");
-              hm.src = "//hm.baidu.com/hm.js?a43a6a0c825c678693fcedd5df8e869d";
+              hm.src = "https://hm.baidu.com/hm.js?30c745b839f8105d9c6c7fd195f4d0d5";
               var s = document.getElementsByTagName("script")[0];
               s.parentNode.insertBefore(hm, s);
             })();
     </script>
+
+    <script type="text/javascript" >
+    //文章内容校验
+    function check_content(){
+      var content = $("#editor").val();
+      if(content == ""){
+        $('#u').focus();
+        return;
+      }
+
+      $.ajax({
+        headers : {
+          'Accept' : 'application/json',
+          'Content-Type' : 'application/json'
+        },
+        url : '@routes.ArticleController.checkContent()',
+        type : 'PATCH',
+        data : JSON.stringify({"content":content}),
+        success : function(response) {
+          if(response.success == true){
+            $.post(
+                    "@routes.ArticleController.create()",
+                    $("#pushForm").serialize(),
+                    function(data) {
+                      // 发布成功
+                      location.href = "/";
+                    }
+            );
+          }else{
+            console.log("Oops");
+            alert(response.msg);
+          }
+        },
+        error: function (data){
+          alert("操作失败")
+        }
+      });
+    }
+
+</script>
 
   </head>
 
@@ -91,5 +132,4 @@
 </html>
 
 
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":["mshare","qzone","tsina","weixin","tieba","sqq","mail","copy","print"],"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"1","bdPos":"right","bdTop":"128"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
