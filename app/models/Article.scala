@@ -1,5 +1,7 @@
 package models
 
+import cn.hutool.http.HtmlUtil
+
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
@@ -60,9 +62,7 @@ case class Article(
   def wrapArticleList() = {
     if (this.content.isDefined) {
       var content = this.content.get
-      content = content.replaceAll("<p .*?>", "\r\n")
-      content = content.replaceAll("<br\\s*/?>", "\r\n")
-      content = content.replaceAll("\\<.*?>", "")
+      content = HtmlUtil.cleanHtmlTag(HtmlUtil.unescape(content))
       this.content = if (content.length > 200) Option(content.substring(0, 200) + "...") else Option(content)
     }
   }

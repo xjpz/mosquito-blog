@@ -335,9 +335,4 @@ class HomeController @Inject()(cc: ControllerComponents,
     //    }
   }
 
-
-  def toMyLove = Action { implicit request =>
-    Ok(views.html.mylove.render())
-  }
-
 }

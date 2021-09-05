@@ -25,10 +25,12 @@
             <ul>
 
                 @for(tweetItem <- services.ViewAccessPoint.Implicits.myDao.queryTweetList) {
-                <li ><a id="CatList_LinkList_0_Link_0" >@tweetItem.content</a>
-                    <small>by @tweetItem.name</small>
-                    <div style="border-bottom: 1px dashed #000000 ;
-                    margin-top: 10px ;"></div></li>
+                <li >
+
+                        <a id="CatList_LinkList_0_Link_0" style="line-height: 30px;">@tweetItem.content</a>
+                        <small>by @tweetItem.name</small>
+                    <div style="border-bottom: 1px dashed #000000 ; margin-top: 10px ;clear: both"></div>
+                </li>
             }
 
             </ul>
