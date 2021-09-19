@@ -7,7 +7,6 @@ target
 /.settings
 /RUNNING_PID
 
-*love.scala.html
 rsync.sh
 stopwd.txt
 wd.txt
