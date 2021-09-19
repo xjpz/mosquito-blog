@@ -12,10 +12,10 @@
             posted @@ @(new SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.inittime.get * 1000L)) <a href="/blog/user/article/@article.uid.get">
         @user.name</a></div>
         <div id="blogbody_read" class="blogbody_read">
-            <a href="/blog/article/@article.aid.get">评论(@article.reply)</a>&nbsp;|&nbsp;
+            <a href="@routes.HomeController.article(article.aid.get)">评论(@article.reply)</a>&nbsp;|&nbsp;
             <a href="javascript:" onclick="smile_numfun(@article.aid.getOrElse(0))">
                 赞(<span id="smile_num">@article.smile.get</span>)</a>&nbsp;|&nbsp;
-            <a href="/blog/article/@article.aid.get">阅读(@article.read)</a>
+            <a href="@routes.HomeController.article(article.aid.get)">阅读(@article.read)</a>
 
 
         </div>
@@ -31,7 +31,7 @@
     @for(i <- replyListTree.indices) {
         <div id="comment_body" class="comment_body">
             <div> @(i + 1)
-                #&nbsp;&nbsp;<a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)) {
+                #&nbsp;&nbsp;<a href="@routes.HomeController.myblogs(replyListTree(i).reply.uid.getOrElse(0))" @if(replyListTree(i).reply.uid == Option(0L)) {
                 onclick="return false;" } >@replyListTree(i).reply.name</a>
                 &nbsp;：</div>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -51,11 +51,11 @@
                 <div id="comment_footer" class="comment_footer">
 
                     <div>
-                        <a href="/blog/user/article/@replyChild.uid.getOrElse(0)" @if(replyChild.uid == Option(0L)) {
+                        <a href="@routes.HomeController.myblogs(replyChild.uid.getOrElse(0))" @if(replyChild.uid == Option(0L)) {
                             onclick="return false;" } >@replyChild.name</a>
                         @*&nbsp;回复&nbsp; <a href="/blog/user/article/@replyListTree(i).reply.uid.getOrElse(0)" @if(replyListTree(i).reply.uid == Option(0L)){ onclick="return false;"} >@replyListTree(i).reply.name</a>：*@
                             &nbsp;回复&nbsp;
-                        <a href="/blog/user/article/@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.uid.get" @if(replyListTree(i).reply.uid == Option(0L)) {
+                        <a href="@routes.HomeController.myblogs(replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.uid.get)" @if(replyListTree(i).reply.uid == Option(0L)) {
                             onclick="return false;"} >@replyListTree(i).queryReply.filter(_.rid == replyChild.quote).head.name</a>
                         ：
                     </div>
@@ -90,7 +90,7 @@
                 <a href="javascript:" onclick="toLogin()">&raquo;去登录</a>&nbsp;
                 <a href="javascript:" onclick="toLogin()">&raquo;去注册</a> &nbsp;
 
-                <span id="qqLoginBtn"><a href="javascript:;" onclick="return window.open('@AppGlobal.qqAuthUrl', 'oauth2Login_10984', 'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes');">
+                <span id="qqLoginBtn"><a href="@AppGlobal.qqAuthUrl" >
                     <img src="@routes.Assets.versioned("images/Connect_logo_7.png")" alt="QQ登录" border="0"></a></span>
 
             </b>

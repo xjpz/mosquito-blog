@@ -1,4 +1,7 @@
-<!-- https://www.playframework.com/documentation/latest/SettingsLogger -->
+<!--
+  ~ Copyright (C) 2009-2016 Lightbend Inc. <https://www.lightbend.com>
+  -->
+<!-- The default logback configuration that Play uses if no other configuration is provided -->
 <configuration>
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel" />
@@ -17,10 +20,25 @@
   </appender>
 
   <appender name="ACCESS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>${application.home}/logs/access.log</file>
+    <file>${application.home:-.}/logs/access.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <!-- daily rollover with compression -->
-      <fileNamePattern>${application.home}/logs/access-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <fileNamePattern>${application.home:-.}/logs/access-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <!-- keep 1 week worth of history -->
+      <maxHistory>7</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%date{yyyy-MM-dd HH:mm:ss ZZZZ} %message%n</pattern>
+      <!-- this quadruples logging throughput -->
+      <immediateFlush>true</immediateFlush>
+    </encoder>
+  </appender>
+
+  <appender name="RPC_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${application.home:-.}/logs/rpc.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- daily rollover with compression -->
+      <fileNamePattern>${application.home:-.}/logs/rpc-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
       <!-- keep 1 week worth of history -->
       <maxHistory>7</maxHistory>
     </rollingPolicy>
@@ -39,21 +57,21 @@
     <appender-ref ref="STDOUT" />
   </appender>
 
+  <logger name="play" level="INFO" />
+  <logger name="application" level="INFO" />
+
   <!-- additivity=false ensures access log data only goes to the access log -->
   <logger name="access" level="INFO" additivity="false">
     <appender-ref ref="ACCESS_FILE" />
   </logger>
+  <!-- additivity=false ensures rpc log data only goes to the access log -->
+  <logger name="rpc" level="INFO" additivity="false">
+    <appender-ref ref="RPC_FILE" />
+  </logger>
 
-  <logger name="play" level="INFO" />
-  <logger name="application" level="DEBUG" />
-
-  <!-- Off these ones as they are annoying, and anyway we manage configuration ourselves -->
-  <logger name="com.avaje.ebean.config.PropertyMapLoader" level="OFF" />
-  <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
-  <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
   <logger name="com.gargoylesoftware.htmlunit.javascript" level="OFF" />
 
-  <root level="WARN">
+  <root level="warn">
     <appender-ref ref="ASYNCFILE" />
     <appender-ref ref="ASYNCSTDOUT" />
   </root>

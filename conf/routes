@@ -3,7 +3,8 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15)
+GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 , access_token:Option[String]?=None)
+GET           /qclogin                              controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 , access_token:Option[String]?=None)
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
