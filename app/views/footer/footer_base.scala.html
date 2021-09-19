@@ -92,7 +92,7 @@
         <div id="main" class="main">
             <div id="content_left" class="content_left">
                 <p>
-                    <a href="/" >网站首页</a>
+                    <a href="/" >首页</a>
                 </p>
                 <p>
                     <a href="@routes.HomeController.about()" @if(page.equals("about")){class="current"} >关于本站</a>
@@ -102,6 +102,9 @@
                 </p>
                 <p>
                     <a href="@routes.HomeController.toResume()" @if(page.equals("resume")){class="current"} >个人简历</a>
+                </p>
+                <p>
+                    <a href="https://github.com/xjpz/mosquito-blog" target="_blank" >GitHub</a>
                 </p>
                 <p>
                     <a href="@routes.HomeController.adminLogin()">后台管理</a>
@@ -115,10 +118,14 @@
                 <p class="copyright">
                     @AppGlobal.siteCopyright <br>
                     <span>
-                        <a href="https://beian.miit.gov.cn/" style="padding:0 2px">@AppGlobal.beianCode</a>
-                        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=@AppGlobal.siteWangBeiCode" style="padding:0 2px">@AppGlobal.siteWangBeiCode</a>
+                        <a href="https://beian.miit.gov.cn/" target="_blank" style="padding:0 2px">@AppGlobal.beianCode</a>
+                        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=@AppGlobal.siteWangBeiCode" target="_blank" style="padding:0 2px">鄂网备@{AppGlobal.siteWangBeiCode}号</a>
                     </span> <br>
-                    <a href="/">首页</a>|<a href="@routes.HomeController.about()">关于本站</a>|<a href="@routes.HomeController.toResume()">个人简历</a>|<a href="@routes.HomeController.adminLogin()">后台管理</a>|
+
+                    <a href="@routes.HomeController.about()">关于本站</a>|
+                    <a href="@routes.HomeController.toResume()">个人简历</a>|
+                    <a href="@routes.HomeController.adminLogin()">后台管理</a>|
+                    <a style="padding:0 10px" href="https://github.com/xjpz/mosquito-blog" target="_blank"  >GitHub</a>|
                     <a href="https://tongji.baidu.com/web/20972565/overview/sole?siteId=9091194" target="_blank">站长统计</a>
                     <script>
                             var _hmt = _hmt || [];

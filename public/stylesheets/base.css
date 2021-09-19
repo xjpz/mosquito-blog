@@ -242,7 +242,7 @@ div#blogs {
     width: 66% !important;
 }
 .scroll-list ul li small{
-    padding-right: 10px;
+    padding-right: 0.3em;
     float: right;
 }
 .module-list ul li {

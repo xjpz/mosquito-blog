@@ -25,7 +25,7 @@ object AppGlobal {
 
   val beianCode = "鄂ICP备2021013794号"
 
-  val siteWangBeiCode = "鄂网备42011602000971号"
+  val siteWangBeiCode = "42011602000971"
 
   val qcCode2AccessTokenUrl = (secret:String,code:String) => s"https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&client_id=$qqConnectAppId&client_secret=$secret&code=$code&redirect_uri=$siteHost&fmt=json"
 
