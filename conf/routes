@@ -69,6 +69,3 @@ GET           /admin/catrgpry/edit                  controllers.HomeController.a
 # admin form
 
 POST          /admin/login                          controllers.HomeController.adminLoginForm
-
-# other
-GET           /toMylove                             controllers.HomeController.toMyLove

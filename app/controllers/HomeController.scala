@@ -1,5 +1,9 @@
 package controllers
 
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Date
+import javax.inject._
 import models.reply._
 import models.{Articles, User, Users}
 import org.apache.commons.codec.binary.Base64
@@ -333,11 +337,6 @@ class HomeController @Inject()(cc: ControllerComponents,
     }
     //      case _ => Future(Redirect(routes.HomeController.adminLogin()))
     //    }
-  }
-
-
-  def toMyLove = Action { implicit request =>
-    Ok(views.html.mylove.render())
   }
 
 }
