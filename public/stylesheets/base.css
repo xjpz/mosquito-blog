@@ -206,8 +206,8 @@ div#blogs {
 .catListTag li {
     padding-left: 0.8em;
     padding-right: 1em;
-    /*padding-bottom:8px;*/
-    /*padding-top:8px;*/
+    padding-bottom:8px;
+    padding-top:8px;
     text-align: left;
     text-decoration:none;
     /*color:#000;*/
@@ -239,14 +239,14 @@ div#blogs {
 }
 .scroll-list{height:240px;overflow:hidden;}
 .scroll-list ul li a{
-    width: 220px !important;
+    width: 66% !important;
 }
 .scroll-list ul li small{
     padding-right: 10px;
     float: right;
 }
 .module-list ul li {
-    height: 40px;
+    /*height: 60px;*/
     line-height: 40px;
     font-size: 13px;
 }
@@ -255,11 +255,14 @@ div#blogs {
     line-height: 30px !important;
 }
 .module-list ul li a {
-    width: 100%;
-    white-space: nowrap;
+    width: 95%;
+    /*white-space: nowrap;*/
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-left: 10px;
+    padding-left: 5%;
+    float: left;
+    padding-bottom: 1em
+;
 }
 
 /*活跃用户end*/

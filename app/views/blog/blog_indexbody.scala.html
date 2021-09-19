@@ -1,5 +1,6 @@
 @(articleList: Seq[(Article, User)], page: Int,size:Int,total:Int)
 @import java.text.SimpleDateFormat
+@import utils.DateUtil
 <div class="blogbody" id="blogbody">
         <!-- 博客-->
 
@@ -10,7 +11,7 @@
             </h4>
             @(article.content.getOrElse("")) <br>
             <br>
-            <div id="blogbody_author" class="blogbody_author">posted @@ @(new SimpleDateFormat("MM月dd日 HH:mm").format(article.inittime.get * 1000L)) &nbsp;&nbsp; <a href="/blog/user/article/@article.uid.get">@user.name</a></div>
+            <div id="blogbody_author" class="blogbody_author">posted @@ @(DateUtil.formatPostTime(article.inittime.get * 1000L)) &nbsp;&nbsp; <a href="/blog/user/article/@article.uid.get">@user.name</a></div>
             <div id="blogbody_read" class="blogbody_read">
                 <a href="/blog/article/@article.aid.get#article_comment" target="_blank">评论(@article.reply)</a>
                     &nbsp;|&nbsp;
