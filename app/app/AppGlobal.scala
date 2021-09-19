@@ -21,10 +21,13 @@ object AppGlobal {
 
   val qqConnectAppId = "101964847"
 
-  val qqAuthUrl = s"https://graph.qq.com/oauth2.0/authorize?client_id=$qqConnectAppId&response_type=token&scope=get_user_info&redirect_uri=https%3A%2F%2F$siteDomain%2Fblog%2Ftest%2Fqcback"
+  val qqAuthUrl = s"https://graph.qq.com/oauth2.0/authorize?client_id=$qqConnectAppId&response_type=token&scope=get_user_info&redirect_uri=https%3A%2F%2F$siteDomain%2Fqclogin"
 
   val beianCode = "鄂ICP备2021013794号"
 
   val siteWangBeiCode = "鄂网备42011602000971号"
 
+  val qcCode2AccessTokenUrl = (secret:String,code:String) => s"https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&client_id=$qqConnectAppId&client_secret=$secret&code=$code&redirect_uri=$siteHost&fmt=json"
+
+  val qcToken2OpenIdUrl = (token:String) => s"https://graph.qq.com/oauth2.0/me?access_token=$token&fmt=json"
 }

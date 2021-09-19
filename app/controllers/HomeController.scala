@@ -1,43 +1,32 @@
 package controllers
 
-import java.security.MessageDigest
-import java.text.SimpleDateFormat
-import java.util.Date
-import javax.inject._
 import models.reply._
-import models.{Articles, Moods, Users}
+import models.{Articles, User, Users}
 import org.apache.commons.codec.binary.Base64
 import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import services.QQService
 import utils.RequestHelper
 
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Date
+import javax.inject._
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
-/**
-  * This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
 
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents,
-                               configuration: Configuration,
                                users: Users,
                                articles: Articles,
-                               moods: Moods,
                                reply2Articles: Reply2Articles,
-                               reply2Messages: Reply2Messages)
+                               reply2Messages: Reply2Messages,
+                               qqService: QQService)
                               (implicit val config: Configuration) extends AbstractController(cc) {
-
-  /**
-    * Create an Action to render an HTML page with a welcome message.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `GET` request with
-    * a path of `/`.
-    */
 
   implicit lazy val shaEncoder = MessageDigest.getInstance("SHA-1")
 
@@ -55,20 +44,31 @@ class HomeController @Inject()(cc: ControllerComponents,
     )(Tuple3.apply)(Tuple3.unapply)
   )
 
-  def index(page: Int, size: Int) = Action.async { implicit request =>
+  def index(page: Int, size: Int, tokenOpt: Option[String]) = Action.async { implicit request =>
     val uid = RequestHelper.getUid
     val name = RequestHelper.getName
-
     val pageFinal = if (page < 1) 0 else page - 1
 
-    for{
-      articleList <- users.queryArticleListJoinUser
-      total <- articles.count(size)
-    }yield{
-      articleList.map{
-        p => (p._1.wrapArticleList(), p._2)
+    tokenOpt.map { token =>
+      for {
+        openId <- qqService.getOpenId(token)
+        user <- qqService.getUserInfo(token, openId)
+      } yield {
+        user match {
+          case Some(u) => Redirect("/").withSession("uid" -> u.uid.get.toString, "name" -> u.name.getOrElse(""))
+          case _ => Redirect("/")
+        }
       }
-      Ok(views.html.index(uid, name)(articleList.slice(pageFinal * size, pageFinal * size + size), page,size,total))
+    }.getOrElse {
+      for {
+        articleList <- users.queryArticleListJoinUser
+        total <- articles.count(size)
+      } yield {
+        articleList.map {
+          i => (i._1.wrapArticleList(), i._2)
+        }
+        Ok(views.html.index(uid, name)(articleList.slice(pageFinal * size, pageFinal * size + size), page, size, total))
+      }
     }
   }
 
@@ -106,7 +106,7 @@ class HomeController @Inject()(cc: ControllerComponents,
 
   def logOut = Action { implicit request =>
     val returnUrl = request.getQueryString("url")
-    Redirect(returnUrl.getOrElse("/")).withSession(request.session -- List("uid","name"))
+    Redirect(returnUrl.getOrElse("/")).withSession(request.session -- List("uid", "name"))
   }
 
   def toMessage = Action.async { implicit request =>
@@ -122,7 +122,7 @@ class HomeController @Inject()(cc: ControllerComponents,
     }
   }
 
-  def toCatalog(catalog: String, aid :Long, page: Int, size: Int) = Action.async { implicit request =>
+  def toCatalog(catalog: String, aid: Long, page: Int, size: Int) = Action.async { implicit request =>
     val uid = RequestHelper.getUid
     val name = RequestHelper.getName
     val pageFinal = if (page < 1) 0 else page - 1
@@ -141,8 +141,8 @@ class HomeController @Inject()(cc: ControllerComponents,
         }
       } else {
         x.map(p => (p._1.wrapArticleList(), p._2))
-        articles.count(size).map{ p =>
-          Ok(views.html.index(uid, name)(x.slice(pageFinal * size, pageFinal * size + size), page,size,p))
+        articles.count(size).map { p =>
+          Ok(views.html.index(uid, name)(x.slice(pageFinal * size, pageFinal * size + size), page, size, p))
         }
       }
     }
