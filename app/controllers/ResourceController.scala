@@ -2,14 +2,16 @@ package controllers
 
 import java.io.File
 import javax.inject.Inject
-
 import play.Logger
 import play.api.Configuration
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.Codecs
-import play.api.libs.json.{JsNull, Json}
+import play.api.libs.json.Json
 import play.api.mvc._
+import utils.ResultUtil.{OPERATE_FAIL, OPERATE_OK}
+import utils.ResultUtil
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
@@ -17,8 +19,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class ResourceController @Inject()(configuration: Configuration)(cc: ControllerComponents) extends AbstractController(cc) {
 
-  lazy val AbsolutePath = """^(/|[a-zA-Z]:\\).*""".r
-  lazy val FILESAVEPATH = configuration.get[Option[String]]("file.resource").getOrElse("/data/blog/resource/") //File Save Path
+  lazy val ABSOLUTE_PATH = """^(/|[a-zA-Z]:\\).*""".r
+  lazy val FILE_SAVE_PATH = configuration.get[Option[String]]("file.resource").getOrElse("/data/blog/resource/") //File Save Path
 
   val pathForm = Form(
     mapping(
@@ -31,14 +33,14 @@ class ResourceController @Inject()(configuration: Configuration)(cc: ControllerC
     val fileUrlDeCode = java.net.URLDecoder.decode(file, "utf-8")
 
     val fileToServe = rootPath.replace("/", "\\") match {
-      case AbsolutePath(_) => new File(rootPath, fileUrlDeCode)
-      case _ => new File(FILESAVEPATH, fileUrlDeCode)
+      case ABSOLUTE_PATH(_) => new File(rootPath, fileUrlDeCode)
+      case _ => new File(FILE_SAVE_PATH, fileUrlDeCode)
     }
 
     if (fileToServe.exists) {
       Ok.sendFile(fileToServe, inline = true)
     } else {
-      Logger.error("Photos controller failed to serve photo: " + fileUrlDeCode)
+      Logger.of(this.getClass).error("Photos controller failed to serve photo: " + fileUrlDeCode)
       NotFound
     }
   }
@@ -50,11 +52,12 @@ class ResourceController @Inject()(configuration: Configuration)(cc: ControllerC
       val filename = file.filename
       val fileType = filename.substring(filename.lastIndexOf("."))
       val fileNameFinal = s"${selectPath._1}/" + Codecs.sha1(file.ref.path.toString) + fileType
-      val filePathFinal = FILESAVEPATH + fileNameFinal
-      file.ref.moveTo(new File(filePathFinal))
-      Ok(Json.obj("success" -> "true", "file_path" -> s"http://${request.host}/blog/resource/$fileNameFinal"))
+      val filePathFinal = FILE_SAVE_PATH + fileNameFinal
+      file.ref.moveFileTo(new File(filePathFinal))
+
+      ResultUtil.success(OPERATE_OK,"file_path",Json.toJson(s"http://${request.host}/blog/resource/$fileNameFinal"))
     }.getOrElse {
-      Ok(Json.obj("success" -> "false", "message" -> "fail", "file_path" -> JsNull))
+      ResultUtil.failure(OPERATE_FAIL)
     }
   }
 }

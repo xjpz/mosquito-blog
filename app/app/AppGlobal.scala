@@ -21,7 +21,7 @@ object AppGlobal {
 
   val qqConnectAppId = "101964847"
 
-  val qqAuthUrl = s"https://graph.qq.com/oauth2.0/authorize?client_id=$qqConnectAppId&response_type=token&scope=get_user_info&redirect_uri=https%3A%2F%2F$siteDomain%2Fqclogin"
+  val qqAuthUrl = s"https://graph.qq.com/oauth2.0/authorize?client_id=$qqConnectAppId&response_type=code&scope=get_user_info&redirect_uri=https%3A%2F%2F$siteDomain%2Fqclogin"
 
   val beianCode = "鄂ICP备2021013794号"
 

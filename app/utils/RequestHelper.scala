@@ -39,5 +39,9 @@ object RequestHelper {
     request.session.get("adminName").getOrElse("游客")
   }
 
+  def getQcCode(implicit request: RequestHeader):Option[String] = {
+    request.getQueryString("code")
+  }
+
 
 }

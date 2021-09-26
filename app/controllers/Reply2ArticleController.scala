@@ -7,7 +7,8 @@ import play.api.data.Forms._
 import play.api.libs.Codecs
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
-import utils.ResultStatus
+import utils.ResultUtil.QUERY_OK
+import utils.{ResultCode, ResultStatus, ResultUtil}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -34,7 +35,7 @@ class Reply2ArticleController @Inject()(reply2Articles: Reply2Articles)(cc: Cont
   def retrieve(rid: Long) = Action.async {
     for {
       Some(reply) <- reply2Articles.retrieve(rid)
-    } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
+    } yield ResultUtil.success(QUERY_OK,Json.toJson(reply))
   }
 
   def queryByAid(aid: Long, page: Int, size: Int) = Action.async {
@@ -44,8 +45,7 @@ class Reply2ArticleController @Inject()(reply2Articles: Reply2Articles)(cc: Cont
       val replyListTree = replySuper.map(p =>
         Reply2ArticleListTree(replyList, p, reply2Articles.parseReplyTree(Seq(p.rid.get), replyList, new ListBuffer[Reply2Article]).toList.sortBy(_.rid))
       )
-
-      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(replyListTree), "des" -> ResultStatus.status_1))
+      ResultUtil.success(QUERY_OK,Json.toJson(replyListTree))
     }
 
   }
@@ -79,7 +79,7 @@ class Reply2ArticleController @Inject()(reply2Articles: Reply2Articles)(cc: Cont
         Redirect("/blog/article/" + aid + "#article_comment")
       }
     } else {
-      Future(Ok(Json.obj("ret" -> 5, "con" -> JsNull, "des" -> ResultStatus.status_5)))
+      Future(ResultUtil.failure(ResultCode.NOT_PERMISSION))
     }
   }
 
@@ -90,8 +90,8 @@ class Reply2ArticleController @Inject()(reply2Articles: Reply2Articles)(cc: Cont
       case Some(x) =>
         for (
           updSmile <- reply2Articles.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
-        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
-      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+        ) yield ResultUtil.success(QUERY_OK,Json.toJson(updSmile))
+      case _ => Future(ResultUtil.failure(ResultCode.DATA_NOT_EXIST))
     }
   }
 

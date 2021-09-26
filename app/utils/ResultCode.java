@@ -20,19 +20,15 @@ public enum ResultCode {
     PARAM_USER_NAME_OR_PASSWORD_ERROR(400,"用户名或密码错误"),
     PARAM_USER_NOT_EXIST(400,"用户不存在"),
 
+    PARAM_VERIFICATION_CODE_ERROR(400,"验证码错误"),
+
+    USER_NAME_ALREADY_EXIST(400,"用户已存在"),
+    USER_EMAIL_ALREADY_EXIST(400,"邮箱已存在"),
+    DATA_NOT_EXIST(400,"数据不存"),
+
     PARAM_ID_NULL(400,"id不能为空"),
     PARAM_PHONE_NULL(400,"手机号不能为空"),
     PARAM_PHONE_ERROR(400,"手机号格式不正确"),
-
-    PARAM_USER_ID_NULL(400,"用户id不能为空"),
-    PARAM_INVITE_SEND_USER_ID_NULL(400,"邀请人id不能为空"),
-    PARAM_INVITE_RECV_USER_ID_NULL(400,"被邀请人id不能为空"),
-
-    PARAM_INVITE_ID_NULL(400,"邀请id不能为空"),
-    PARAM_INVITE_STATUS_NULL(400,"邀请状态不能为空"),
-    PARAM_GENDER_NULL(400,"性别不能为空"),
-    PARAM_BIND_TYPE_ERROR(400,"绑定类型不能为空"),
-    PARAM_OPENID_NULL(400,"openId不能为空"),
 
 
     ;

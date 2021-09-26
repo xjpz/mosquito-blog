@@ -3,8 +3,8 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 , access_token:Option[String]?=None)
-GET           /qclogin                              controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 , access_token:Option[String]?=None)
+GET           /                                     controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 )
+GET           /qclogin                              controllers.HomeController.index(page:Int ?= 1 , size:Int ?= 15 )
 
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
@@ -32,7 +32,9 @@ GET           /blog/resume                          controllers.HomeController.t
 
 #blog util
 
-GET           /blog/upload                          controllers.HomeController.toUpload
+GET           /
+
+                          controllers.HomeController.toUpload
 GET           /blog/resource/*file                  controllers.ResourceController.at(path="/",file)
 GET           /blog/captcha                         controllers.CaptchaController.getCaptcha(w:Int ?= 90 , h :Int ?= 36)
 

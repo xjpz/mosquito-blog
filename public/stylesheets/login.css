@@ -49,7 +49,7 @@ input::-ms-clear {
 	font-size:16px;
 }
 .header .switch #switch_qlogin {
-	margin-right:85px;
+	margin-right:5em;
 }
 .header .switch .switch_btn {
 	color:#999;
@@ -76,7 +76,7 @@ input::-ms-clear {
 }
 #switch_bottom {
 	position:absolute;
-	bottom:-1px;_bottom:-2px;
+	bottom:-1px;
 	border-bottom:2px solid #848484;
 }
 
@@ -262,7 +262,10 @@ a.zcxy {text-decoration: underline;line-height:58px;margin-left:15px;color: #959
 .web_login .login_form {margin-top:30px;}
 .web_login .uinArea {
 	height: 60px;}
-.header .switch{left:70px;}
+
+.header .switch{
+	left:7em;
+}
 
 
 .other_login{

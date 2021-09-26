@@ -1,5 +1,4 @@
 @import app.AppGlobal
-@(uid:Long,uname:String)
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -36,7 +35,7 @@
 
   <body>
       <!-- ntopbar -->
-    @blog.blog_topbar(uid,uname)
+    @blog.blog_topbar(0L,"")
 
       <!-- blog -->
     <div class="bloga" id="bloga">
@@ -49,8 +48,10 @@
           <div class="login" style="margin-top : 50px ;">
 
             <div class="header">
-              <div class="switch" id="switch"><a class="switch_btn_focus" id="switch_qlogin" href="javascript:void(0);" tabindex="7">快速登录</a>
-                <a class="switch_btn" id="switch_login" href="javascript:void(0);" tabindex="8">快速注册</a> <div class="switch_bottom" id="switch_bottom" style="position : absolute ; "></div>
+              <div class="switch" id="switch">
+                <a class="switch_btn_focus" id="switch_qlogin" href="javascript:void(0);" tabindex="7">登录</a>
+                <a class="switch_btn" id="switch_login" href="javascript:void(0);" tabindex="8">注册</a>
+                <div class="switch_bottom" id="switch_bottom" style="position : absolute ; "></div>
               </div>
             </div>
 
@@ -106,7 +107,7 @@
                   <input type="hidden" name="to" value="reg"/>
                   <input type="hidden" name="did" value="0"/>
                   <ul class="reg_form" id="reg-ul">
-                    <div id="userCue" style="color:red;" class="cue">快速注册请注意格式！</div>
+                    <div id="userCue" style="color:red;" class="cue">注册请注意格式！</div>
                     <li>
 
                       <label for="user" class="input-tips2">用户名：</label>
@@ -150,7 +151,7 @@
 
                     <li>
                       <div class="inputArea">
-                        <input type="button" id="reg" style="margin-top : 10px ; margin-left : 85px ;" class="button_blue" onclick="check_reg()" value="同意协议并注册"/> <a href="javascript:" onclick="disp_alert()" class="zcxy" target="_blank">注册协议</a>
+                        <input type="button" id="reg" style="margin-top : 10px ; margin-left : 85px ;" class="button_blue" onclick="check_reg()" value="同意协议并注册"/> <a href="javascript:" onclick="disp_alert()" class="zcxy" >注册协议</a>
                       </div>
 
                     </li> <div class="cl"></div>
@@ -173,13 +174,10 @@
 
 </html>
 
-<script type="text/javascript" language="javascript">
+<script type="text/javascript" >
+
     function disp_alert(){
       alert("协议还没有起草。但，最终解释权归本站所有。");
-    }
-
-    function qc_login(){
-      window.open ("@AppGlobal.qqAuthUrl",'newWindow', 'height=400, width=600, top=100, left=300, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
     }
 
     <!-- 验证码-->
@@ -217,20 +215,12 @@
               "@routes.UserController.login()",
               $("#login_form").serialize(),
               function(data) {
-                if(data.ret==9) {
+                if(!data.success) {
 
-                  alert("账号不存在");
+                  alert(data.msg);
                   $('#u').focus();
                   change();
-                } else if(data.ret==8) {
-
-                  alert("账号或密码错误");
-                  $('#u').focus();
-
-                }else if(data.ret == 2){
-                  alert("服务器错误!");
-                } else {
-
+                }  else {
                   var url = window.location.search;
                   var returnUrl = url.substring(url.indexOf('=')+1, url.length);
                   if(returnUrl==""){
@@ -331,23 +321,11 @@
               "@routes.UserController.reg()",
               $("#regUser").serialize(),
               function(data) {
-                if(data.ret==6) {
+                if(!data.success) {
                   userCue.style.color="red";
-                  userCue.innerHTML = "<b>×验证码错误.</b>";
+                  userCue.innerHTML = "<b>×"+data.msg+".</b>";
                   $('#captcha').focus();
                   change();
-                } else if(data.ret==11) {
-                  userCue.style.color="red";
-                  userCue.innerHTML = "<b>×用户名已存在.</b>";
-                  $('#user').focus();
-                } else if(data.ret==13) {
-                  userCue.style.color="red";
-                  userCue.innerHTML = "<b>×手机号已注册.</b>";
-                  $('#phone').focus();
-                }else if(data.ret==12) {
-                  userCue.style.color="red";
-                  userCue.innerHTML = "<b>×邮箱已注册.</b>";
-                  $('#email').focus();
                 } else {
                   alert("恭喜，注册成功！");
                   location.href = "/";

@@ -9,7 +9,8 @@ import play.api.data.Forms._
 import play.api.libs.Codecs
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
-import utils.ResultStatus
+import utils.{ResultCode, ResultStatus, ResultUtil}
+import utils.ResultUtil.QUERY_OK
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -34,7 +35,7 @@ class Reply2MsgController @Inject()(reply2Messages: Reply2Messages)(cc: Controll
   def retrieve(rid: Long) = Action.async {
     for {
       Some(reply) <- reply2Messages.retrieve(rid)
-    } yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(reply), "des" -> ResultStatus.status_1))
+    } yield ResultUtil.success(QUERY_OK,Json.toJson(reply))
   }
 
   def initReply2Message = Action.async { implicit request =>
@@ -66,7 +67,7 @@ class Reply2MsgController @Inject()(reply2Messages: Reply2Messages)(cc: Controll
         Redirect("/blog/message#article_comment")
       }
     } else {
-      Future(Ok(Json.obj("ret" -> 5, "con" -> JsNull, "des" -> ResultStatus.status_5)))
+      Future(ResultUtil.failure(ResultCode.NOT_PERMISSION))
     }
   }
 
@@ -77,8 +78,8 @@ class Reply2MsgController @Inject()(reply2Messages: Reply2Messages)(cc: Controll
       case Some(x) =>
         for (
           updSmile <- reply2Messages.updateSmileCount(rid, x.smile.getOrElse(0) + 1)
-        ) yield Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(updSmile), "des" -> ResultStatus.status_1))
-      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+        ) yield ResultUtil.success(QUERY_OK,Json.toJson(updSmile))
+      case _ => Future(ResultUtil.failure(ResultCode.DATA_NOT_EXIST))
     }
   }
 }

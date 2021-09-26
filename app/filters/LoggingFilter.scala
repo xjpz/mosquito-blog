@@ -24,13 +24,15 @@ class LoggingFilter @Inject()(implicit val mat: Materializer, ec: ExecutionConte
       val endTime = System.currentTimeMillis
       val requestTime = endTime - startTime
 
-      requestHeader.method match {
-        case "POST" =>
-          result.body.consumeData(mat).map { bodyByteString =>
-            val body = Json.parse(bodyByteString.decodeString("UTF-8"))
-            play.Logger.of("access").info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status} body ${Json.prettyPrint(body)}")
-          }
-        case _ =>  play.Logger.of("access").info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
+      if(!requestHeader.uri.contains("assets")){
+        requestHeader.method match {
+          case "POST" =>
+            result.body.consumeData(mat).map { bodyByteString =>
+              val body = Json.parse(bodyByteString.decodeString("UTF-8"))
+              play.Logger.of("access").info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status} body ${Json.prettyPrint(body)}")
+            }
+          case _ =>  play.Logger.of("access").info(s"${requestHeader.method} ${requestHeader.uri} took ${requestTime}ms and returned ${result.header.status}")
+        }
       }
       result.withHeaders("Request-Time" -> requestTime.toString)
     }

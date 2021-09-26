@@ -84,7 +84,7 @@
         type : 'PATCH',
         data : JSON.stringify({"content":content}),
         success : function(response) {
-          if(response.success == true){
+          if(response.success){
             $.post(
                     "@routes.ArticleController.create()",
                     $("#pushForm").serialize(),

@@ -48,13 +48,13 @@ class HomeController @Inject()(cc: ControllerComponents,
     )(Tuple3.apply)(Tuple3.unapply)
   )
 
-  def index(page: Int, size: Int, tokenOpt: Option[String]) = Action.async { implicit request =>
+  def index(page: Int, size: Int) = Action.async { implicit request =>
     val uid = RequestHelper.getUid
     val name = RequestHelper.getName
     val pageFinal = if (page < 1) 0 else page - 1
-
-    tokenOpt.map { token =>
+    RequestHelper.getQcCode.map { code =>
       for {
+        token <- qqService.getAccessToken(code)
         openId <- qqService.getOpenId(token)
         user <- qqService.getUserInfo(token, openId)
       } yield {
@@ -77,14 +77,7 @@ class HomeController @Inject()(cc: ControllerComponents,
   }
 
   def toLogin = Action.async { implicit request =>
-    val uid = RequestHelper.getUid
-    uid match {
-      case 0 => Future(Ok(views.html.login(0, "")))
-      case _ =>
-        users.retrieve(uid).map {
-          case Some(user) => Ok(views.html.login(user.uid.getOrElse(0L), user.name.getOrElse("")))
-        }
-    }
+    Future.successful(Ok(views.html.login()))
   }
 
   def article(aid: Long) = Action.async { implicit request =>
@@ -174,7 +167,7 @@ class HomeController @Inject()(cc: ControllerComponents,
     val name = RequestHelper.getName
 
     uid match {
-      case 0 => Ok(views.html.login(uid, name))
+      case 0 => Ok(views.html.login())
       case _ => Ok(views.html.article_new(uid, name))
     }
   }

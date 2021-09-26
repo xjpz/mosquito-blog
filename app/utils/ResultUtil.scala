@@ -63,7 +63,7 @@ object ResultUtil {
     val ret = Json.obj(
       "success" -> false,
       "code" -> resultCode.getCode,
-      "msg" -> resultCode.getCode
+      "msg" -> resultCode.getMsg
     )
     Results.Ok(ret)
   }

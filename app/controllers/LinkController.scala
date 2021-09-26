@@ -1,11 +1,11 @@
 package controllers
 
 import javax.inject.Inject
-
 import models.{LinkListWrapper, Links}
-import play.api.libs.json.{JsNull, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{AbstractController, ControllerComponents}
-import utils.ResultStatus
+import utils.ResultUtil.QUERY_OK
+import utils.{ResultCode, ResultUtil}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -17,8 +17,8 @@ class LinkController @Inject()(links: Links)(cc: ControllerComponents) extends A
 
   def retrieve(lid: Long) = Action.async {
     links.retrieve(lid).map {
-      case Some(x) => Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(x), "des" -> ResultStatus.status_1))
-      case _ => Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0))
+      case Some(x) => ResultUtil.success(QUERY_OK,Json.toJson(x))
+      case _ => ResultUtil.failure(ResultCode.DATA_NOT_EXIST)
     }
   }
 
@@ -28,7 +28,7 @@ class LinkController @Inject()(links: Links)(cc: ControllerComponents) extends A
         x.toList.slice(size * page, size * page + size),
         x.length
       )
-      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(articleListWrapper), "des" -> ResultStatus.status_1))
+      ResultUtil.success(QUERY_OK,Json.toJson(articleListWrapper))
     }
   }
 

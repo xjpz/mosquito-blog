@@ -72,7 +72,7 @@
             type : 'PATCH',
             data : JSON.stringify({}),
             success : function(response, textStatus, jqXhr) {
-                if(response.ret == 1){
+                if(response.success){
                     document.getElementById(idName).innerHTML = parseInt(num)+1;
                 }else{
                     console.log("Oops");

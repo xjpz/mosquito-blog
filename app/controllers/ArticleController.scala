@@ -8,6 +8,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.{AbstractController, ControllerComponents}
+import utils.ResultUtil.{OPERATE_OK, QUERY_OK}
 import utils.{RequestHelper, ResultCode, ResultStatus, ResultUtil}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,7 +33,7 @@ class ArticleController @Inject()(articles: Articles)(cc: ControllerComponents) 
 
   def retrieve(aid: Long) = Action.async {
     articles.retrieve(aid).map {
-      case Some(article) => Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(article), "des" -> ResultStatus.status_1))
+      case Some(article) => ResultUtil.success(QUERY_OK,Json.toJson(article))
     }
   }
 
@@ -42,7 +43,7 @@ class ArticleController @Inject()(articles: Articles)(cc: ControllerComponents) 
         x.toList.slice(size * page, size * page + size),
         x.length
       )
-      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(articleListWrapper), "des" -> ResultStatus.status_1))
+      ResultUtil.success(QUERY_OK,Json.toJson(articleListWrapper))
     }
   }
 
@@ -52,7 +53,7 @@ class ArticleController @Inject()(articles: Articles)(cc: ControllerComponents) 
         x.toList.slice(size * page, size * page + size),
         x.length
       )
-      Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(articleListWrapper), "des" -> ResultStatus.status_1))
+      ResultUtil.success(QUERY_OK,Json.toJson(articleListWrapper))
     }
   }
 
@@ -95,21 +96,18 @@ class ArticleController @Inject()(articles: Articles)(cc: ControllerComponents) 
         if (x.aid == updArticle.aid) {
           articles.update(updArticle).map(_ => Redirect("/"))
         } else {
-          Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
+          Future(ResultUtil.failure(ResultCode.NOT_PERMISSION))
         }
       }
     } else {
-      Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
+      Future(ResultUtil.failure(ResultCode.NOT_PERMISSION))
     }
   }
 
   def updateSmileCount(aid: Long) = Action.async {
     articles.retrieve(aid).flatMap {
-      case Some(x) =>
-        articles.updateSmileCount(aid, x.smile.getOrElse(0) + 1).map(p =>
-          Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(p), "des" -> ResultStatus.status_1))
-        )
-      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+      case Some(x) => articles.updateSmileCount(aid, x.smile.getOrElse(0) + 1).map(_ => ResultUtil.success)
+      case _ => Future(ResultUtil.failure(ResultCode.DATA_NOT_EXIST))
     }
   }
 
@@ -119,11 +117,11 @@ class ArticleController @Inject()(articles: Articles)(cc: ControllerComponents) 
     articles.retrieve(aid).flatMap {
       case Some(x) =>
         if (Option(uid) == x.uid) {
-          articles.revoke(aid).map(p => Ok(Json.obj("ret" -> 1, "con" -> Json.toJson(p), "des" -> ResultStatus.status_1)))
+          articles.revoke(aid).map(p => ResultUtil.success(OPERATE_OK, Json.toJson(p)))
         } else {
-          Future(Ok(Json.obj("ret" -> 3, "con" -> JsNull, "des" -> ResultStatus.status_3)))
+          Future(ResultUtil.failure(ResultCode.NOT_PERMISSION))
         }
-      case _ => Future(Ok(Json.obj("ret" -> 0, "con" -> JsNull, "des" -> ResultStatus.status_0)))
+      case _ => Future(ResultUtil.failure(ResultCode.DATA_NOT_EXIST))
     }
   }
 
